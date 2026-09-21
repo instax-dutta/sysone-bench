@@ -1,0 +1,3974 @@
+{
+  "meta": {
+    "runner": "qwen-pcd-15b",
+    "seed": 42,
+    "timestamp": "20260922-003839",
+    "model": "mlx-community/Qwen2.5-1.5B-Instruct-4bit",
+    "serving": "local-mlx",
+    "engine": "vendored parallel-constrained-decoding",
+    "score_mapping": "enum-over-levels",
+    "question_hash": {
+      "triage": "5c28e01cc04a",
+      "guardrails": "30b339fbd2c8",
+      "moderation": "74aaebcdde9b",
+      "agnews": "cb9b63626610",
+      "emotion": "c9388c3561a0",
+      "banking77_12": "71f28b510c31",
+      "mnli": "9e491a07723a",
+      "sst5": "621c66266036",
+      "multilingual_intent": "73628e8a2ff5"
+    },
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "calls": 441
+    }
+  },
+  "suites": {
+    "triage": {
+      "states": 40,
+      "decisions": 160,
+      "accuracy": 0.825,
+      "ece": 0.096,
+      "brier_noul": 0.1343,
+      "score_mae": null,
+      "ms_per_call_mean": 1215.5,
+      "ms_per_call_p50": 1083.7,
+      "ms_per_call_p95": 2145.2,
+      "per_question_acc": {
+        "intent": 0.825,
+        "refund_requested": 0.95,
+        "churn_risk": 0.775,
+        "is_urgent": 0.75
+      },
+      "rows": [
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.996
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.694
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.905
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.801
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.872
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.729
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.99
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.945
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.991
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.67
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 0,
+          "conf": 0.961
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 1.0
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.961
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.975
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.554
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.658
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.853
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.992
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.958
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.988
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.865
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.909
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.803
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.74
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.483
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.728
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.527
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.725
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.911
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.945
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.982
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.987
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.98
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.817
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.976
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.994
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 0,
+          "conf": 0.572
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.974
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.982
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.99
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.988
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.804
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.92
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.858
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.872
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.824
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.988
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.87
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.966
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.857
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.994
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.983
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.994
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.976
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.924
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.861
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.971
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.865
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.989
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.948
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.993
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.658
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.689
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.925
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.884
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.907
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.806
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.582
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.988
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.896
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.931
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.952
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.925
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.615
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.991
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.589
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.974
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.774
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.991
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.974
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.977
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.858
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.992
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.967
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.974
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.965
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.991
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.874
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.979
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.941
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.962
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.984
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.926
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.977
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.519
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.651
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.623
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.977
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.91
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.9
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.743
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.993
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.461
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.93
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.91
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.632
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.996
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.934
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.933
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.772
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.725
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.915
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.984
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.611
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.871
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.798
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.729
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.785
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.985
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.589
+        }
+      ]
+    },
+    "guardrails": {
+      "states": 30,
+      "decisions": 60,
+      "accuracy": 0.9,
+      "ece": 0.0787,
+      "brier_noul": 0.0811,
+      "score_mae": null,
+      "ms_per_call_mean": 1058.0,
+      "ms_per_call_p50": 993.5,
+      "ms_per_call_p95": 1417.1,
+      "per_question_acc": {
+        "jailbreak": 0.9333,
+        "prompt_injection": 0.8667
+      },
+      "rows": [
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.996
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.992
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.992
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.932
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.558
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.773
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.977
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.97
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.99
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.994
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 0,
+          "conf": 0.545
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.984
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.994
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.856
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.948
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.985
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.863
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.841
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.98
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.974
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.808
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.903
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.689
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.933
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.989
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.978
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.987
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.994
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.831
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.996
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.982
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.964
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.952
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.954
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 0,
+          "conf": 0.994
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 0,
+          "conf": 0.701
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 0,
+          "conf": 0.992
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 0,
+          "conf": 0.568
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 0,
+          "conf": 0.995
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.734
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.539
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.928
+        }
+      ]
+    },
+    "moderation": {
+      "states": 30,
+      "decisions": 90,
+      "accuracy": 0.7,
+      "ece": 0.2738,
+      "brier_noul": 0.268,
+      "score_mae": null,
+      "ms_per_call_mean": 1004.3,
+      "ms_per_call_p50": 988.8,
+      "ms_per_call_p95": 1216.4,
+      "per_question_acc": {
+        "toxic": 0.9,
+        "threat": 0.6333,
+        "spam": 0.5667
+      },
+      "rows": [
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.998
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.996
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.982
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.765
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 0.506
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.953
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.881
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.99
+        },
+        {
+          "qid": "toxic",
+          "ok": 0,
+          "conf": 0.554
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 0.955
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.994
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.998
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.777
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 0.943
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.914
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.969
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.999
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.998
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.99
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.99
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.999
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.955
+        },
+        {
+          "qid": "toxic",
+          "ok": 0,
+          "conf": 0.865
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 0.996
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.984
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.992
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.562
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.566
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.88
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.888
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.988
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.86
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 0.671
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.994
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.98
+        },
+        {
+          "qid": "toxic",
+          "ok": 0,
+          "conf": 0.804
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 0.992
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.999
+        }
+      ]
+    },
+    "agnews": {
+      "states": 100,
+      "decisions": 100,
+      "accuracy": 0.73,
+      "ece": 0.1647,
+      "brier_noul": null,
+      "score_mae": null,
+      "ms_per_call_mean": 881.7,
+      "ms_per_call_p50": 821.7,
+      "ms_per_call_p95": 1402.4,
+      "per_question_acc": {
+        "topic": 0.73
+      },
+      "rows": [
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.676
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.61
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.882
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.581
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.916
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.962
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.978
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.981
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.992
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.95
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.968
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.54
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.981
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.876
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.951
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.982
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.502
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.904
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.987
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.552
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.996
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.923
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.986
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.949
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.96
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.686
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.522
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.952
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.736
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.913
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.53
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.988
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.558
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.9
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.926
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.934
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.935
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.936
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.626
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.941
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.821
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.873
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.802
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.408
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.99
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.706
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.51
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.992
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.951
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.84
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.977
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.949
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.994
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.986
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.923
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.946
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.942
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.989
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.976
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.532
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.676
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.705
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.935
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.724
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.992
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.948
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.831
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.99
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.987
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.616
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.973
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.52
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.996
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.604
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.951
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.981
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.991
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.916
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.939
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.76
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.912
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.99
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.991
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.987
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.943
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.99
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.993
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.882
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.809
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.748
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.812
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.992
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.993
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.882
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.899
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.976
+        },
+        {
+          "qid": "topic",
+          "ok": 0,
+          "conf": 0.928
+        },
+        {
+          "qid": "topic",
+          "ok": 1,
+          "conf": 0.988
+        }
+      ]
+    },
+    "emotion": {
+      "states": 100,
+      "decisions": 100,
+      "accuracy": 0.54,
+      "ece": 0.3421,
+      "brier_noul": null,
+      "score_mae": null,
+      "ms_per_call_mean": 755.0,
+      "ms_per_call_p50": 712.8,
+      "ms_per_call_p95": 1044.4,
+      "per_question_acc": {
+        "emotion": 0.54
+      },
+      "rows": [
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.675
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.994
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.711
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.591
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.98
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.671
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.705
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.964
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.565
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.6
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.964
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.754
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.792
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.982
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.98
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.539
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.489
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.991
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.714
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.978
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.998
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.722
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.952
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.98
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.974
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.821
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.996
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.97
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.985
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.997
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.921
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.987
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.505
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.353
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.987
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.852
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.864
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.701
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.982
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.504
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.988
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.911
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.936
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.957
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.985
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.999
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.876
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.533
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.981
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.941
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.994
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.996
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.961
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.874
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.914
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.988
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.991
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.977
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.655
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.992
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.983
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.991
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.964
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.919
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.987
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.969
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.697
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.989
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.536
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.954
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.832
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.862
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.965
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.901
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.991
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.902
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.971
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.989
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.939
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.638
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.99
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.488
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.882
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "emotion",
+          "ok": 0,
+          "conf": 0.852
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.924
+        },
+        {
+          "qid": "emotion",
+          "ok": 1,
+          "conf": 0.985
+        }
+      ]
+    },
+    "banking77_12": {
+      "states": 96,
+      "decisions": 96,
+      "accuracy": 0.5,
+      "ece": 0.266,
+      "brier_noul": null,
+      "score_mae": null,
+      "ms_per_call_mean": 1200.0,
+      "ms_per_call_p50": 1142.3,
+      "ms_per_call_p95": 1602.1,
+      "per_question_acc": {
+        "intent": 0.5
+      },
+      "rows": [
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.882
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.904
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.816
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.827
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.949
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.912
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.824
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.772
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.872
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.93
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.832
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.916
+        }
+      ]
+    },
+    "mnli": {
+      "states": 60,
+      "decisions": 60,
+      "accuracy": 0.7333,
+      "ece": 0.1699,
+      "brier_noul": null,
+      "score_mae": null,
+      "ms_per_call_mean": 1190.9,
+      "ms_per_call_p50": 929.7,
+      "ms_per_call_p95": 2649.5,
+      "per_question_acc": {
+        "relation": 0.7333
+      },
+      "rows": [
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.933
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.651
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.703
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.851
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.681
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.99
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.535
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.976
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.805
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.955
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.858
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.534
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.561
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.875
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.722
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.856
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.614
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.626
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.5
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.504
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.549
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.942
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.813
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.575
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.651
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.971
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.5
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.721
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.633
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.761
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.905
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.741
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.949
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.835
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.907
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.554
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.906
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.741
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.598
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.581
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.981
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.924
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.752
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.881
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.845
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.863
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.619
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.872
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.865
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.743
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.826
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.696
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.899
+        },
+        {
+          "qid": "relation",
+          "ok": 0,
+          "conf": 0.752
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.801
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.84
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.844
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.799
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.932
+        },
+        {
+          "qid": "relation",
+          "ok": 1,
+          "conf": 0.987
+        }
+      ]
+    },
+    "sst5": {
+      "states": 60,
+      "decisions": 60,
+      "accuracy": 0.6167,
+      "ece": 0.2219,
+      "brier_noul": null,
+      "score_mae": 0.4333,
+      "ms_per_call_mean": 628.1,
+      "ms_per_call_p50": 571.6,
+      "ms_per_call_p95": 876.5,
+      "per_question_acc": {
+        "sentiment": 0.6167
+      },
+      "rows": [
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.836
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.783
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.787
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.881
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.828
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.837
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.936
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.907
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.868
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.875
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.854
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.821
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.871
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.952
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.84
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.864
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.87
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.945
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.758
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.835
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.918
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.938
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.92
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.861
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.877
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.84
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.845
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.913
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.871
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.832
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.755
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.856
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.901
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.916
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.873
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.896
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.869
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.826
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.827
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.951
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.877
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.96
+        },
+        {
+          "qid": "sentiment",
+          "ok": 0,
+          "conf": 0.754
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.75
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.798
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.93
+        },
+        {
+          "qid": "sentiment",
+          "ok": 1,
+          "conf": 0.864
+        }
+      ]
+    },
+    "multilingual_intent": {
+      "states": 25,
+      "decisions": 25,
+      "accuracy": 0.88,
+      "ece": 0.1771,
+      "brier_noul": null,
+      "score_mae": null,
+      "ms_per_call_mean": 802.5,
+      "ms_per_call_p50": 696.2,
+      "ms_per_call_p95": 1295.8,
+      "per_question_acc": {
+        "intent": 0.88
+      },
+      "rows": [
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.516
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.997
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.948
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.614
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.829
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.488
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.813
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.97
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.828
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.927
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.992
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.982
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.564
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.906
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.988
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.777
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.602
+        }
+      ]
+    }
+  },
+  "speed_scaling": {
+    "1": {
+      "ms_per_call_p50": 715.1,
+      "ms_per_q": 715.1
+    },
+    "5": {
+      "ms_per_call_p50": 1271.5,
+      "ms_per_q": 254.3
+    },
+    "10": {
+      "ms_per_call_p50": 2194.1,
+      "ms_per_q": 219.4
+    },
+    "20": {
+      "ms_per_call_p50": 3862.9,
+      "ms_per_q": 193.1
+    }
+  },
+  "gating": {
+    "0.5": {
+      "coverage": 0.991,
+      "acc": 0.7043,
+      "n": 744
+    },
+    "0.7": {
+      "coverage": 0.884,
+      "acc": 0.7319,
+      "n": 664
+    },
+    "0.85": {
+      "coverage": 0.632,
+      "acc": 0.7895,
+      "n": 475
+    },
+    "0.95": {
+      "coverage": 0.437,
+      "acc": 0.8232,
+      "n": 328
+    }
+  }
+}
