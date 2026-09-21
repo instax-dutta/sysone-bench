@@ -12,17 +12,22 @@ v2 runs from 2026-09-21: 751 states, 9 suites. Laya is the `convaiinnovations/la
 English checkpoint on a local M2 CPU. Jev is pinned `jev-1.13.0` through the TypeSafe
 API. Full Jev run cost $0.008.
 
-| Suite | n | Laya | Jev | Gap |
-|---|---|---|---|---|
-| triage (curated) | 160 | 0.800 | 0.888 | +0.088 |
-| guardrails (curated) | 60 | 0.883 | 0.967 | +0.084 |
-| moderation (curated) | 90 | 0.833 | 0.989 | +0.156 |
-| agnews (4 labels) | 100 | 0.940 | 0.910 | -0.030 |
-| emotion (6 labels) | 100 | 0.540 | 0.550 | +0.010 |
-| banking77, 12 intents | 96 | 0.802 | 0.906 | +0.104 |
-| mnli (3-way NLI) | 60 | 0.983 | 0.867 | -0.117 |
-| sst5 (score, 5 levels) | 60 | 0.367 | 0.617 | +0.250 |
-| multilingual intent (5 langs) | 25 | 0.360 | 1.000 | +0.640 |
+| Suite | n | Laya | Jev | Qwen-PCD | Best |
+|---|---|---|---|---|---|
+| triage (curated) | 160 | 0.800 | 0.888 | 0.825 | Jev |
+| guardrails (curated) | 60 | 0.883 | 0.967 | 0.900 | Jev |
+| moderation (curated) | 90 | 0.833 | 0.989 | 0.700 | Jev |
+| agnews (4 labels) | 100 | 0.940 | 0.910 | 0.730 | Laya |
+| emotion (6 labels) | 100 | 0.540 | 0.550 | 0.540 | tie |
+| banking77, 12 intents | 96 | 0.802 | 0.906 | 0.500 | Jev |
+| mnli (3-way NLI) | 60 | 0.983 | 0.867 | 0.733 | Laya |
+| sst5 (score, 5 levels) | 60 | 0.367 | 0.617 | 0.617 | Jev/Qwen tie |
+| multilingual intent (5 langs) | 25 | 0.360 | 1.000 | 0.880 | Jev |
+
+Qwen-PCD is stock Qwen2.5-1.5B-Instruct with parallel constrained decoding (same code
+as harshatheg/Qwen-2.5-1B-RLCD, which ships no fine-tuned weights), local MLX on M2.
+Its score questions run as enums over rubric levels. It collapses on 12-option enums
+(banking77 0.500) but matches Jev on sst5 and trails only Jev on multilingual (0.880).
 
 v3: same 751 states through `laya.Router` reproduce all English numbers exactly and
 lift multilingual intent to 0.840 (Jev 1.000). Router keys on script: 15 of 590 calls

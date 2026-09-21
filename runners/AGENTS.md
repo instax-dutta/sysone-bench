@@ -25,4 +25,6 @@
 - `./.venv/bin/python -c "from runners.laya_runner import LayaRunner; print(LayaRunner.name)"` prints `laya`.
 
 # Child DOX Index
-- None. `base.py`, `laya_runner.py`, `jev_runner.py`, `router_runner.py` all live under this contract.
+- None. `base.py`, `laya_runner.py`, `jev_runner.py`, `router_runner.py`,
+  `qwen_runner.py` all live under this contract. `pcd/` is vendored third-party
+  engine code (Apache 2.0); do not modify except import-path rewrites.

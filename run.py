@@ -110,6 +110,9 @@ def build_runner(name):
     if name == "laya-router":
         from runners.router_runner import RouterRunner
         return RouterRunner()
+    if name == "qwen":
+        from runners.qwen_runner import QwenRunner
+        return QwenRunner()
     if name == "jev":
         from runners.jev_runner import JevRunner
         return JevRunner()

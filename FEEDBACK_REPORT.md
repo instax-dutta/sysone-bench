@@ -54,6 +54,20 @@ English suites reproduce the base numbers exactly. Multilingual intent moves
 routing keys on script, so Spanish/French/German stayed on the English checkpoint.
 Run file: `results/run_laya-router_20260922-001411.json`.
 
+## v4 addendum: Qwen2.5-1.5B-Instruct + parallel constrained decoding (2026-09-22)
+
+Fourth column, same 751 states. The harshatheg/Qwen-2.5-1B-RLCD repo ships no weights,
+so this is stock `mlx-community/Qwen2.5-1.5B-Instruct-4bit` under the vendored parallel
+engine, local MLX on M2. Score questions asked as enums over rubric levels.
+
+Triage 0.825, guardrails 0.900, moderation 0.700, agnews 0.730, emotion 0.540,
+banking77_12 0.500, mnli 0.733, sst5 0.617 (ties Jev), multilingual 0.880.
+Latency ~700-1150 ms per call on M2, below the author's M4 Max figures as expected.
+
+Two findings: first-token logit slicing degrades as option count grows (banking77
+12-way at 0.500 while 4-6 way stays competitive), and emotion is now a three-model
+wall at 0.54-0.55. Run file: `results/run_qwen-pcd-15b_20260922-003839.json`.
+
 ## Limits of this report
 
 - Curated suites are hand-labeled by one author. Public subsets are random draws,
