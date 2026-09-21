@@ -47,7 +47,8 @@ class JevRunner(BaseRunner):
             elif a.get("type") == "noul" and "probability" in a and "noul" not in a:
                 a["noul"] = float(a.pop("probability"))
             norm[qid] = a
-        return {"answers": norm, "_raw_model": data.get("model", self.model)}
+        return {"answers": norm, "_raw_model": data.get("model", self.model),
+                "_usage": data.get("usage", {})}
 
     def info(self):
         return {"runner": self.name, "model": self.model,

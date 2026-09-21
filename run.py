@@ -28,6 +28,7 @@ def question_hash(questions):
 
 def run_suite(runner, questions, cases):
     lat, correct, confs, y_true, y_prob, per_q, rows = [], [], [], [], [], {}, []
+    score_err = []
     for state, expected in cases:
         t0 = time.perf_counter()
         res = runner.predict(state, questions)
@@ -38,6 +39,11 @@ def run_suite(runner, questions, cases):
             if a["type"] == "choice":
                 ok = int(a["choice"] == exp)
                 c = float(a["confidence"])
+            elif a["type"] == "score":
+                pred = float(a["score"])
+                score_err.append(abs(pred - float(exp)))
+                ok = int(abs(pred - float(exp)) <= 0.5)
+                c = float(a.get("confidence", 0.0))
             else:
                 p = noul_prob(a)
                 ok = int(int(p >= 0.5) == exp)
@@ -51,8 +57,10 @@ def run_suite(runner, questions, cases):
     acc = float(np.mean(correct))
     ece = float(laya.ece_score(np.array(confs), np.array(correct)))
     brier = float(np.mean([(p - t) ** 2 for p, t in zip(y_prob, y_true)])) if y_prob else None
+    mae = round(float(np.mean(score_err)), 4) if score_err else None
     return {"states": len(cases), "decisions": len(correct), "accuracy": round(acc, 4),
             "ece": round(ece, 4), "brier_noul": round(brier, 4) if brier is not None else None,
+            "score_mae": mae,
             "ms_per_call_mean": round(statistics.mean(lat), 1),
             "ms_per_call_p50": round(statistics.median(lat), 1),
             "ms_per_call_p95": round(float(np.percentile(lat, 95)), 1),
@@ -80,6 +88,22 @@ def speed_scaling(runner):
     return out
 
 
+class TrackUsage:
+    """Wraps a runner, accumulating per-call token usage into a shared counter."""
+
+    def __init__(self, runner, counter):
+        self.runner = runner
+        self.counter = counter
+
+    def predict(self, state, questions):
+        res = self.runner.predict(state, questions)
+        u = res.get("_usage", {}) or {}
+        self.counter["input_tokens"] += int(u.get("input_tokens", 0))
+        self.counter["output_tokens"] += int(u.get("output_tokens", 0))
+        self.counter["calls"] += 1
+        return res
+
+
 def build_runner(name):
     if name == "laya":
         return LayaRunner()
@@ -97,7 +121,8 @@ def main():
         runner = build_runner(model)
         ts = datetime.now().strftime("%Y%m%d-%H%M%S")
         out = {"meta": {"runner": runner.name, "seed": SEED, "timestamp": ts,
-                        **runner.info(), "question_hash": {}},
+                        **runner.info(), "question_hash": {},
+                        "usage": {"input_tokens": 0, "output_tokens": 0, "calls": 0}},
                "suites": {}}
         for suite, (qfn_name, cases) in SUITES.items():
             questions = getattr(laya, qfn_name)()
@@ -105,6 +130,17 @@ def main():
             if suite == "triage":  # warmup
                 runner.predict({"message": "hello"}, questions)
             out["suites"][suite] = run_suite(runner, questions, cases)
+            s = out["suites"][suite]
+            print(f"[{runner.name}] {suite}: acc={s['accuracy']} ece={s['ece']} "
+                  f"p50={s['ms_per_call_p50']}ms", flush=True)
+        pub = json.load(open("datasets/public_cases.json"))
+        assert pub["seed"] == SEED, "public cases seed mismatch"
+        for suite, spec in pub["suites"].items():
+            questions = spec["questions"]
+            out["meta"]["question_hash"][suite] = question_hash(questions)
+            # re-run through runner to count usage/calls uniformly
+            wrapped = TrackUsage(runner, out["meta"]["usage"])
+            out["suites"][suite] = run_suite(wrapped, questions, spec["cases"])
             s = out["suites"][suite]
             print(f"[{runner.name}] {suite}: acc={s['accuracy']} ece={s['ece']} "
                   f"p50={s['ms_per_call_p50']}ms", flush=True)
