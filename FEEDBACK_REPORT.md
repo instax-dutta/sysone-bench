@@ -46,6 +46,14 @@
 - It collapses exactly where its author predicts: non-English intent (0.36) and sst5
   score (0.367). The honest-limits section of BENCHMARKS.md held up in our runs.
 
+## v3 addendum: routed Laya (2026-09-22)
+
+Ran the same 751 states through `laya.Router` (english + multilingual preloaded).
+English suites reproduce the base numbers exactly. Multilingual intent moves
+0.360 to 0.840 (Jev 1.000). Router sent 15 of 590 calls to multilingual;
+routing keys on script, so Spanish/French/German stayed on the English checkpoint.
+Run file: `results/run_laya-router_20260922-001411.json`.
+
 ## Limits of this report
 
 - Curated suites are hand-labeled by one author. Public subsets are random draws,

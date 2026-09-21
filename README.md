@@ -24,6 +24,10 @@ API. Full Jev run cost $0.008.
 | sst5 (score, 5 levels) | 60 | 0.367 | 0.617 | +0.250 |
 | multilingual intent (5 langs) | 25 | 0.360 | 1.000 | +0.640 |
 
+v3: same 751 states through `laya.Router` reproduce all English numbers exactly and
+lift multilingual intent to 0.840 (Jev 1.000). Router keys on script: 15 of 590 calls
+went multilingual, Spanish/French/German stayed on English. Run files in `results/`.
+
 The Jev lead sits in multi-class and non-English questions: 6-way `intent`
 (Laya 0.725, Jev 0.975), `toxic` (0.767 vs 1.000), multilingual intent (0.360 vs 1.000).
 Laya wins agnews and mnli at $0 self-hosted, and takes `churn_risk` (0.800 vs 0.750).
