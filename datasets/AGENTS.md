@@ -7,9 +7,12 @@
 
 # Local Contracts
 - Case format: `(state_dict, {question_id: expected})` where expected is a label string for
-  `choice` questions or 0/1 for `noul` questions.
+  `choice` questions, 0/1 for `noul` questions, or an int level for `score` questions.
 - `SUITES` maps suite name to `(questions_fn_name, cases)`. Question dicts come from the
   `laya` package presets so both runners share identical wording.
+- `public_cases.json` holds public-source suites with inline question dicts:
+  agnews (100), emotion (100), banking77_12 (96), mnli (60), sst5 (60, score),
+  multilingual_intent (25). Built by `build_public.py`, SEED=42.
 - `SEED = 42`. Case order is fixed; runners must not shuffle.
 - Never edit an existing case to favor a model. Add new cases instead.
 
