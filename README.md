@@ -8,30 +8,32 @@ different prompts, so this is the first comparison where the inputs match byte f
 
 ## Results
 
-Runs from 2026-09-21. Laya is the `convaiinnovations/laya` English checkpoint on a local
-M2 CPU. Jev is pinned `jev-1.13.0` through the TypeSafe API.
+v2 runs from 2026-09-21: 751 states, 9 suites. Laya is the `convaiinnovations/laya`
+English checkpoint on a local M2 CPU. Jev is pinned `jev-1.13.0` through the TypeSafe
+API. Full Jev run cost $0.008.
 
-| Suite | Laya | Jev | Gap |
-|---|---|---|---|
-| triage (160 decisions) | 0.800 | 0.894 | +0.094 |
-| guardrails (60 decisions) | 0.883 | 0.950 | +0.067 |
-| moderation (90 decisions) | 0.833 | 0.989 | +0.156 |
+| Suite | n | Laya | Jev | Gap |
+|---|---|---|---|---|
+| triage (curated) | 160 | 0.800 | 0.888 | +0.088 |
+| guardrails (curated) | 60 | 0.883 | 0.967 | +0.084 |
+| moderation (curated) | 90 | 0.833 | 0.989 | +0.156 |
+| agnews (4 labels) | 100 | 0.940 | 0.910 | -0.030 |
+| emotion (6 labels) | 100 | 0.540 | 0.550 | +0.010 |
+| banking77, 12 intents | 96 | 0.802 | 0.906 | +0.104 |
+| mnli (3-way NLI) | 60 | 0.983 | 0.867 | -0.117 |
+| sst5 (score, 5 levels) | 60 | 0.367 | 0.617 | +0.250 |
+| multilingual intent (5 langs) | 25 | 0.360 | 1.000 | +0.640 |
 
-95% confidence intervals: triage Laya 0.738-0.862, Jev 0.846-0.942; guardrails Laya
-0.802-0.965, Jev 0.895-1.000; moderation Laya 0.756-0.910, Jev 0.967-1.000. The
-guardrails gap is inside the noise.
+The Jev lead sits in multi-class and non-English questions: 6-way `intent`
+(Laya 0.725, Jev 0.975), `toxic` (0.767 vs 1.000), multilingual intent (0.360 vs 1.000).
+Laya wins agnews and mnli at $0 self-hosted, and takes `churn_risk` (0.800 vs 0.750).
+Emotion is weak on both (0.54-0.55, ECE near 0.3), and score questions miscalibrate
+more than choice or noul on either model.
 
-Per question, the gap sits in multi-class judgments: 6-way `intent` (Laya 0.725, Jev
-0.975) and `toxic` (0.767 vs 1.000). The one Laya win is `churn_risk` (0.800 vs 0.750).
-Binary flags are close: `refund_requested` 0.925 vs 1.000, `prompt_injection` 0.867 vs 0.900.
-
-Calibration is solid on both sides: ECE 0.065-0.082 for Laya, 0.034-0.055 for Jev.
-Gating at confidence 0.85 keeps 69% of traffic at 0.953 accuracy on Laya and 83% at
-0.988 on Jev.
-
-Latency per 5-question call: Laya 375-476 ms local, Jev 885-1017 ms over the API.
-The Jev run cost under $1. Laya costs nothing after the download. Full writeup with
-limits and takeaways is in `REPORT.md`. Machine specs are in `MACHINES.md`.
+Gating at confidence 0.85 keeps 58% of traffic at 0.878 accuracy on Laya and 78% at
+0.917 on Jev. Latency per 5-question call: Laya 180-660 ms local, Jev 925-1068 ms
+over the API. The benchmark-cum-feedback report for TypeSafe is `FEEDBACK_REPORT.md`.
+Machine specs are in `MACHINES.md`.
 
 ## Run it
 
