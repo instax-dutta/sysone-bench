@@ -33,14 +33,6 @@ Latency per 5-question call: Laya 375-476 ms local, Jev 885-1017 ms over the API
 The Jev run cost under $1. Laya costs nothing after the download. Full writeup with
 limits and takeaways is in `REPORT.md`. Machine specs are in `MACHINES.md`.
 
-## Status
-
-- [x] Laya runner + 100 curated states (triage 40, guardrails 30, moderation 30)
-- [x] Full Laya run on pelican CPU (310 decisions, see `results/`)
-- [x] Jev API key + live Jev run (2026-09-21, pinned `jev-1.13.0`)
-- [x] Head-to-head comparison (`results/compare_laya_vs_jev-1.13.0.json`, see `REPORT.md`)
-- [ ] Publish to GitHub
-
 ## Run it
 
 1. `python3 -m venv .venv && .venv/bin/python -m ensurepip`
