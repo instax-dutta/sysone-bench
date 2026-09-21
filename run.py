@@ -107,6 +107,9 @@ class TrackUsage:
 def build_runner(name):
     if name == "laya":
         return LayaRunner()
+    if name == "laya-router":
+        from runners.router_runner import RouterRunner
+        return RouterRunner()
     if name == "jev":
         from runners.jev_runner import JevRunner
         return JevRunner()
@@ -153,6 +156,7 @@ def main():
                                 "acc": round(float(np.mean([r["ok"] for r in sel])), 4) if sel else None,
                                 "n": len(sel)}
         out["gating"] = gating
+        out["meta"].update(runner.info())  # refresh: picks up route_counts etc.
         path = f"results/run_{runner.name}_{ts}.json"
         with open(path, "w") as f:
             json.dump(out, f, indent=2)
