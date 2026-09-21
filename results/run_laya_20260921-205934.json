@@ -1,0 +1,1658 @@
+{
+  "meta": {
+    "runner": "laya",
+    "seed": 42,
+    "timestamp": "20260921-205934",
+    "repo": "convaiinnovations/laya",
+    "checkpoint": "english",
+    "serving": "local",
+    "question_hash": {
+      "triage": "5c28e01cc04a",
+      "guardrails": "30b339fbd2c8",
+      "moderation": "74aaebcdde9b"
+    }
+  },
+  "suites": {
+    "triage": {
+      "states": 40,
+      "decisions": 160,
+      "accuracy": 0.8,
+      "ece": 0.0793,
+      "brier_noul": 0.1271,
+      "ms_per_call_mean": 531.6,
+      "ms_per_call_p50": 475.7,
+      "ms_per_call_p95": 804.8,
+      "per_question_acc": {
+        "intent": 0.725,
+        "refund_requested": 0.925,
+        "churn_risk": 0.8,
+        "is_urgent": 0.75
+      },
+      "rows": [
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.986
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.88
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.829
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.812
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.285
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 0,
+          "conf": 0.678
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.924
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.901
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.897
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.907
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.941
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.934
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.359
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.971
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.924
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.621
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.954
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.851
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.966
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.86
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.638
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.771
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.915
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.913
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.951
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.919
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.326
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.944
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.844
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.894
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.996
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.968
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.523
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.625
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.333
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.899
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.909
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.828
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.983
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.618
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.958
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.908
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.98
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.904
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.97
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.732
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.897
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 0,
+          "conf": 0.632
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.917
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.932
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.379
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.986
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.87
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.985
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.907
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.976
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.878
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.909
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.769
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.918
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.838
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.933
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.809
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.461
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.975
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.967
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.551
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.996
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.834
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.873
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.778
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.704
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.797
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.863
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.924
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.969
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.91
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.956
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.468
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.668
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.917
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.964
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.469
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.98
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.844
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.66
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.881
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.977
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.985
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.77
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.59
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.956
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.992
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.897
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.417
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.965
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.807
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.926
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.995
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.844
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.645
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.891
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.897
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.611
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.719
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.933
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.733
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.89
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.928
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.386
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.804
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.919
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.927
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.503
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.989
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.931
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.978
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.929
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.772
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.899
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.811
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 0,
+          "conf": 0.694
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 0,
+          "conf": 0.724
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.627
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.896
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.965
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.596
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.976
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.979
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.839
+        },
+        {
+          "qid": "intent",
+          "ok": 0,
+          "conf": 0.505
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.956
+        },
+        {
+          "qid": "intent",
+          "ok": 1,
+          "conf": 0.619
+        },
+        {
+          "qid": "refund_requested",
+          "ok": 0,
+          "conf": 0.744
+        },
+        {
+          "qid": "churn_risk",
+          "ok": 1,
+          "conf": 0.778
+        },
+        {
+          "qid": "is_urgent",
+          "ok": 1,
+          "conf": 0.8
+        }
+      ]
+    },
+    "guardrails": {
+      "states": 30,
+      "decisions": 60,
+      "accuracy": 0.8833,
+      "ece": 0.0652,
+      "brier_noul": 0.0838,
+      "ms_per_call_mean": 484.6,
+      "ms_per_call_p50": 374.9,
+      "ms_per_call_p95": 671.1,
+      "per_question_acc": {
+        "jailbreak": 0.9,
+        "prompt_injection": 0.8667
+      },
+      "rows": [
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.949
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 0,
+          "conf": 0.713
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 0,
+          "conf": 0.734
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.893
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.707
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.994
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.886
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.906
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.927
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.912
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.863
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.976
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.997
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.945
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.968
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.799
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.882
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.897
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 0,
+          "conf": 0.565
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.963
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.855
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 0,
+          "conf": 0.835
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.617
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 0,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 0,
+          "conf": 0.888
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.973
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 1,
+          "conf": 0.891
+        },
+        {
+          "qid": "jailbreak",
+          "ok": 1,
+          "conf": 0.768
+        },
+        {
+          "qid": "prompt_injection",
+          "ok": 0,
+          "conf": 0.848
+        }
+      ]
+    },
+    "moderation": {
+      "states": 30,
+      "decisions": 90,
+      "accuracy": 0.8333,
+      "ece": 0.0819,
+      "brier_noul": 0.1006,
+      "ms_per_call_mean": 486.4,
+      "ms_per_call_p50": 475.6,
+      "ms_per_call_p95": 587.7,
+      "per_question_acc": {
+        "toxic": 0.7667,
+        "threat": 0.8667,
+        "spam": 0.8667
+      },
+      "rows": [
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.976
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.787
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 0.685
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 0,
+          "conf": 0.543
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.943
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.952
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.973
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.946
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.944
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.992
+        },
+        {
+          "qid": "toxic",
+          "ok": 0,
+          "conf": 0.541
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.88
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.971
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.769
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 0.83
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.974
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.958
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.906
+        },
+        {
+          "qid": "toxic",
+          "ok": 0,
+          "conf": 0.848
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.617
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.72
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.957
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.846
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.678
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 0.672
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.635
+        },
+        {
+          "qid": "toxic",
+          "ok": 0,
+          "conf": 0.59
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.851
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.933
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.965
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.912
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.998
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.658
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.847
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.976
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.992
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.988
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.849
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.939
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.968
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.632
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.877
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.644
+        },
+        {
+          "qid": "toxic",
+          "ok": 0,
+          "conf": 0.73
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.842
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.751
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.893
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 0,
+          "conf": 0.594
+        },
+        {
+          "qid": "threat",
+          "ok": 0,
+          "conf": 0.777
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.736
+        },
+        {
+          "qid": "toxic",
+          "ok": 0,
+          "conf": 0.779
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.799
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.723
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.905
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.905
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.999
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 1.0
+        },
+        {
+          "qid": "spam",
+          "ok": 1,
+          "conf": 0.991
+        },
+        {
+          "qid": "toxic",
+          "ok": 1,
+          "conf": 0.576
+        },
+        {
+          "qid": "threat",
+          "ok": 1,
+          "conf": 0.598
+        },
+        {
+          "qid": "spam",
+          "ok": 0,
+          "conf": 0.541
+        }
+      ]
+    }
+  },
+  "speed_scaling": {
+    "1": {
+      "ms_per_call_p50": 90.0,
+      "ms_per_q": 90.0
+    },
+    "5": {
+      "ms_per_call_p50": 476.3,
+      "ms_per_q": 95.3
+    },
+    "10": {
+      "ms_per_call_p50": 959.4,
+      "ms_per_q": 95.9
+    },
+    "20": {
+      "ms_per_call_p50": 2009.5,
+      "ms_per_q": 100.5
+    }
+  },
+  "gating": {
+    "0.5": {
+      "coverage": 0.968,
+      "acc": 0.84,
+      "n": 300
+    },
+    "0.7": {
+      "coverage": 0.852,
+      "acc": 0.8864,
+      "n": 264
+    },
+    "0.85": {
+      "coverage": 0.69,
+      "acc": 0.9533,
+      "n": 214
+    },
+    "0.95": {
+      "coverage": 0.455,
+      "acc": 0.9645,
+      "n": 141
+    }
+  }
+}
