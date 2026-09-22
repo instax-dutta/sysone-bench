@@ -1,16 +1,34 @@
 # sysone-bench
 
-Laya and Jev answer the same 100 states, same questions, same seed. This repo records
-who does better. As far as we can tell, nobody has run both models on identical inputs
-before. The Laya author never had Jev API access, and Jev's published numbers come from
-different prompts, so this is the first comparison where the inputs match byte for byte
-(the harness checks question hashes before comparing).
+**The first independent head-to-head benchmark of System One decision models on
+byte-identical inputs.**
+
+Laya (open weights, Apache-2.0) and Jev (TypeSafe, closed API) answer the exact same
+states and typed questions in the same run, with the same seed. Question SHA hashes are
+verified identical before any comparison, so the inputs match byte for byte. Vendor
+numbers are published from different prompts and are not directly comparable; this repo
+is.
+
+## Why this exists
+
+Before this repo there was no comparison where Laya and Jev saw the same input. The Laya
+author never had Jev API access, and Jev's published numbers come from different prompts,
+so cross-vendor claims could not be checked. This benchmark closes that gap.
+
+## Fairness rules (binding)
+
+- Same states, same question dicts, same seed for every model. No per-model prompt tuning.
+- Pinned, versioned model ids recorded in every result file.
+- Question hashes verified identical before comparing.
+- Raw and temperature-fitted ECE reported separately, never mixed.
+- Results are append-only records: a published run is never overwritten.
 
 ## Results
 
-v2 runs from 2026-09-21: 751 states, 9 suites. Laya is the `convaiinnovations/laya`
-English checkpoint on a local M2 CPU. Jev is pinned `jev-1.13.0` through the TypeSafe
-API. Full Jev run cost $0.008.
+### v2 - 751 states, 9 suites (2026-09-21)
+
+Laya is the `convaiinnovations/laya` English checkpoint on a local M2 CPU. Jev is pinned
+`jev-1.13.0` through the TypeSafe API. The full Jev run cost $0.008.
 
 | Suite | n | Laya | Jev | Qwen-PCD | Best |
 |---|---|---|---|---|---|
@@ -24,40 +42,73 @@ API. Full Jev run cost $0.008.
 | sst5 (score, 5 levels) | 60 | 0.367 | 0.617 | 0.617 | Jev/Qwen tie |
 | multilingual intent (5 langs) | 25 | 0.360 | 1.000 | 0.880 | Jev |
 
-Qwen-PCD is stock Qwen2.5-1.5B-Instruct with parallel constrained decoding (same code
-as harshatheg/Qwen-2.5-1B-RLCD, which ships no fine-tuned weights), local MLX on M2.
-Its score questions run as enums over rubric levels. It collapses on 12-option enums
-(banking77 0.500) but matches Jev on sst5 and trails only Jev on multilingual (0.880).
+Qwen-PCD is a secondary open baseline: stock Qwen2.5-1.5B-Instruct with parallel
+constrained decoding (same code as `harshatheg/Qwen-2.5-1B-RLCD`, which ships no
+fine-tuned weights), local MLX on M2. It collapses on 12-option enums (banking77 0.500)
+but matches Jev on sst5 and trails only Jev on multilingual (0.880).
 
-v3: same 751 states through `laya.Router` reproduce all English numbers exactly and
-lift multilingual intent to 0.840 (Jev 1.000). Router keys on script: 15 of 590 calls
-went multilingual, Spanish/French/German stayed on English. Run files in `results/`.
-
-The Jev lead sits in multi-class and non-English questions: 6-way `intent`
-(Laya 0.725, Jev 0.975), `toxic` (0.767 vs 1.000), multilingual intent (0.360 vs 1.000).
-Laya wins agnews and mnli at $0 self-hosted, and takes `churn_risk` (0.800 vs 0.750).
-Emotion is weak on both (0.54-0.55, ECE near 0.3), and score questions miscalibrate
-more than choice or noul on either model.
+The Jev lead concentrates in multi-class and non-English questions: 6-way `intent`
+(Laya 0.725, Jev 0.975), `toxic` (0.767 vs 1.000), multilingual intent (0.360 vs
+1.000). Laya wins agnews and mnli at $0 self-hosted, and takes `churn_risk`
+(0.800 vs 0.750). Emotion is weak on both (0.54-0.55, ECE near 0.3), and `score`
+questions miscalibrate more than `choice` or `noul` on either model.
 
 Gating at confidence 0.85 keeps 58% of traffic at 0.878 accuracy on Laya and 78% at
-0.917 on Jev. Latency per 5-question call: Laya 180-660 ms local, Jev 925-1068 ms
-over the API. The benchmark-cum-feedback report for TypeSafe is `FEEDBACK_REPORT.md`.
-Machine specs are in `MACHINES.md`.
+0.917 on Jev. Latency per 5-question call: Laya 180-660 ms local, Jev 925-1068 ms over
+the API.
 
-## Run it
+### v3 - routed Laya
 
-1. `python3 -m venv .venv && .venv/bin/python -m ensurepip`
-2. `./.venv/bin/python -m pip install laya requests python-dotenv`
-3. Laya only: `USE_TF=0 ./.venv/bin/python run.py --models laya`
-4. Both: `TYPESAFE_API_KEY=... ./.venv/bin/python run.py --models laya,jev`
-5. Compare: `./.venv/bin/python compare.py results/<run_a>.json results/<run_b>.json`
+The same 751 states through `laya.Router` reproduce all English numbers exactly and lift
+multilingual intent to 0.840 (Jev 1.000). The Router keys on script: 15 of 590 calls went
+multilingual, while Spanish/French/German stayed on the English checkpoint.
 
-## Layout
+### Supporting documents
 
-- `datasets/cases.py` - states + ground truth, fixed seed
-- `runners/base.py` - runner interface every model adapter implements
-- `runners/laya_runner.py` - local Laya inference
-- `runners/jev_runner.py` - TypeSafe Decisions API (needs key)
-- `run.py` - executes suites, writes `results/run_<model>_<timestamp>.json`
-- `compare.py` - accuracy, ECE, latency deltas across runs
-- `PLAN.md` - full plan
+- `REPORT.md` - accuracy, ECE, gating, latency for the head-to-head.
+- `FEEDBACK_REPORT.md` - benchmark-cum-feedback report sent to TypeSafe.
+- `PLAN.md` - the benchmark plan and binding fairness rules.
+- `MACHINES.md` - machine specs for every recorded run.
+
+## Reproduce
+
+```bash
+python3 -m venv .venv && .venv/bin/python -m ensurepip
+./.venv/bin/python -m pip install laya requests python-dotenv
+
+# Laya only (open weights, no key needed)
+USE_TF=0 ./.venv/bin/python run.py --models laya
+
+# Laya and Jev (needs a TypeSafe key in .env as TYPESAFE_API_KEY)
+TYPESAFE_API_KEY=... ./.venv/bin/python run.py --models laya,jev
+
+# Compare two runs
+./.venv/bin/python compare.py results/<run_a>.json results/<run_b>.json
+```
+
+## Repository layout
+
+- `datasets/cases.py` - curated states and ground truth, fixed seed.
+- `datasets/public_cases.json` - public-suite states and questions.
+- `runners/base.py` - the runner interface every model adapter implements.
+- `runners/laya_runner.py` - local Laya inference.
+- `runners/jev_runner.py` - TypeSafe Decisions API (needs `TYPESAFE_API_KEY`).
+- `run.py` - executes suites, writes `results/run_<model>_<timestamp>.json`.
+- `compare.py` - accuracy, ECE, and latency deltas across runs.
+- `results/` - append-only run outputs and comparisons.
+
+## Citation
+
+```bibtex
+@misc{sysonebench2026,
+  title  = {sysone-bench: independent head-to-head benchmark of System One decision models},
+  year   = {2026},
+  author = {instax-dutta},
+  url    = {https://github.com/instax-dutta/sysone-bench}
+}
+```
+
+## License
+
+MIT - see `LICENSE`. Model weights and datasets keep their own licenses (Laya is
+Apache-2.0; public suites follow their upstream terms).

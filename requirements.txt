@@ -1,0 +1,3 @@
+laya
+requests
+python-dotenv
