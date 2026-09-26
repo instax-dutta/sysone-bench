@@ -20,7 +20,7 @@
 - Do not commit, push, or publish automatically. Leave changes in the worktree for review.
 - Never read, print, log, or commit `TYPESAFE_API_KEY`.
 - New durable boundaries require their own `AGENTS.md`.
-- Final runtime is Python 3.12 on pelican; CI covers Python 3.11 and 3.12.
+- Final runtime is Python 3.12 on the shared host; CI covers Python 3.11 and 3.12.
 
 ## File Map
 

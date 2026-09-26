@@ -65,7 +65,7 @@ jobs:
           run.py
           compare.py
           tests/test_run_compare_v2.py
-          ops/pelican/remote_jev_entrypoint.py
+          ops/remote/remote_jev_entrypoint.py
       - name: Run PCD mypy
         run: >-
           uv run --offline mypy

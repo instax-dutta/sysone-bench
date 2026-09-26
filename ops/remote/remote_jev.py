@@ -9,8 +9,19 @@ from typing import Any
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 DOTENV_PATH = REPOSITORY_ROOT / ".env"
-REMOTE_HOST = "tejes@pelican"
-REMOTE_ENTRYPOINT = "/home/tejes/sysone-bench-v2/ops/remote_jev_entrypoint.py"
+# Where the benchmark runs is deployment configuration, not a repository default, so nothing
+# personal is baked in. Set both variables to run the Jev leg:
+#   SYSONE_BENCH_SSH_HOST      for example "runner@benchmark-host"
+#   SYSONE_BENCH_REMOTE_ROOT   the checkout path on that host
+REMOTE_HOST = os.environ.get("SYSONE_BENCH_SSH_HOST", "")
+REMOTE_ROOT = os.environ.get("SYSONE_BENCH_REMOTE_ROOT", "")
+
+
+def remote_entrypoint() -> str:
+    """Absolute path of the entrypoint inside the remote checkout."""
+    if not REMOTE_ROOT:
+        raise RuntimeError("SYSONE_BENCH_REMOTE_ROOT is not set")
+    return f"{REMOTE_ROOT.rstrip('/')}/ops/remote/remote_jev_entrypoint.py"
 API_KEY_NAME = "TYPESAFE_API_KEY"
 SSH_TIMEOUT_SECONDS = 6 * 60 * 60
 
@@ -57,7 +68,9 @@ def read_api_key() -> str:
 
 def send_api_key(api_key: str, *, runner: Any = None) -> int:
     key = _validate_key(api_key)
-    command = ["ssh", REMOTE_HOST, REMOTE_ENTRYPOINT]
+    if not REMOTE_HOST:
+        raise RuntimeError("SYSONE_BENCH_SSH_HOST is not set")
+    command = ["ssh", REMOTE_HOST, remote_entrypoint()]
     command_runner = subprocess.run if runner is None else runner
     sanitized_environment = dict(os.environ)
     sanitized_environment.pop(API_KEY_NAME, None)

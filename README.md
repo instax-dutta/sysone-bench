@@ -61,19 +61,25 @@ consensus.
 ## Reproduce
 
 Model runs need the sealed manifest and its checksum, which are in this repo. Open models
-run CPU only in a container on the Pelican host, pinned to 4 CPUs and 12 GB:
+run CPU only in a container, pinned to 4 CPUs and 12 GB. The launcher derives its paths from
+the checkout, so it needs no configuration:
 
 ```bash
-ops/pelican/run_open_model.sh --run-id <run-id> --model laya   # or qwen
+ops/remote/run_open_model.sh --run-id <run-id> --model laya   # or qwen
 ```
 
-Jev needs a key, and the key never touches disk. It arrives on stdin and lives only in
-the child process environment:
+Jev needs a key, and the key never touches disk. It arrives on stdin and lives only in the
+child process environment. The destination is deployment configuration, so point the sender
+at your own host and checkout:
 
 ```bash
-printf '%s' "$TYPESAFE_API_KEY" | ssh tejes@pelican \
-  'cd /home/tejes/sysone-bench-v2 && .venv/bin/python ops/pelican/remote_jev_entrypoint.py'
+export SYSONE_BENCH_SSH_HOST="user@host"
+export SYSONE_BENCH_REMOTE_ROOT="/path/to/sysone-bench"
+printf '%s' "$TYPESAFE_API_KEY" | .venv/bin/python ops/remote/remote_jev.py
 ```
+
+Optional overrides for the open-model launcher: `SYSONE_BENCH_WORKSPACE_ROOT`,
+`SYSONE_BENCH_MODEL_CACHE` and `SYSONE_BENCH_IMAGE`.
 
 Comparisons and figures, from finished run directories:
 
@@ -106,7 +112,7 @@ byte-identical output, figures included.
   clustered bootstrap, permutation tests, Holm correction.
 - `benchmark/report.py`, `benchmark/figure_data.py`, `benchmark/graphics.py` - report
   assembly and figure rendering.
-- `ops/pelican/` - preflight, container image, launchers, Jev credential path.
+- `ops/remote/` - capacity preflight, container image, launchers, Jev credential path.
 - `results/` - append-only run outputs, comparisons and the published report.
 
 ## License

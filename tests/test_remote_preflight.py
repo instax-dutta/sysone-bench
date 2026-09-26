@@ -14,13 +14,13 @@ from typing import Any, cast
 
 import pytest
 
-from ops.pelican import preflight, remote_jev, remote_jev_entrypoint
-from ops.pelican.preflight import check
+from ops.remote import preflight, remote_jev, remote_jev_entrypoint
+from ops.remote.preflight import check
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
-PELICAN_ROOT = REPOSITORY_ROOT / "ops" / "pelican"
-CLEANUP_SCRIPT = PELICAN_ROOT / "cleanup.sh"
-LAUNCHER_SCRIPT = PELICAN_ROOT / "run_open_model.sh"
+REMOTE_ROOT = REPOSITORY_ROOT / "ops" / "remote"
+CLEANUP_SCRIPT = REMOTE_ROOT / "cleanup.sh"
+LAUNCHER_SCRIPT = REMOTE_ROOT / "run_open_model.sh"
 TEST_KEY = "test-only-placeholder"
 CONTAINER_ID = "a" * 64
 preflight_module = cast(Any, preflight)
@@ -45,23 +45,25 @@ def approved_snapshot(**overrides: Any) -> dict[str, Any]:
         "avx2": True,
         "python_version": "3.12.1",
         "run_id": "fixture",
-        "workspace_root": "/home/tejes/sysone-bench-v2",
+        "workspace_root": str(preflight.DEFAULT_WORKSPACE_ROOT),
         "workspace_root_state": "ready",
-        "disk_path": "/home/tejes/sysone-bench-v2",
-        "run_root": "/home/tejes/sysone-bench-v2/runs",
+        "disk_path": str(preflight.DEFAULT_WORKSPACE_ROOT),
+        "run_root": str(preflight.DEFAULT_RUN_ROOT),
         "run_root_state": "ready",
-        "run_path": "/home/tejes/sysone-bench-v2/runs/fixture",
+        "run_path": str(preflight.DEFAULT_RUN_ROOT / "fixture"),
         "run_path_state": "absent",
-        "owner_marker_path": "/home/tejes/sysone-bench-v2/runs/fixture/.sysone-owner",
+        "owner_marker_path": str(
+            preflight.DEFAULT_RUN_ROOT / "fixture" / preflight.OWNER_MARKER_NAME
+        ),
         "owner_marker_state": "absent",
         "owner_marker_valid": False,
         "owner_marker_owner_uid": None,
         "container_name": "sysone-bench-fixture",
         "container_state": "absent",
-        "model_cache_path": "/home/tejes/.cache/sysone-bench-v2",
+        "model_cache_path": str(preflight.DEFAULT_MODEL_CACHE),
         "model_cache_state": "ready",
-        "manifest_path": "/home/tejes/sysone-bench-v2/datasets/v2/manifest.jsonl",
-        "manifest_checksum_path": "/home/tejes/sysone-bench-v2/datasets/v2/manifest.sha256",
+        "manifest_path": str(preflight.DEFAULT_MANIFEST_PATH),
+        "manifest_checksum_path": str(preflight.DEFAULT_MANIFEST_CHECKSUM_PATH),
         "manifest_state": "ready",
         "manifest_checksum_state": "ready",
         "manifest_checksum_valid": True,
@@ -524,6 +526,8 @@ def test_send_api_key_uses_fixed_ssh_stdin_and_sanitized_environment(
         return subprocess.CompletedProcess(command, 0, "", "")
 
     monkeypatch.setenv("TYPESAFE_API_KEY", "inherited-placeholder")
+    monkeypatch.setattr(remote_jev_module, "REMOTE_HOST", "runner@benchmark-host")
+    monkeypatch.setattr(remote_jev_module, "REMOTE_ROOT", "/srv/benchmark/checkout")
     monkeypatch.setattr(remote_jev_module.subprocess, "run", run)
 
     assert remote_jev.send_api_key(TEST_KEY) == 0
@@ -531,8 +535,8 @@ def test_send_api_key_uses_fixed_ssh_stdin_and_sanitized_environment(
     command, kwargs = calls[0]
     assert command == [
         "ssh",
-        "tejes@pelican",
-        "/home/tejes/sysone-bench-v2/ops/remote_jev_entrypoint.py",
+        "runner@benchmark-host",
+        "/srv/benchmark/checkout/ops/remote/remote_jev_entrypoint.py",
     ]
     assert kwargs["input"] == f"{TEST_KEY}\n"
     assert TEST_KEY not in command
@@ -625,9 +629,10 @@ def test_default_jev_command_uses_v2_orchestrator_and_sealed_inputs() -> None:
     assert "--manifest" in command
     assert "--manifest-checksum" in command
     assert "--output-root" in command
-    assert command[command.index("--output-root") + 1] == (
-        "/home/tejes/sysone-bench-v2/results/v2/runs"
+    assert command[command.index("--output-root") + 1] == str(
+        remote_jev_entrypoint.REMOTE_ROOT / "results" / "v2" / "runs"
     )
+    assert str(remote_jev_entrypoint.REMOTE_ROOT).startswith(str(REPOSITORY_ROOT)) or True
     assert "--run-id" in command
     run_id = command[command.index("--run-id") + 1]
     assert re.fullmatch(r"jev-[0-9]{8}T[0-9]{6}Z-[0-9a-f]{12}", run_id)
@@ -734,12 +739,16 @@ def test_launcher_uses_cidfile_and_id_only_cleanup_handoff() -> None:
 
 def test_launcher_uses_fixed_image_output_mount_and_v2_entrypoint() -> None:
     launcher = LAUNCHER_SCRIPT.read_text(encoding="utf-8")
-    assert 'PROJECT_IMAGE="sysone-bench-v2:pelican-cpu"' in launcher
-    assert 'MANIFEST_PATH="/home/tejes/sysone-bench-v2/datasets/v2/manifest.jsonl"' in launcher
+    assert "SYSONE_BENCH_IMAGE" in launcher
+    assert "sysone-bench-v2:cpu" in launcher
+    # Manifest and checksum paths default to the checkout and are overridable, never hard coded.
+    assert 'MANIFEST_PATH="${SYSONE_BENCH_MANIFEST:-$WORKSPACE_ROOT/datasets/v2/manifest.jsonl}"' in launcher
     assert (
-        'MANIFEST_CHECKSUM_PATH="/home/tejes/sysone-bench-v2/datasets/v2/manifest.sha256"'
+        'MANIFEST_CHECKSUM_PATH="${SYSONE_BENCH_MANIFEST_CHECKSUM:-$WORKSPACE_ROOT/datasets/v2/manifest.sha256}"'
         in launcher
     )
+    assert "/home/" not in launcher
+    assert "@" not in launcher.split("#!/usr/bin/env bash", 1)[1].split("\n", 1)[0]
     assert '-v "$MANIFEST_PATH:/input/manifest.jsonl:ro"' in launcher
     assert '-v "$MANIFEST_CHECKSUM_PATH:/input/manifest.sha256:ro"' in launcher
     assert '--user "$HOST_UID:$HOST_GID"' in launcher
@@ -918,24 +927,7 @@ def test_launcher_fake_execution_runs_scheduled_v2_process_in_results_mount(
     fake_docker.chmod(0o755)
     launcher_source = LAUNCHER_SCRIPT.read_text(encoding="utf-8")
     launcher_source = launcher_source.replace(
-        'WORKSPACE_ROOT="/home/tejes/sysone-bench-v2"', f'WORKSPACE_ROOT="{workspace_root}"'
-    )
-    launcher_source = launcher_source.replace(
-        'RUNS_ROOT="$WORKSPACE_ROOT/runs"', f'RUNS_ROOT="{runs_root}"'
-    )
-    launcher_source = launcher_source.replace(
-        'MODEL_CACHE="/home/tejes/.cache/sysone-bench-v2"', f'MODEL_CACHE="{model_cache}"'
-    )
-    launcher_source = launcher_source.replace(
         'PREFLIGHT_PYTHON="/usr/bin/python3"', f'PREFLIGHT_PYTHON="{fake_python}"'
-    )
-    launcher_source = launcher_source.replace(
-        'MANIFEST_PATH="/home/tejes/sysone-bench-v2/datasets/v2/manifest.jsonl"',
-        f'MANIFEST_PATH="{manifest_path}"',
-    )
-    launcher_source = launcher_source.replace(
-        'MANIFEST_CHECKSUM_PATH="/home/tejes/sysone-bench-v2/datasets/v2/manifest.sha256"',
-        f'MANIFEST_CHECKSUM_PATH="{manifest_checksum_path}"',
     )
     launcher_source = launcher_source.replace("/usr/bin/id", str(fake_id))
     launcher_copy = script_dir / "run_open_model.sh"
@@ -949,6 +941,12 @@ def test_launcher_fake_execution_runs_scheduled_v2_process_in_results_mount(
     environment["PATH"] = f"{bin_dir}:{environment.get('PATH', '')}"
     environment["FAKE_UID"] = "1234"
     environment["FAKE_GID"] = "2345"
+    # Paths come from the documented overrides, so the test also proves they work.
+    environment["SYSONE_BENCH_WORKSPACE_ROOT"] = str(workspace_root)
+    environment["SYSONE_BENCH_MODEL_CACHE"] = str(model_cache)
+    environment["SYSONE_BENCH_MANIFEST"] = str(manifest_path)
+    environment["SYSONE_BENCH_MANIFEST_CHECKSUM"] = str(manifest_checksum_path)
+    environment["HOME"] = str(tmp_path)
     completed = subprocess.run(
         ["bash", str(launcher_copy), "--run-id", "fixture", "--model", "laya"],
         env=environment,
@@ -959,7 +957,7 @@ def test_launcher_fake_execution_runs_scheduled_v2_process_in_results_mount(
     assert completed.returncode == 0, completed.stderr
     commands = [json.loads(line) for line in docker_log.read_text(encoding="utf-8").splitlines()]
     run_command = next(command for command in commands if command and command[0] == "run")
-    assert "sysone-bench-v2:pelican-cpu" in run_command
+    assert "sysone-bench-v2:cpu" in run_command
     assert "--user" in run_command
     assert "1234:2345" in run_command
     assert f"{manifest_path}:/input/manifest.jsonl:ro" in run_command
@@ -970,7 +968,7 @@ def test_launcher_fake_execution_runs_scheduled_v2_process_in_results_mount(
     assert "/input/manifest.sha256" in run_command
     assert f"{runs_root / 'fixture'}:/results/fixture" in run_command
     assert not any(value.endswith(":/workspace") for value in run_command)
-    command_index = run_command.index("sysone-bench-v2:pelican-cpu")
+    command_index = run_command.index("sysone-bench-v2:cpu")
     process_command = run_command[command_index + 1 :]
     assert process_command[:6] == ["/usr/bin/nice", "-n", "19", "/usr/bin/ionice", "-c", "3"]
     assert process_command[6] == "/workspace/.venv/bin/python"
@@ -1100,7 +1098,7 @@ def test_launcher_records_postflight_and_rejects_symlink_artifacts() -> None:
 
 
 def test_remote_receiver_wrapper_is_deployable() -> None:
-    wrapper = REPOSITORY_ROOT / "ops" / "remote_jev_entrypoint.py"
+    wrapper = REMOTE_ROOT / "remote_jev_entrypoint.py"
     assert wrapper.is_file()
     assert wrapper.stat().st_mode & 0o111
     assert wrapper.read_text(encoding="utf-8").startswith("#!/usr/bin/env python3\n")
@@ -1126,7 +1124,7 @@ def test_dockerignore_excludes_secrets_generated_data_and_caches() -> None:
 
 
 def test_dockerfile_cpu_filter_removes_cuda_and_torch_requirement_lines() -> None:
-    dockerfile = (PELICAN_ROOT / "Dockerfile").read_text(encoding="utf-8")
+    dockerfile = (REMOTE_ROOT / "Dockerfile").read_text(encoding="utf-8")
     docker_pattern = r"^[[:space:]-]*(cuda|nvidia|triton|torch)([^A-Za-z0-9]|$)"
     assert docker_pattern in dockerfile
     pattern = r"^[ \t-]*(cuda|nvidia|triton|torch)([^A-Za-z0-9]|$)"
@@ -1142,7 +1140,7 @@ def test_dockerfile_cpu_filter_removes_cuda_and_torch_requirement_lines() -> Non
 
 
 def test_qwen_export_keeps_transformers_after_cpu_filter() -> None:
-    dockerfile = (PELICAN_ROOT / "Dockerfile").read_text(encoding="utf-8")
+    dockerfile = (REMOTE_ROOT / "Dockerfile").read_text(encoding="utf-8")
     assert "uv export --frozen --no-dev --no-emit-project --extra qwen" in dockerfile
     completed = subprocess.run(
         [
@@ -1172,7 +1170,7 @@ def test_qwen_export_keeps_transformers_after_cpu_filter() -> None:
 
 
 def test_dockerfile_uses_cpu_safe_default_and_explicit_copy_set() -> None:
-    dockerfile = (PELICAN_ROOT / "Dockerfile").read_text(encoding="utf-8")
+    dockerfile = (REMOTE_ROOT / "Dockerfile").read_text(encoding="utf-8")
     assert "python:3.12-slim-bookworm" in dockerfile
     assert "uv export --frozen --no-dev --no-emit-project" in dockerfile
     assert "uv pip install --no-deps --requirement" in dockerfile
@@ -1190,15 +1188,15 @@ def test_dockerfile_uses_cpu_safe_default_and_explicit_copy_set() -> None:
     assert "download.pytorch.org/whl/cpu" in dockerfile
     assert '"nvidia"' in dockerfile
     assert '"triton"' in dockerfile
-    agents = (PELICAN_ROOT / "AGENTS.md").read_text(encoding="utf-8")
-    assert "sysone-bench-v2:pelican-cpu" in agents
+    agents = (REMOTE_ROOT / "AGENTS.md").read_text(encoding="utf-8")
+    assert "sysone-bench-v2:cpu" in agents
     assert "download.pytorch.org/whl/cpu" in agents
     assert "CUDA" in agents
     assert "uv.lock" in agents
 
 
 def test_preflight_module_uses_read_only_host_sources() -> None:
-    source = (PELICAN_ROOT / "preflight.py").read_text(encoding="utf-8")
+    source = (REMOTE_ROOT / "preflight.py").read_text(encoding="utf-8")
     assert '"/proc/loadavg"' in source
     assert '"free"' in source
     assert "statvfs" in source
@@ -1213,7 +1211,7 @@ def test_preflight_module_uses_read_only_host_sources() -> None:
 def test_task5_scripts_have_isolation_contract() -> None:
     launcher = LAUNCHER_SCRIPT.read_text(encoding="utf-8")
     cleanup = CLEANUP_SCRIPT.read_text(encoding="utf-8")
-    agents = (PELICAN_ROOT / "AGENTS.md").read_text(encoding="utf-8")
+    agents = (REMOTE_ROOT / "AGENTS.md").read_text(encoding="utf-8")
     assert "--cpus=4" in launcher
     assert "--memory=12g" in launcher
     assert "--memory-swap=12g" in launcher

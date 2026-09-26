@@ -458,7 +458,7 @@ Copy current `REPORT.md`, `FEEDBACK_REPORT.md`, and `MACHINES.md` into dated fil
 
 - [ ] **Step 5: Update the README and plan**
 
-Embed the seven current images, link source CSVs and figure manifests, document local and pelican commands, state the narrowed manifest-identity claim, and mark the approved plan phases.
+Embed the seven current images, link source CSVs and figure manifests, document local and the shared host commands, state the narrowed manifest-identity claim, and mark the approved plan phases.
 
 - [ ] **Step 6: Add third-party notices**
 

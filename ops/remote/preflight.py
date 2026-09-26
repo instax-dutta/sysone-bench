@@ -20,12 +20,26 @@ MIN_DISK_GIB = 100.0
 MAX_LOAD1_PER_CPU = 0.50
 MAX_LOAD5_PER_CPU = 0.75
 REQUIRED_CPU_IDS = (0, 1, 2, 3)
-DEFAULT_RUNS_ROOT = Path("/home/tejes/sysone-bench-v2/runs")
-DEFAULT_WORKSPACE_ROOT = Path("/home/tejes/sysone-bench-v2")
+# Every default is derived from this file's own location or from the environment, so the
+# same checkout works for any user on any host and no personal path is baked into the code.
+# SYSONE_BENCH_WORKSPACE_ROOT, SYSONE_BENCH_MODEL_CACHE, SYSONE_BENCH_MANIFEST and
+# SYSONE_BENCH_MANIFEST_CHECKSUM override the derived values.
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_WORKSPACE_ROOT = Path(os.environ.get("SYSONE_BENCH_WORKSPACE_ROOT", REPOSITORY_ROOT))
+DEFAULT_RUNS_ROOT = DEFAULT_WORKSPACE_ROOT / "runs"
 DEFAULT_RUN_ROOT = DEFAULT_RUNS_ROOT
-DEFAULT_MODEL_CACHE = Path("/home/tejes/.cache/sysone-bench-v2")
-DEFAULT_MANIFEST_PATH = Path("/home/tejes/sysone-bench-v2/datasets/v2/manifest.jsonl")
-DEFAULT_MANIFEST_CHECKSUM_PATH = Path("/home/tejes/sysone-bench-v2/datasets/v2/manifest.sha256")
+DEFAULT_MODEL_CACHE = Path(
+    os.environ.get("SYSONE_BENCH_MODEL_CACHE", Path.home() / ".cache" / "sysone-bench-v2")
+)
+DEFAULT_MANIFEST_PATH = Path(
+    os.environ.get("SYSONE_BENCH_MANIFEST", DEFAULT_WORKSPACE_ROOT / "datasets" / "v2" / "manifest.jsonl")
+)
+DEFAULT_MANIFEST_CHECKSUM_PATH = Path(
+    os.environ.get(
+        "SYSONE_BENCH_MANIFEST_CHECKSUM",
+        DEFAULT_WORKSPACE_ROOT / "datasets" / "v2" / "manifest.sha256",
+    )
+)
 OWNER_MARKER_NAME = ".sysone-owner"
 LOADAVG_PATH = Path("/proc/loadavg")
 CPUINFO_PATH = Path("/proc/cpuinfo")
@@ -558,7 +572,7 @@ def check(snapshot: Mapping[str, Any], *, allow_owned: bool = False) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Read-only pelican capacity gate")
+    parser = argparse.ArgumentParser(description="Read-only remote capacity gate")
     parser.add_argument("--run-id")
     parser.add_argument("--workspace-root", type=Path, default=DEFAULT_WORKSPACE_ROOT)
     parser.add_argument("--run-root", type=Path, default=DEFAULT_RUN_ROOT)

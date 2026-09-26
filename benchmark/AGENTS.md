@@ -65,7 +65,7 @@
 - `uv run --offline pytest tests/test_report.py -q`
 - `uv run --offline pytest tests/test_graphics.py -q`
 - `uv run --offline pytest tests/test_runner_contracts.py tests/test_timing.py -q`
-- Scoped mypy command: `uv run --offline mypy --python-version 3.12 --allow-subclassing-any --follow-imports=skip --ignore-missing-imports benchmark/orchestrator.py benchmark/manifest.py benchmark/storage.py run.py compare.py tests/test_run_compare_v2.py ops/pelican/remote_jev_entrypoint.py`.
+- Scoped mypy command: `uv run --offline mypy --python-version 3.12 --allow-subclassing-any --follow-imports=skip --ignore-missing-imports benchmark/orchestrator.py benchmark/manifest.py benchmark/storage.py run.py compare.py tests/test_run_compare_v2.py ops/remote/remote_jev_entrypoint.py`.
 - `uv run pytest`
 - Whole-tree Ruff remains outside this task because unrelated legacy runner modules retain separate scoped contracts.
 

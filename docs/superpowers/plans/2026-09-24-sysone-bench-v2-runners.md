@@ -1,12 +1,12 @@
-# Sysone-bench v2 Runners and Pelican Execution Implementation Plan
+# Sysone-bench v2 Runners and Remote Execution Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Make all four model adapters strict and reproducible, add a tested Torch PCD backend, and execute open-model and Jev runs inside an isolated, resource-capped pelican workflow.
+**Goal:** Make all four model adapters strict and reproducible, add a tested Torch PCD backend, and execute open-model and Jev runs inside an isolated, resource-capped the shared host workflow.
 
 **Architecture:** Adapters normalize vendor responses into the core answer contract and return raw/usage metadata without mutating inputs. The orchestration layer records every phase and writes v2 artifacts through exclusive storage. Open models run sequentially in a dedicated Docker container; Jev receives a transient key through SSH stdin and never writes it to disk.
 
-**Tech Stack:** Python 3.12, requests, python-dotenv, PyTorch CPU, Transformers, pytest, unittest.mock, Docker on `tejes@pelican`.
+**Tech Stack:** Python 3.12, requests, python-dotenv, PyTorch CPU, Transformers, pytest, unittest.mock, Docker on a shared CPU-only benchmark host reached over ssh.
 
 **Spec:** `docs/superpowers/specs/2026-09-24-sysone-bench-v2-design.md`
 
@@ -18,8 +18,8 @@
 - Qwen-PCD is a secondary transformed-schema baseline; Router is a deployment variant.
 - Seed `42` is passed only where the adapter supports it and is recorded as unsupported otherwise.
 - Jev model ID is the bare pinned `jev-1.13.0`; the returned model ID must match.
-- Open-model jobs on pelican use 4 CPUs, 12 GiB RAM, no ports, `nice 19`, and idle I/O.
-- Do not install packages globally on pelican or alter existing containers.
+- Open-model jobs on the shared host use 4 CPUs, 12 GiB RAM, no ports, `nice 19`, and idle I/O.
+- Do not install packages globally on the shared host or alter existing containers.
 - Never place `TYPESAFE_API_KEY` in a command line, log, result, remote file, or graph.
 - Count warmup, benchmark, and speed-scaling calls separately.
 - Do not run model inference on the local development machine.
@@ -40,17 +40,17 @@
 - Create `benchmark/timing.py` - warmup, repetitions, p50, p95, and host context.
 - Modify `run.py` - dotenv loading, phase tracking, v2 storage, and model selection.
 - Modify `compare.py` - fail-closed manifest comparison and v2 output.
-- Create `ops/pelican/Dockerfile` - pinned Python 3.12 CPU image.
-- Create `ops/pelican/preflight.py` - read-only capacity checks.
-- Create `ops/pelican/run_open_model.sh` - isolated container launcher.
-- Create `ops/pelican/remote_jev.py` - local key reader and SSH stdin sender.
-- Create `ops/pelican/remote_jev_entrypoint.py` - remote one-shot Jev receiver.
-- Create `ops/pelican/cleanup.sh` - removes only the job's container and temporary files.
-- Create `ops/pelican/AGENTS.md` - remote safety and secret-handling contract.
+- Create `ops/remote/Dockerfile` - pinned Python 3.12 CPU image.
+- Create `ops/remote/preflight.py` - read-only capacity checks.
+- Create `ops/remote/run_open_model.sh` - isolated container launcher.
+- Create `ops/remote/remote_jev.py` - local key reader and SSH stdin sender.
+- Create `ops/remote/remote_jev_entrypoint.py` - remote one-shot Jev receiver.
+- Create `ops/remote/cleanup.sh` - removes only the job's container and temporary files.
+- Create `ops/remote/AGENTS.md` - remote safety and secret-handling contract.
 - Create `tests/test_runner_contracts.py` - fake adapter and malformed-output tests.
 - Create `tests/test_jev_runner.py` - mocked HTTP and configuration tests.
 - Create `tests/test_timing.py` - deterministic clock tests.
-- Create `tests/test_pelican_preflight.py` - capacity threshold tests.
+- Create `tests/test_remote_preflight.py` - capacity threshold tests.
 
 - Create `tests/fakes.py` - deterministic fake runners, mocked Jev setup, and v2 manifest fixtures.
 
@@ -414,17 +414,17 @@ Expected: PASS.
 
 ---
 
-### Task 5: Add isolated pelican execution
+### Task 5: Add isolated remote execution
 
 **Files:**
-- Create: `ops/pelican/Dockerfile`
-- Create: `ops/pelican/preflight.py`
-- Create: `ops/pelican/run_open_model.sh`
-- Create: `ops/pelican/cleanup.sh`
-- Create: `ops/pelican/remote_jev.py`
-- Create: `ops/pelican/remote_jev_entrypoint.py`
-- Create: `ops/pelican/AGENTS.md`
-- Test: `tests/test_pelican_preflight.py`
+- Create: `ops/remote/Dockerfile`
+- Create: `ops/remote/preflight.py`
+- Create: `ops/remote/run_open_model.sh`
+- Create: `ops/remote/cleanup.sh`
+- Create: `ops/remote/remote_jev.py`
+- Create: `ops/remote/remote_jev_entrypoint.py`
+- Create: `ops/remote/AGENTS.md`
+- Test: `tests/test_remote_preflight.py`
 
 **Interfaces:**
 - `preflight.check(snapshot: Mapping[str, Any]) -> None`.
@@ -436,7 +436,7 @@ Expected: PASS.
 ```python
 import pytest
 
-from ops.pelican.preflight import check
+from ops.remote.preflight import check
 
 
 def test_preflight_rejects_high_load():
@@ -450,7 +450,7 @@ def test_preflight_accepts_approved_capacity():
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `uv run pytest tests/test_pelican_preflight.py -q`
+Run: `uv run pytest tests/test_remote_preflight.py -q`
 
 Expected: FAIL because the preflight module does not exist.
 
@@ -466,7 +466,7 @@ Use `python:3.12-slim-bookworm`, install only locked runtime dependencies, set `
 
 `run_open_model.sh` must:
 
-1. Create a unique run directory under `/home/tejes/sysone-bench-v2/runs/<run_id>`.
+1. Create a unique run directory under the checkout's `runs/<run_id>`.
 2. Run the read-only preflight.
 3. Start `docker run --rm --name sysone-bench-<run_id> --cpus=4 --memory=12g --memory-swap=12g --cpuset-cpus=0-3 -v <run_dir>:/workspace -w /workspace`.
 4. Execute the requested model sequentially.
@@ -476,7 +476,7 @@ Use `python:3.12-slim-bookworm`, install only locked runtime dependencies, set `
 
 - [ ] **Step 6: Implement Jev key streaming**
 
-`remote_jev.py` reads the local gitignored `.env`, extracts only `TYPESAFE_API_KEY` in memory, and invokes `ssh tejes@pelican /home/tejes/sysone-bench-v2/ops/remote_jev_entrypoint.py` with the key on stdin. The remote entrypoint reads one line, sets it in the child process environment, runs the Jev command, clears the variable, and exits. Neither script prints the key or writes it to disk.
+`remote_jev.py` reads the local gitignored `.env`, extracts only `TYPESAFE_API_KEY` in memory, and invokes `ssh "$SYSONE_BENCH_SSH_HOST" "$SYSONE_BENCH_REMOTE_ROOT/ops/remote/remote_jev_entrypoint.py"` with the key on stdin. It refuses to run when either variable is unset, so no destination is baked into the repository. The remote entrypoint reads one line, sets it in the child process environment, runs the Jev command, clears the variable, and exits. Neither script prints the key or writes it to disk.
 
 - [ ] **Step 7: Add remote safety AGENTS**
 
@@ -487,8 +487,8 @@ Document the shared-mainframe boundary, no-global-install rule, CPU and memory c
 Run:
 
 ```bash
-uv run pytest tests/test_pelican_preflight.py -q
-bash -n ops/pelican/run_open_model.sh ops/pelican/cleanup.sh
+uv run pytest tests/test_remote_preflight.py -q
+bash -n ops/remote/run_open_model.sh ops/remote/cleanup.sh
 ```
 
 Expected: PASS.
@@ -549,4 +549,4 @@ Expected: PASS.
 
 ## Completion Gate
 
-The runner track is complete when Laya, Jev, Qwen-PCD, and Router pass strict fake-adapter tests, Jev configuration and retries are safe, Torch PCD works without MLX, every phase is accounted for, and pelican preflight/launcher tests prove the job cannot alter existing workloads.
+The runner track is complete when Laya, Jev, Qwen-PCD, and Router pass strict fake-adapter tests, Jev configuration and retries are safe, Torch PCD works without MLX, every phase is accounted for, and the shared host preflight/launcher tests prove the job cannot alter existing workloads.

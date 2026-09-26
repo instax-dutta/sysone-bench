@@ -69,8 +69,8 @@ Default section order:
 - Use dashes, not em dashes
 - No preamble, no recap, no closing pleasantries in responses
 - Lead with the next action; number multi-step tasks; one concrete next action at the end
-- Never run tests, builds, dataset generation, model jobs, or other batch commands on the local Mac; use `ssh tejes@pelican` for all execution
-- On Pelican, never modify unrelated processes, containers, files, or workloads; restrict work to the sysone-bench workspace and dedicated run/cache roots unless the user explicitly requests otherwise
+- Never run tests, builds, dataset generation, model jobs, or other batch commands on the local machine; run all execution on the remote benchmark host over ssh
+- On the remote host, never modify unrelated processes, containers, files, or workloads; restrict work to the sysone-bench checkout and dedicated run/cache roots unless the user explicitly requests otherwise
 
 ## Project: sysone-bench
 - First independent head-to-head benchmark of System One decision models: Laya (open weights) vs Jev (closed API), with Qwen PCD as a third open series
@@ -86,7 +86,7 @@ Default section order:
 - `results/` - run outputs, comparisons, and published reports. Owns result schema, append-only rule, and the report directory contract.
 - `docs/` - design specifications and implementation plans. Owns durable documentation boundaries.
 - `benchmark/` - v2 core contracts, canonical identity, and append-only storage. Owns the core package contract.
-- `ops/` - isolated remote execution, worker safety, and transient secret transport. Owns the Pelican boundary.
+- `ops/` - isolated remote execution, worker safety, and transient secret transport. Owns the remote execution boundary and its configuration contract.
 - `tests/` - deterministic fake-only regression tests and fixtures. Owns test isolation and evidence.
 - `tools/` - clean-environment command-line entry points. Owns external-package import protection.
 - Root owns: `run.py`, `compare.py`, `PLAN.md`, `README.md`, env setup.

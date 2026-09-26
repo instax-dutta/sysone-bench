@@ -9,9 +9,9 @@
 - Laya serving: local, `convaiinnovations/laya` English checkpoint, CPU, defaults
 - Jev serving: TypeSafe API, pinned `jev-1.13.0`, network path US/gcc to `api.typesafe.ai`
 
-## machine-b (prior Laya validation run)
-- Role: earlier full Laya-only run that motivated this repo (`bench_full.py` era)
-- Hostname: pelican
+## machine-b (shared Linux CPU host)
+- Role: earlier full Laya-only run that motivated this repo (`bench_full.py` era), and the
+  host the current v2 runs and the report were produced on
 - CPU: Intel Xeon E5-2620 v3 @ 2.40GHz, 12 cores
 - RAM: 47 GB
 - OS: Ubuntu 24.04.4 LTS
@@ -23,4 +23,8 @@
 
 ## Reproducing on your hardware
 - Latency numbers are hardware-specific; accuracy/ECE should reproduce within noise.
-- GPU serving changes latency by an order of magnitude; see `REPORT.md`.
+- GPU serving changes latency by an order of magnitude; see the v2 report under
+  `results/v2/report-20260926/`.
+- The v2.0.0 result was produced on a CPU-only host with each run container limited to
+  4 CPUs and 12 GB. No hostname or account is recorded here, and none is needed to reproduce
+  the accuracy numbers.

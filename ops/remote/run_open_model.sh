@@ -2,13 +2,20 @@
 set -Eeuo pipefail
 IFS=$'\n\t'
 
+# Every path is derived from this script's own location or from the environment, so one
+# checkout runs for any user on any host with no personal path baked in.
+#   SYSONE_BENCH_WORKSPACE_ROOT        override the detected checkout
+#   SYSONE_BENCH_MODEL_CACHE           override the model cache (default: $XDG_CACHE_HOME or ~/.cache)
+#   SYSONE_BENCH_IMAGE                 override the container image tag
+#   SYSONE_BENCH_MANIFEST              override the sealed manifest path
+#   SYSONE_BENCH_MANIFEST_CHECKSUM     override the sealed manifest checksum path
 SCRIPT_DIR="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-WORKSPACE_ROOT="/home/tejes/sysone-bench-v2"
+WORKSPACE_ROOT="${SYSONE_BENCH_WORKSPACE_ROOT:-$(CDPATH='' cd -- "$SCRIPT_DIR/../.." && pwd)}"
 RUNS_ROOT="$WORKSPACE_ROOT/runs"
-MODEL_CACHE="/home/tejes/.cache/sysone-bench-v2"
-MANIFEST_PATH="/home/tejes/sysone-bench-v2/datasets/v2/manifest.jsonl"
-MANIFEST_CHECKSUM_PATH="/home/tejes/sysone-bench-v2/datasets/v2/manifest.sha256"
-PROJECT_IMAGE="sysone-bench-v2:pelican-cpu"
+MODEL_CACHE="${SYSONE_BENCH_MODEL_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/sysone-bench-v2}"
+MANIFEST_PATH="${SYSONE_BENCH_MANIFEST:-$WORKSPACE_ROOT/datasets/v2/manifest.jsonl}"
+MANIFEST_CHECKSUM_PATH="${SYSONE_BENCH_MANIFEST_CHECKSUM:-$WORKSPACE_ROOT/datasets/v2/manifest.sha256}"
+PROJECT_IMAGE="${SYSONE_BENCH_IMAGE:-sysone-bench-v2:cpu}"
 PREFLIGHT_PYTHON="/usr/bin/python3"
 VENV_PYTHON="/workspace/.venv/bin/python"
 V2_MODULE="benchmark.orchestrator"

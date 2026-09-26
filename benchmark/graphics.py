@@ -22,8 +22,8 @@ import matplotlib
 
 matplotlib.use("Agg")
 
-import matplotlib.pyplot as plt  # noqa: E402
-from matplotlib.figure import Figure  # noqa: E402
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 
 MODEL_ORDER = ("jev", "laya", "qwen-pcd")
 MODEL_LABELS = {
@@ -86,7 +86,7 @@ def _family(
     rows = data.get(family)
     if rows is None:
         raise ValueError(f"figure source is missing the {family} family")
-    return [cast(Mapping[str, Any], row) for row in rows]
+    return list(rows)
 
 
 def _axes_list(axes: Any) -> list[Any]:
@@ -180,7 +180,7 @@ def suite_accuracy_figure(
         y=0.995,
     )
     figure.tight_layout(rect=(0, 0, 1, 0.97))
-    return figure
+    return cast(Figure, figure)
 
 
 def paired_effects_figure(
@@ -244,7 +244,7 @@ def paired_effects_figure(
         color=INK,
     )
     figure.tight_layout(rect=(0, 0, 0.82, 0.96))
-    return figure
+    return cast(Figure, figure)
 
 
 def calibration_figure(data: Mapping[str, Sequence[Mapping[str, Any]]]) -> Figure:
@@ -293,7 +293,7 @@ def calibration_figure(data: Mapping[str, Sequence[Mapping[str, Any]]]) -> Figur
         figure.legend(handles, labels, loc="lower center", ncol=3, frameon=False)
     figure.suptitle("Calibration on the evaluation split, lower is better", fontsize=12, color=INK)
     figure.tight_layout(rect=(0, 0.06, 1, 0.95))
-    return figure
+    return cast(Figure, figure)
 
 
 def efficiency_figure(data: Mapping[str, Sequence[Mapping[str, Any]]]) -> Figure:
@@ -337,7 +337,7 @@ def efficiency_figure(data: Mapping[str, Sequence[Mapping[str, Any]]]) -> Figure
         axis.spines[spine].set_visible(False)
     axis.legend(frameon=False, loc="upper left")
     figure.tight_layout()
-    return figure
+    return cast(Figure, figure)
 
 
 def multilingual_figure(data: Mapping[str, Sequence[Mapping[str, Any]]]) -> Figure:
@@ -375,7 +375,7 @@ def multilingual_figure(data: Mapping[str, Sequence[Mapping[str, Any]]]) -> Figu
     handles, labels = axis.get_legend_handles_labels()
     figure.legend(handles, labels, loc="lower center", ncol=3, frameon=False)
     figure.tight_layout(rect=(0, 0.08, 1, 1))
-    return figure
+    return cast(Figure, figure)
 
 
 FIGURES = {

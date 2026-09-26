@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, cast
 
@@ -255,7 +255,7 @@ def test_suite_table_reproduces_the_sealed_summary(tmp_path: Path) -> None:
     manifest = _write_manifest(tmp_path / "manifest.jsonl")
     runs = _three_runs(tmp_path, manifest)
 
-    for label, run in runs.items():
+    for run in runs.values():
         correctness = report.decision_correctness(run, manifest)
         table = report.suite_table(run, correctness)
         report.verify_against_sealed_summary(run, table)
@@ -288,7 +288,7 @@ def test_paired_contrast_is_paired_and_adjusted(tmp_path: Path) -> None:
     )
 
     assert set(contrast) == {"guardrails", "sst5", "triage"}
-    for suite_id, entry in contrast.items():
+    for entry in contrast.values():
         assert entry["ci_low"] <= entry["delta"] <= entry["ci_high"]
         assert 0.0 <= entry["p_value"] <= 1.0
         assert entry["p_value_holm"] >= entry["p_value"]
@@ -318,7 +318,7 @@ def test_build_comparison_emits_the_three_model_document(tmp_path: Path) -> None
 
     assert set(comparison["runs"]) == {"laya", "jev", "qwen-pcd"}
     assert comparison["dataset"]["version"] == "2.0.0"
-    for suite_id, entry in comparison["suites"].items():
+    for entry in comparison["suites"].values():
         assert set(entry) >= {"laya", "jev", "qwen-pcd", "delta", "ci_low", "ci_high", "p_value"}
     data = figure_data.build_figure_data(comparison)
     assert {row["model"] for row in data["accuracy"]} == {"laya", "jev", "qwen-pcd"}

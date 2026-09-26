@@ -7,7 +7,7 @@ numbers collected on different prompts.
 
 ## Why it wins
 1. Genuinely unclaimed (Laya author never had Jev API access).
-2. Half built already (100 states, Laya data from pelican full run).
+2. Half built already (100 states, Laya data from a full run on the shared Linux host).
 3. Benchmark repos get cited by both camps.
 
 ## Steps

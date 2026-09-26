@@ -19,9 +19,9 @@ write a report if a single recomputed count or per-suite accuracy disagrees.
 | Laya | `convaiinnovations/laya`, package 0.3.11, commit `55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851`, root checkpoint | local, CPU |
 | Qwen PCD | `Qwen/Qwen2.5-1.5B-Instruct`, revision `989aa7980e4cf806f80c7fef2b1adb7bc71aa306` | local, CPU |
 
-Each container was limited to 4 CPUs and 12 GB on the Pelican host. Laya and Qwen ran
-against a dedicated model cache; Jev's latency is measured over the network from that same
-host, so treat it as a deployment observation rather than a lab number.
+Each container was limited to 4 CPUs and 12 GB on a CPU-only host with no GPU. Laya and
+Qwen ran against a dedicated model cache; Jev's latency is measured over the network from
+that same host, so treat it as a deployment observation rather than a lab number.
 
 ## Accuracy
 

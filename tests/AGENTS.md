@@ -18,10 +18,10 @@
 - Update the nearest owning contract when a test boundary gains a durable rule.
 
 # Verification
-- `uv run --offline pytest tests/test_pelican_preflight.py -q`
+- `uv run --offline pytest tests/test_remote_preflight.py -q`
 - `uv run --offline pytest tests/test_statistics.py -q`
 - `uv run --offline pytest tests/test_figure_data.py -q`
-- `bash -n ops/pelican/run_open_model.sh ops/pelican/cleanup.sh`
+- `bash -n ops/remote/run_open_model.sh ops/remote/cleanup.sh`
 - Scoped Ruff, Ruff format, and mypy checks cover new Python files.
 - `git diff --check` and result-artifact immutability checks run at closeout.
 

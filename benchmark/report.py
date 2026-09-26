@@ -208,8 +208,10 @@ def verify_against_sealed_summary(
 ) -> None:
     """Fail unless the recomputed numbers reproduce the run's own sealed summary exactly."""
     sealed = run.summary
-    if not isinstance(sealed.get("accuracy"), (int, float)):
+    if "accuracy" not in sealed:
         raise ValueError(f"run {run.run_id} summary has no evaluation accuracy")
+    if not isinstance(sealed["accuracy"], (int, float)) or isinstance(sealed["accuracy"], bool):
+        raise TypeError(f"run {run.run_id} summary accuracy must be a number")
     recomputed_cases = sum(int(entry["cases"]) for entry in table.values())
     recomputed_decisions = sum(int(entry["decisions"]) for entry in table.values())
     if recomputed_cases != sealed.get("cases"):

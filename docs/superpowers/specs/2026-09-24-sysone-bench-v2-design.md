@@ -35,8 +35,8 @@ Produce a publication-grade sysone-bench release that:
 - Show Router in a dedicated deployment-variant figure rather than as a fourth base-model series.
 - Do not publish a single overall leaderboard score.
 - Publish assets in this GitHub repository and make them Hugging Face-ready.
-- Run open models on `tejes@pelican` without affecting existing workloads.
-- Stream `TYPESAFE_API_KEY` transiently and never store it in the repository or on pelican.
+- Run open models on a shared CPU-only benchmark host reached over ssh without affecting existing workloads.
+- Stream `TYPESAFE_API_KEY` transiently and never store it in the repository or on the shared host.
 - Use dark mode for future visual brainstorming pages.
 - Treat Laya and Jev as the primary manifest-identical comparison. Qwen-PCD is a secondary baseline with a documented schema transform, and Router is a deployment variant of Laya.
 
@@ -104,7 +104,7 @@ graphs/v2/
   figure-manifest.json
 
 reports/archive/
-ops/pelican/
+ops/remote/
 tests/
 .github/workflows/ci.yml
 pyproject.toml
@@ -332,11 +332,11 @@ Missing IDs, extra IDs, wrong types, invalid labels, non-finite values, malforme
 
 ### 9.4 Qwen-PCD portability
 
-The Torch backend is implemented and tested on Linux CPU. The Apple MLX backend remains available for local development but is not used for the final pelican run.
+The Torch backend is implemented and tested on Linux CPU. The Apple MLX backend remains available for local development but is not used for the final the shared host run.
 
 The Torch backend must not fabricate confidence on token-collision paths. Invalid constrained generations fail explicitly.
 
-## 10. Remote execution on pelican
+## 10. Remote execution on the shared host
 
 ### 10.1 Isolation
 
@@ -361,15 +361,15 @@ A run starts only when:
 - At least 16 GiB memory is available.
 - At least 100 GiB free disk is available.
 - The host exposes AVX2 and the dedicated container provides Python 3.12.
-- `/home/tejes/sysone-bench-v2/runs/<run_id>` and container name `sysone-bench-<run_id>` are unused.
-- The dedicated model cache is `/home/tejes/.cache/sysone-bench-v2`.
+- the checkout's `runs/<run_id>` and container name `sysone-bench-<run_id>` are unused.
+- The dedicated model cache is a dedicated model cache.
 
 The preflight snapshot and post-run snapshot are stored in run metadata.
 
 ### 10.3 Jev secret handling
 
 - The user places the key in the local gitignored `.env`.
-- A one-shot pelican process receives the key through protected SSH stdin.
+- A one-shot remote process receives the key through protected SSH stdin.
 - The key is never placed in a command line, log, result, remote file, or graph.
 - The process exits after the run.
 - Logs are scanned and redacted before publication.
@@ -377,8 +377,8 @@ The preflight snapshot and post-run snapshot are stored in run metadata.
 ### 10.4 Run protocol
 
 - Laya, Qwen-PCD, Router, and Jev run sequentially.
-- Open models run in the isolated pelican container.
-- Jev calls originate from pelican for consistent network context.
+- Open models run in the isolated the shared host container.
+- Jev calls originate from the shared host for consistent network context.
 - Warmups are separated from benchmark and speed-scaling calls.
 - Every call is counted by phase.
 - The first valid Jev run is the predeclared primary run.
@@ -519,7 +519,7 @@ No overall composite score is calculated.
 
 ### 13.8 Latency and resource use
 
-The shared pelican host makes timing a controlled diagnostic, not a production hardware claim.
+The shared shared host makes timing a controlled diagnostic, not a production hardware claim.
 
 Record:
 
@@ -699,7 +699,7 @@ The release is blocked unless:
 - No secret appears in tracked or generated files.
 - Graph source data exactly matches validated comparison data.
 - Report values exactly match generated summaries.
-- Pelican job cleanup leaves existing workloads unchanged.
+- The shared host job cleanup leaves existing workloads unchanged.
 
 ## 17. DOX updates
 
@@ -743,9 +743,9 @@ The work is complete when:
 10. README, REPORT, FEEDBACK_REPORT, MACHINES, and third-party notices reflect only v2 facts.
 11. All legacy results remain byte-for-byte unchanged.
 12. Ruff, mypy, pytest, CI, secret scan, and release audit pass.
-13. Pelican cleanup is verified without modifying existing containers or workloads.
+13. Remote cleanup is verified without modifying existing containers or workloads.
 14. No commit, push, or external publication occurs without explicit user instruction.
 
 ## 20. Approved design outcome
 
-Use versioned hardening in the existing repository. Preserve history, build a strict v2 data and result layer, run only isolated jobs on pelican, and publish a Qwen 3.5-style benchmark release grounded in paired statistics and complete provenance.
+Use versioned hardening in the existing repository. Preserve history, build a strict v2 data and result layer, run only isolated jobs on the shared host, and publish a Qwen 3.5-style benchmark release grounded in paired statistics and complete provenance.

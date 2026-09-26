@@ -11,10 +11,11 @@ from typing import Any
 from uuid import uuid4
 
 API_KEY_NAME = "TYPESAFE_API_KEY"
-REMOTE_ROOT = Path("/home/tejes/sysone-bench-v2")
-REMOTE_MANIFEST_PATH = "/home/tejes/sysone-bench-v2/datasets/v2/manifest.jsonl"
-REMOTE_MANIFEST_CHECKSUM_PATH = "/home/tejes/sysone-bench-v2/datasets/v2/manifest.sha256"
-REMOTE_OUTPUT_ROOT = "/home/tejes/sysone-bench-v2/results/v2/runs"
+# Derived from this file's location inside the remote checkout, so no host path is embedded.
+REMOTE_ROOT = Path(__file__).resolve().parents[2]
+REMOTE_MANIFEST_PATH = str(REMOTE_ROOT / "datasets" / "v2" / "manifest.jsonl")
+REMOTE_MANIFEST_CHECKSUM_PATH = str(REMOTE_ROOT / "datasets" / "v2" / "manifest.sha256")
+REMOTE_OUTPUT_ROOT = str(REMOTE_ROOT / "results" / "v2" / "runs")
 DEFAULT_JEV_COMMAND = (
     "/usr/bin/python3",
     "-m",
