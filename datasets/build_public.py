@@ -5,13 +5,15 @@ Run from OUTSIDE the repo dir (local datasets/ shadows the HF package):
 import json
 import random
 import sys
+from pathlib import Path
 
-sys.path.insert(0, "/Users/saiduttaabhishekdash/sysone-bench")
+REPOSITORY_ROOT = str(Path(__file__).resolve().parents[1])
+sys.path.insert(0, REPOSITORY_ROOT)
 from datasets import load_dataset
 
 SEED = 42
 rng = random.Random(SEED)
-OUT = "/Users/saiduttaabhishekdash/sysone-bench/datasets/public_cases.json"
+OUT = str(Path(REPOSITORY_ROOT) / "datasets" / "public_cases.json")
 
 AGNEWS_Q = {"topic": {"type": "choice",
     "instructions": "Which section does this news article belong to?",

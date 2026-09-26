@@ -1,43 +1,27 @@
-"""
-Unified Engine Router for Parallel Constrained Decoding.
-Automatically selects MLX backend on Apple Silicon macOS,
-or PyTorch / CUDA backend on Linux, Docker, and Hugging Face Spaces.
-"""
+from __future__ import annotations
 
-import os
-import platform
+from typing import Any
+
+from runners.pcd import engine_torch as _selected_torch
 
 USE_MLX = False
-if platform.system() == "Darwin" and os.environ.get("BACKEND", "").lower() != "torch":
-    try:
-        import mlx.core as mx
-        import mlx_lm
-        USE_MLX = True
-    except Exception:
-        USE_MLX = False
+_mlx_engine: Any = None
+_torch_engine: Any = None
 
-if USE_MLX:
-    from runners.pcd.engine_mlx import (
-        get_engine,
-        run_parallel_generation,
-        run_naive_generation,
-        stream_naive_generation,
-        run_rlcd_generation,
-    )
-else:
-    from runners.pcd.engine_torch import (
-        get_torch_engine as get_engine,
-        run_parallel_generation_torch as run_parallel_generation,
-        run_naive_generation_torch as run_naive_generation,
-        stream_naive_generation_torch as stream_naive_generation,
-    )
-    run_rlcd_generation = run_parallel_generation
+_torch_engine = _selected_torch
+get_engine = _torch_engine.get_engine
+run_parallel_generation = _torch_engine.run_parallel_generation
+run_naive_generation = _torch_engine.run_naive_generation
+stream_naive_generation = _torch_engine.stream_naive_generation
+run_rlcd_generation = _torch_engine.run_rlcd_generation
+
+BACKEND = "torch"
 
 __all__ = [
-    "get_engine",
-    "run_parallel_generation",
-    "run_naive_generation",
-    "stream_naive_generation",
-    "run_rlcd_generation",
     "USE_MLX",
+    "get_engine",
+    "run_naive_generation",
+    "run_parallel_generation",
+    "run_rlcd_generation",
+    "stream_naive_generation",
 ]

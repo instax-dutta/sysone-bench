@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4
+        with:
+          version: "0.11.3"
+          python-version: ${{ matrix.python-version }}
+      - name: Sync dependencies
+        run: uv sync --frozen --extra dev --extra qwen
+      - name: Run core Ruff
+        run: uv run --offline ruff check benchmark tests
+      - name: Run PCD Ruff
+        run: >-
+          uv run --offline ruff check
+          runners/pcd/engine_common.py
+          runners/pcd/engine_torch.py
+          runners/pcd/engine.py
+          runners/qwen_runner.py
+          tests/test_pcd_torch.py
+      - name: Check PCD formatting
+        run: >-
+          uv run --offline ruff format --check
+          runners/pcd/engine_common.py
+          runners/pcd/engine_torch.py
+          runners/pcd/engine.py
+          runners/qwen_runner.py
+          tests/test_pcd_torch.py
+      - name: Run core mypy
+        run: >-
+          uv run --offline mypy
+          --python-version 3.12
+          --allow-subclassing-any
+          --follow-imports=skip
+          --ignore-missing-imports
+          benchmark
+      - name: Run Task 6 mypy
+        run: >-
+          uv run --offline mypy
+          --python-version 3.12
+          --allow-subclassing-any
+          --follow-imports=skip
+          --ignore-missing-imports
+          benchmark/orchestrator.py
+          benchmark/manifest.py
+          benchmark/storage.py
+          run.py
+          compare.py
+          tests/test_run_compare_v2.py
+          ops/remote/remote_jev_entrypoint.py
+      - name: Run PCD mypy
+        run: >-
+          uv run --offline mypy
+          --allow-subclassing-any
+          --follow-imports=skip
+          --ignore-missing-imports
+          runners/pcd/engine_common.py
+          runners/pcd/engine_torch.py
+          runners/pcd/engine.py
+          runners/qwen_runner.py
+          tests/test_pcd_torch.py
+      - name: Run pytest
+        run: uv run pytest

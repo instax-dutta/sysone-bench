@@ -1,39 +1,103 @@
-"""Run suites against one or more models. Usage:
-  USE_TF=0 ./.venv/bin/python run.py --models laya
-  TYPESAFE_API_KEY=... ./.venv/bin/python run.py --models laya,jev
-Writes results/run_<name>_<ts>.json (append-only).
-"""
+"""Run sealed v2 manifests through the append-only orchestration boundary."""
+
 import argparse
 import copy
 import hashlib
+import inspect
 import json
 import statistics
+import sys
 import time
-from datetime import datetime
+from collections.abc import Callable, Mapping, Sequence
+from functools import partial
+from pathlib import Path
+from typing import Any
 
 import numpy as np
 
-import laya
-from datasets.cases import SUITES, SEED
+from benchmark.timing import measure_call
+from benchmark.usage import UsageCounter
+from runners.base import BaseRunner
 from runners.laya_runner import LayaRunner
 
+DEFAULT_MANIFEST = Path("datasets/v2/manifest.jsonl")
+DEFAULT_MANIFEST_CHECKSUM = Path("datasets/v2/manifest.sha256")
+DEFAULT_OUTPUT_ROOT = Path("results/v2/runs")
 
-def noul_prob(a):
+
+class _MissingLaya:
+    @staticmethod
+    def ece_score(confidences: Any, correctness: Any) -> float:
+        pairs = [
+            (float(confidence), float(correct))
+            for confidence, correct in zip(confidences, correctness, strict=True)
+        ]
+        if not pairs:
+            return 0.0
+        return sum(abs(confidence - correct) for confidence, correct in pairs) / len(pairs)
+
+    @staticmethod
+    def triage_questions() -> dict[str, Any]:
+        raise RuntimeError("laya package is required for legacy speed scaling")
+
+
+laya: Any
+try:
+    import laya as laya_module
+except ModuleNotFoundError as error:
+    if error.name != "laya":
+        raise
+    laya = _MissingLaya()
+else:
+    laya = laya_module
+
+
+def noul_prob(a: Mapping[str, Any]) -> float:
     return float(a.get("noul", a.get("probability", a.get("boolean", 0.0))))
 
 
-def question_hash(questions):
+def question_hash(questions: object) -> str:
     return hashlib.sha256(json.dumps(questions, sort_keys=True).encode()).hexdigest()[:12]
 
 
-def run_suite(runner, questions, cases):
-    lat, correct, confs, y_true, y_prob, per_q, rows = [], [], [], [], [], {}, []
-    score_err = []
+def _call_predict(
+    predict: Callable[..., dict[str, Any]],
+    state: Mapping[str, Any],
+    questions: Mapping[str, Any],
+    phase: str = "benchmark",
+) -> dict[str, Any]:
+    parameters = inspect.signature(predict).parameters.values()
+    accepts_phase = any(
+        parameter.name == "phase"
+        and parameter.kind
+        in (inspect.Parameter.POSITIONAL_OR_KEYWORD, inspect.Parameter.KEYWORD_ONLY)
+        for parameter in parameters
+    ) or any(parameter.kind is inspect.Parameter.VAR_KEYWORD for parameter in parameters)
+    if accepts_phase:
+        return predict(state, questions, phase=phase)
+    return predict(state, questions)
+
+
+def run_suite(
+    runner: Any,
+    questions: Mapping[str, Any],
+    cases: Sequence[tuple[Mapping[str, Any], Mapping[str, Any]]],
+    phase: str = "benchmark",
+) -> dict[str, Any]:
+    lat: list[float] = []
+    correct: list[int] = []
+    confs: list[float] = []
+    y_true: list[Any] = []
+    y_prob: list[float] = []
+    per_q: dict[str, list[int]] = {}
+    rows: list[dict[str, Any]] = []
+    score_err: list[float] = []
     for state, expected in cases:
-        t0 = time.perf_counter()
-        res = runner.predict(state, questions)
-        dt = (time.perf_counter() - t0) * 1000
-        lat.append(dt)
+        res, elapsed = measure_call(
+            time.perf_counter,
+            partial(_call_predict, runner.predict, state, questions, phase),
+        )
+        lat.append(elapsed * 1000)
         for qid, exp in expected.items():
             a = res["answers"][qid]
             if a["type"] == "choice":
@@ -58,113 +122,145 @@ def run_suite(runner, questions, cases):
     ece = float(laya.ece_score(np.array(confs), np.array(correct)))
     brier = float(np.mean([(p - t) ** 2 for p, t in zip(y_prob, y_true)])) if y_prob else None
     mae = round(float(np.mean(score_err)), 4) if score_err else None
-    return {"states": len(cases), "decisions": len(correct), "accuracy": round(acc, 4),
-            "ece": round(ece, 4), "brier_noul": round(brier, 4) if brier is not None else None,
-            "score_mae": mae,
-            "ms_per_call_mean": round(statistics.mean(lat), 1),
-            "ms_per_call_p50": round(statistics.median(lat), 1),
-            "ms_per_call_p95": round(float(np.percentile(lat, 95)), 1),
-            "per_question_acc": {k: round(float(np.mean(v)), 4) for k, v in per_q.items()},
-            "rows": rows}
+    return {
+        "states": len(cases),
+        "decisions": len(correct),
+        "accuracy": round(acc, 4),
+        "ece": round(ece, 4),
+        "brier_noul": round(brier, 4) if brier is not None else None,
+        "score_mae": mae,
+        "ms_per_call_mean": round(statistics.mean(lat), 1),
+        "ms_per_call_p50": round(statistics.median(lat), 1),
+        "ms_per_call_p95": round(float(np.percentile(lat, 95)), 1),
+        "per_question_acc": {k: round(float(np.mean(v)), 4) for k, v in per_q.items()},
+        "rows": rows,
+    }
 
 
-def speed_scaling(runner):
+def speed_scaling(runner: Any) -> dict[str, dict[str, float]]:
     base = {"message": "My payment failed twice, error 500, need help urgently."}
     tq = laya.triage_questions()
     keys = list(tq.keys())
-    out = {}
+    out: dict[str, dict[str, float]] = {}
     for nq in [1, 5, 10, 20]:
-        qs = {f"q{i}_{keys[i % len(keys)]}": copy.deepcopy(tq[keys[i % len(keys)]])
-              for i in range(nq)}
+        qs = {
+            f"q{i}_{keys[i % len(keys)]}": copy.deepcopy(tq[keys[i % len(keys)]]) for i in range(nq)
+        }
         for _ in range(2):
-            runner.predict(base, qs)
+            _call_predict(runner.predict, base, qs, "warmup")
         ts = []
         for _ in range(10):
-            t0 = time.perf_counter()
-            runner.predict(base, qs)
-            ts.append((time.perf_counter() - t0) * 1000)
-        out[str(nq)] = {"ms_per_call_p50": round(statistics.median(ts), 1),
-                        "ms_per_q": round(statistics.median(ts) / nq, 1)}
+            _, elapsed = measure_call(
+                time.perf_counter,
+                partial(_call_predict, runner.predict, base, qs, "speed"),
+            )
+            ts.append(elapsed * 1000)
+        out[str(nq)] = {
+            "ms_per_call_p50": round(statistics.median(ts), 1),
+            "ms_per_q": round(statistics.median(ts) / nq, 1),
+        }
     return out
 
 
 class TrackUsage:
     """Wraps a runner, accumulating per-call token usage into a shared counter."""
 
-    def __init__(self, runner, counter):
+    def __init__(self, runner: Any, counter: UsageCounter | dict[str, int]) -> None:
         self.runner = runner
         self.counter = counter
 
-    def predict(self, state, questions):
-        res = self.runner.predict(state, questions)
-        u = res.get("_usage", {}) or {}
-        self.counter["input_tokens"] += int(u.get("input_tokens", 0))
-        self.counter["output_tokens"] += int(u.get("output_tokens", 0))
-        self.counter["calls"] += 1
+    def predict(
+        self,
+        state: Mapping[str, Any],
+        questions: Mapping[str, Any],
+        *,
+        phase: str = "benchmark",
+    ) -> dict[str, Any]:
+        res = _call_predict(self.runner.predict, state, questions, phase)
+        usage = res.get("_usage")
+        if usage is None:
+            usage = {}
+        if not isinstance(usage, Mapping):
+            raise TypeError("runner usage must be a mapping")
+        if isinstance(self.counter, UsageCounter):
+            self.counter.record(phase, usage)
+        elif isinstance(self.counter, dict):
+            self.counter["input_tokens"] += int(usage.get("input_tokens", 0))
+            self.counter["output_tokens"] += int(usage.get("output_tokens", 0))
+            self.counter["calls"] += 1
+        else:
+            raise TypeError("counter must be a UsageCounter or dictionary")
         return res
 
 
-def build_runner(name):
+def build_runner(name: str) -> BaseRunner:
     if name == "laya":
         return LayaRunner()
     if name == "laya-router":
         from runners.router_runner import RouterRunner
+
         return RouterRunner()
     if name == "qwen":
         from runners.qwen_runner import QwenRunner
+
         return QwenRunner()
     if name == "jev":
         from runners.jev_runner import JevRunner
+
         return JevRunner()
     raise ValueError(f"unknown model: {name}")
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--models", default="laya")
-    args = ap.parse_args()
-    for model in [m.strip() for m in args.models.split(",")]:
-        runner = build_runner(model)
-        ts = datetime.now().strftime("%Y%m%d-%H%M%S")
-        out = {"meta": {"runner": runner.name, "seed": SEED, "timestamp": ts,
-                        **runner.info(), "question_hash": {},
-                        "usage": {"input_tokens": 0, "output_tokens": 0, "calls": 0}},
-               "suites": {}}
-        for suite, (qfn_name, cases) in SUITES.items():
-            questions = getattr(laya, qfn_name)()
-            out["meta"]["question_hash"][suite] = question_hash(questions)
-            if suite == "triage":  # warmup
-                runner.predict({"message": "hello"}, questions)
-            out["suites"][suite] = run_suite(runner, questions, cases)
-            s = out["suites"][suite]
-            print(f"[{runner.name}] {suite}: acc={s['accuracy']} ece={s['ece']} "
-                  f"p50={s['ms_per_call_p50']}ms", flush=True)
-        pub = json.load(open("datasets/public_cases.json"))
-        assert pub["seed"] == SEED, "public cases seed mismatch"
-        for suite, spec in pub["suites"].items():
-            questions = spec["questions"]
-            out["meta"]["question_hash"][suite] = question_hash(questions)
-            # re-run through runner to count usage/calls uniformly
-            wrapped = TrackUsage(runner, out["meta"]["usage"])
-            out["suites"][suite] = run_suite(wrapped, questions, spec["cases"])
-            s = out["suites"][suite]
-            print(f"[{runner.name}] {suite}: acc={s['accuracy']} ece={s['ece']} "
-                  f"p50={s['ms_per_call_p50']}ms", flush=True)
-        out["speed_scaling"] = speed_scaling(runner)
-        rows = [r for s in out["suites"].values() for r in s["rows"]]
-        gating = {}
-        for thr in [0.5, 0.7, 0.85, 0.95]:
-            sel = [r for r in rows if r["conf"] >= thr]
-            gating[str(thr)] = {"coverage": round(len(sel) / len(rows), 3),
-                                "acc": round(float(np.mean([r["ok"] for r in sel])), 4) if sel else None,
-                                "n": len(sel)}
-        out["gating"] = gating
-        out["meta"].update(runner.info())  # refresh: picks up route_counts etc.
-        path = f"results/run_{runner.name}_{ts}.json"
-        with open(path, "w") as f:
-            json.dump(out, f, indent=2)
-        print(f"[{runner.name}] saved {path}")
+def _print_run_progress(model: str, suite_id: str, split: str, decisions: int) -> None:
+    print(f"[{model}] {suite_id}/{split}: {decisions} decisions")
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    from benchmark.orchestrator import run_all_v2
+
+    parser = argparse.ArgumentParser(prog="run.py")
+    parser.add_argument("--models", required=True)
+    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument("--manifest-checksum", type=Path, default=DEFAULT_MANIFEST_CHECKSUM)
+    parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
+    parser.add_argument("--run-id")
+    try:
+        args = parser.parse_args(argv)
+    except SystemExit as error:
+        if error.code is None:
+            return 0
+        if isinstance(error.code, int):
+            return error.code
+        return 1
+    if not args.manifest.is_file():
+        print("sealed manifest is required", file=sys.stderr)
+        return 1
+    if not args.manifest_checksum.is_file():
+        print("sealed manifest checksum is required", file=sys.stderr)
+        return 1
+    models = tuple(model.strip() for model in args.models.split(",") if model.strip())
+    if not models:
+        print("run failed: --models must contain at least one model", file=sys.stderr)
+        return 2
+    try:
+        paths = run_all_v2(
+            models,
+            args.manifest,
+            args.output_root,
+            manifest_checksum_path=args.manifest_checksum,
+            run_id=args.run_id,
+            progress=_print_run_progress,
+        )
+    except RuntimeError:
+        print("run failed: runner execution failed", file=sys.stderr)
+        return 1
+    except (ImportError, OSError, TypeError, ValueError) as error:
+        print(f"run failed: {error}", file=sys.stderr)
+        return 1
+    for path in paths:
+        print(f"run artifacts: {path}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

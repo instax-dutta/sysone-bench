@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sysone-bench manifest v2",
+  "description": "Structural manifest schema; Python validate_manifest is authoritative for global case_id uniqueness, suite_id/order_index uniqueness, question qid uniqueness, and expected-ID coverage.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "schema_version",
+      "dataset_version",
+      "suite_id",
+      "case_id",
+      "order_index",
+      "split",
+      "state",
+      "questions",
+      "expected",
+      "provenance_id",
+      "label_provenance"
+    ],
+    "properties": {
+      "schema_version": {
+        "const": 2,
+        "type": "integer"
+      },
+      "dataset_version": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "suite_id": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "case_id": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "order_index": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "split": {
+        "enum": [
+          "calibration",
+          "evaluation"
+        ],
+        "type": "string"
+      },
+      "state": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "questions": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "criteria": {
+              "oneOf": [
+                {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "minProperties": 1,
+                  "propertyNames": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "type": "object"
+                },
+                {
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "instructions": {
+              "type": "string"
+            },
+            "max_score": {
+              "minimum": 0,
+              "type": "number"
+            },
+            "qid": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "choice",
+                "noul",
+                "score"
+              ],
+              "type": "string"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "type": {
+                    "const": "choice"
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "criteria": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "minProperties": 1,
+                    "propertyNames": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "criteria"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "type": {
+                    "const": "noul"
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              },
+              "then": {
+                "not": {
+                  "required": [
+                    "max_score"
+                  ]
+                },
+                "properties": {
+                  "criteria": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "minProperties": 1,
+                    "propertyNames": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "type": {
+                    "const": "score"
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "criteria": {
+                    "items": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "minItems": 1,
+                    "type": "array",
+                    "uniqueItems": true
+                  },
+                  "max_score": {
+                    "minimum": 0,
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "max_score"
+                ]
+              }
+            },
+            {
+              "if": {
+                "not": {
+                  "properties": {
+                    "type": {
+                      "const": "score"
+                    }
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              },
+              "then": {
+                "not": {
+                  "required": [
+                    "max_score"
+                  ]
+                }
+              }
+            }
+          ],
+          "required": [
+            "qid",
+            "type"
+          ],
+          "type": "object"
+        },
+        "type": "array",
+        "uniqueItems": true
+      },
+      "expected": {
+        "additionalProperties": true,
+        "propertyNames": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "provenance_id": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "label_provenance": {
+        "minLength": 1,
+        "type": "string"
+      }
+    }
+  }
+}

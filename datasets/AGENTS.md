@@ -3,7 +3,7 @@
 - Every model answers these exact bytes; fairness depends on this file not changing per model.
 
 # Ownership
-- Cases curated by repo owner. Additions require ground truth from two agreeing labelers or a cited public dataset.
+- Cases curated by repo owner. Additions require either a cited public dataset or ground truth reviewed under a recorded protocol in `datasets/v2/provenance.json`. The sealed v2 dataset used `human-reviewed-ai-assisted-v1`: one human reviewer corrected an AI draft, with no second independent review and no adjudication. A two-reviewer requirement is not a standing rule for this repository.
 
 # Local Contracts
 - Case format: `(state_dict, {question_id: expected})` where expected is a label string for
@@ -25,4 +25,4 @@
   must print `{'triage': 40, 'guardrails': 30, 'moderation': 30}`.
 
 # Child DOX Index
-- None. Single file scope.
+- `v2/` - v2 source registry, resolved source lock, deterministic inventory builder, split/provenance validator, blind reviewer and assistant draft tooling, the approved single-review AI-assisted label protocol, and future dataset artifacts.
