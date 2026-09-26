@@ -69,16 +69,24 @@ Default section order:
 - Use dashes, not em dashes
 - No preamble, no recap, no closing pleasantries in responses
 - Lead with the next action; number multi-step tasks; one concrete next action at the end
-- Big batch jobs run on remote servers, never local
+- Never run tests, builds, dataset generation, model jobs, or other batch commands on the local Mac; use `ssh tejes@pelican` for all execution
+- On Pelican, never modify unrelated processes, containers, files, or workloads; restrict work to the sysone-bench workspace and dedicated run/cache roots unless the user explicitly requests otherwise
 
 ## Project: sysone-bench
-- First independent head-to-head benchmark of System One decision models: Laya (open weights) vs Jev (closed API)
-- Rule: both models answer byte-identical states and questions, fixed seed, same run. No vendor-published cross-comparison.
-- Never commit API keys. Jev key lives in env var `TYPESAFE_API_KEY`, loaded from `.env` (gitignored).
+- First independent head-to-head benchmark of System One decision models: Laya (open weights) vs Jev (closed API), with Qwen PCD as a third open series
+- Rule: every model answers byte-identical states and questions from one sealed manifest, fixed seed, same run. No vendor-published cross-comparison.
+- Published v2.0.0 result: Jev 0.9065, Laya 0.6863, Qwen PCD 0.6048 over 1,240 evaluation decisions. Report at `results/v2/report-20260926/`.
+- Never commit API keys. The Jev key is streamed over stdin and never written to disk in this repo or on the run host.
 - Result JSONs are append-only records: never overwrite a published run, write a new file.
+- The v2 ground truth used `human-reviewed-ai-assisted-v1`: one human reviewer corrected an AI draft, with no second reviewer and no adjudication. Do not describe it as two-reviewer or adjudicated.
 
 ## Child DOX Index
 - `datasets/` - benchmark cases and ground truth. Owns case schema, labeling rules.
 - `runners/` - model adapters (Laya, Jev). Owns the runner interface contract.
-- `results/` - run outputs and comparisons. Owns result schema, append-only rule.
+- `results/` - run outputs, comparisons, and published reports. Owns result schema, append-only rule, and the report directory contract.
+- `docs/` - design specifications and implementation plans. Owns durable documentation boundaries.
+- `benchmark/` - v2 core contracts, canonical identity, and append-only storage. Owns the core package contract.
+- `ops/` - isolated remote execution, worker safety, and transient secret transport. Owns the Pelican boundary.
+- `tests/` - deterministic fake-only regression tests and fixtures. Owns test isolation and evidence.
+- `tools/` - clean-environment command-line entry points. Owns external-package import protection.
 - Root owns: `run.py`, `compare.py`, `PLAN.md`, `README.md`, env setup.

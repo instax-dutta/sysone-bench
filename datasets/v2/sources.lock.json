@@ -1,0 +1,43 @@
+{
+  "agnews": {
+    "canonical": "fancyzhx/ag_news",
+    "wrapper": "fancyzhx/ag_news",
+    "revision": "eb185aade064a813bc0b7f42de02595523103ca4",
+    "split": "test",
+    "license": "unknown",
+    "citation": "https://huggingface.co/datasets/fancyzhx/ag_news"
+  },
+  "emotion": {
+    "canonical": "dair-ai/emotion",
+    "wrapper": "dair-ai/emotion",
+    "revision": "cab853a1dbdf4c42c2b3ef2173804746df8825fe",
+    "split": "test",
+    "license": "other",
+    "citation": "https://huggingface.co/datasets/dair-ai/emotion"
+  },
+  "banking77": {
+    "canonical": "PolyAI/banking77",
+    "wrapper": "mteb/banking77",
+    "revision": "18072d2685ea682290f7b8924d94c62acc19c0b2",
+    "split": "test",
+    "license": "mit",
+    "citation": "https://huggingface.co/datasets/PolyAI/banking77"
+  },
+  "mnli": {
+    "canonical": "nyu-mll/glue",
+    "wrapper": "nyu-mll/glue",
+    "config": "mnli",
+    "revision": "bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c",
+    "split": "validation_matched",
+    "license": "other",
+    "citation": "https://huggingface.co/datasets/nyu-mll/glue"
+  },
+  "sst5": {
+    "canonical": "SetFit/sst5",
+    "wrapper": "SetFit/sst5",
+    "revision": "e51bdcd8cd3a30da231967c1a249ba59361279a3",
+    "split": "test",
+    "license": "not_declared",
+    "citation": "https://huggingface.co/datasets/SetFit/sst5"
+  }
+}

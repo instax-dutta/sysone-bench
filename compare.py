@@ -1,43 +1,42 @@
-"""Head-to-head compare of two run files. Usage:
-  ./.venv/bin/python compare.py results/run_laya_<ts>.json results/run_jev-<v>_<ts>.json
-Checks question hashes match, then prints accuracy / ECE / latency deltas.
-"""
-import json
+from __future__ import annotations
+
+import argparse
 import math
 import sys
+from collections.abc import Sequence
+from pathlib import Path
+
+from benchmark.orchestrator import compare_v2
+
+DEFAULT_OUTPUT_ROOT = Path("results/v2/comparisons")
 
 
-def ci(acc, n, z=1.96):
+def ci(acc: float, n: int, z: float = 1.96) -> tuple[float, float]:
     se = math.sqrt(acc * (1 - acc) / n)
     return round(max(0, acc - z * se), 3), round(min(1, acc + z * se), 3)
 
 
-def main():
-    a = json.load(open(sys.argv[1]))
-    b = json.load(open(sys.argv[2]))
-    qa, qb = a["meta"]["question_hash"], b["meta"]["question_hash"]
-    print(f"A={a['meta']['runner']}  B={b['meta']['runner']}")
-    print(f"questions identical: {qa == qb} ({qa})")
-    print(f"A model: {a['meta']}  B model: {b['meta']}")
-    for suite in a["suites"]:
-        sa, sb = a["suites"][suite], b["suites"][suite]
-        loa, hia = ci(sa["accuracy"], sa["decisions"])
-        lob, hib = ci(sb["accuracy"], sb["decisions"])
-        d = round(sb["accuracy"] - sa["accuracy"], 3)
-        print(f"\n{suite}: A acc={sa['accuracy']} (95CI {loa}-{hia}, n={sa['decisions']}) "
-              f"ECE={sa['ece']} p50={sa['ms_per_call_p50']}ms")
-        print(f"{' ' * len(suite)}  B acc={sb['accuracy']} (95CI {lob}-{hib}, n={sb['decisions']}) "
-              f"ECE={sb['ece']} p50={sb['ms_per_call_p50']}ms  delta={d:+}")
-        for q in sa["per_question_acc"]:
-            print(f"  {q}: A={sa['per_question_acc'][q]} B={sb['per_question_acc'].get(q, '?')}")
-    print(f"\ngating A={a['gating']}")
-    print(f"gating B={b['gating']}")
-    out = f"results/compare_{a['meta']['runner']}_vs_{b['meta']['runner']}.json"
-    json.dump({"a": sys.argv[1], "b": sys.argv[2], "question_hash_match": qa == qb,
-               "suites": {s: {"a": a["suites"][s], "b": b["suites"][s]} for s in a["suites"]}},
-              open(out, "w"), indent=2)
-    print(f"saved {out}")
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="compare.py")
+    parser.add_argument("path_a", type=Path)
+    parser.add_argument("path_b", type=Path)
+    parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
+    try:
+        args = parser.parse_args(argv)
+    except SystemExit as error:
+        if error.code is None:
+            return 0
+        if isinstance(error.code, int):
+            return error.code
+        return 1
+    try:
+        output = compare_v2(args.path_a, args.path_b, args.output_root)
+    except (OSError, TypeError, ValueError) as error:
+        print(f"compare failed: {error}", file=sys.stderr)
+        return 1
+    print(f"comparison artifacts: {output}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

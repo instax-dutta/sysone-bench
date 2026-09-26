@@ -1,0 +1,30 @@
+[project]
+name = "sysone-bench"
+version = "2.0.0"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+  "laya",
+  "requests",
+  "python-dotenv",
+  "numpy",
+  "matplotlib",
+  "pandas",
+]
+
+[project.optional-dependencies]
+build = ["datasets"]
+qwen = ["torch", "transformers"]
+dev = ["pytest", "ruff", "mypy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
