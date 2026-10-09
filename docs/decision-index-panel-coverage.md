@@ -37,7 +37,7 @@ answers so identical runs collapse.
 | :--- | ---: |
 | Run directories verified | 46 |
 | Distinct runner names | 44 |
-| **Distinct measurements** | **43 of 51** |
+| **Distinct measurements** | **49 of 50** |
 | Not measured | 8 |
 
 Three directories are correctly counted once each:

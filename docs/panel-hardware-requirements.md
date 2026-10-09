@@ -123,7 +123,7 @@ A run is acceptable if it records, per row:
 5. `checksums.sha256` over `metadata.json`, `predictions.jsonl`, `summary.json`, `usage.json`,
    `gpu_provenance.json`, `.sysone-owner`
 6. 1190 prediction rows against manifest digest
-   `a938cc2483a592dc84e0d5baac12594491bcaa5b4ceb6b7c3b0def71b36297bd`
+   `0d21a64c6b61b6be7b49050dbd89f89f934912a7b586734e475308e9c9422ea2` (dataset 2.1.0)
 
 Technique entries must additionally set `technique_reimplementation: true` and
 `vendor_code_executed: false`. Two panel rows currently satisfy the letter of the contract but not

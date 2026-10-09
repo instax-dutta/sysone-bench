@@ -618,6 +618,7 @@ function wire() {
     state.compare = "none";
     document.querySelectorAll("[data-compare]").forEach((b) =>
       b.setAttribute("aria-pressed", String(b.dataset.compare === "none")));
+    drawDeferralNote();
     drawSuites();
   });
 

@@ -76,6 +76,10 @@ Default section order:
 - First independent head-to-head benchmark of System One decision models: Laya (open weights) vs Jev (closed API), with Qwen PCD as a third open series
 - Rule: every model answers byte-identical states and questions from one sealed manifest, fixed seed, same run. No vendor-published cross-comparison.
 - Published v2.0.0 result: Jev 0.9065, Laya 0.6863, Qwen PCD 0.6048 over 1,240 evaluation decisions. Report at `results/v2/report-20260926/`.
+- The live panel is dataset 2.1.0 with 49 distinct measurements over a 50-entry scope, derived by `ops/panel_coverage.py`.
+  `jeff` is withdrawn pending re-measurement because its run was never mirrored; `seb-9b` is in scope
+  and awaits a GPU. Never hand-type these counts: read `webpage/data/results.json`.
+- A measurement whose artifacts cannot be reproduced is withdrawn, never republished from a superseded run.
 - Never commit API keys. The Jev key is streamed over stdin and never written to disk in this repo or on the run host.
 - Result JSONs are append-only records: never overwrite a published run, write a new file.
 - Raw run directories live in `results/raw/`, inside the repo but gitignored. `results/` holds

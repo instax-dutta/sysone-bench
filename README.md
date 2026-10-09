@@ -10,16 +10,16 @@ There was no way to check cross-vendor claims before this. Laya's author had no 
 access, and the published vendor numbers come from different prompts. Two numbers from
 different prompts are not a comparison.
 
-## Expanded panel: 43 of 51 measured
+## Expanded panel: 49 of 50 measured
 
 The three-model result below is the sealed v2.0.0 release. Since then the scope was widened to the
-Decision Index 0.2.1 panel, and **43 distinct measurements** are complete against the same sealed
-manifest.
+Decision Index 0.2.1 panel, and **49 distinct measurements** are complete against the same sealed
+manifest, re-scored onto the corrected dataset 2.1.0 gold.
 
 Counts are derived by `ops/panel_coverage.py` from finished run directories, never from a
 hand-kept tally. It verifies every artifact against its own `checksums.sha256` and fingerprints
 the evaluation-phase answers, so repeat runs and identical runs collapse instead of inflating the
-number. It found 46 verified directories but only **43** distinct measurements:
+number. It found 52 verified directories but only **49** distinct measurements:
 
 | Runner | Directories | Counted once because |
 | :--- | :--- | :--- |
@@ -33,7 +33,7 @@ number. It found 46 verified directories but only **43** distinct measurements:
 |---|---|---:|---|
 | **`Jev 1.13.0`** | closed API | **0.9065** | the reference every open model below is measured against; not a panel entry |
 
-Jev is the vendor's hosted model behind `api.typesafe.ai`, so it is not one of the 51 panel
+Jev is the vendor's hosted model behind `api.typesafe.ai`, so it is not one of the 50 panel
 entries — the panel is open-weights only. It is listed first because it is the number to beat.
 Its 0.9065 comes from the sealed v2.0.0 release below, measured on the same manifest digest and
 1,240 evaluation decisions as every row in the table underneath.
@@ -63,7 +63,7 @@ cost: **0.7629 on CPU fp32 against 0.7734 on T4 fp16**, a 0.0105 gap on identica
 pinned revision. `decider-2b` differed 0.7895 on Kaggle against 0.7927 on Colab, but those runs were
 not byte-identical in configuration, so it is a weaker signal.
 
-Full 43-row table with scoring method and provenance flags:
+Full 49-row table with scoring method and provenance flags:
 [`docs/decision-index-panel-coverage.md`](docs/decision-index-panel-coverage.md).
 
 Two caveats carried in the table rather than hidden:
