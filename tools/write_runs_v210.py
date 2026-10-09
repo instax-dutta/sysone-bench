@@ -35,6 +35,46 @@ def write_json_exclusive(path: pathlib.Path, payload: object) -> None:
     path.write_text(json.dumps(payload, indent=1, sort_keys=True) + "\n")
 
 
+def count_deferrals(src: pathlib.Path) -> dict | None:
+    """Count projected deferrals from the stored predictions, or None if absent.
+
+    A run whose predictions carry no per-decision status is simply not a
+    deferring runner, so we record nothing rather than recording a zero that
+    would read as a measured fact about every adapter.
+    """
+    pred = src / "predictions.jsonl"
+    if not pred.exists():
+        return None
+    deferred = projected = total = 0
+    for line in pred.read_text().splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        if row.get("split") != "evaluation":
+            continue
+        raw = row.get("_raw_model")
+        if not isinstance(raw, dict):
+            return None
+        for dec in raw.get("decisions", []):
+            if not isinstance(dec, dict):
+                continue
+            if "status" not in dec and "projected_to_argmax" not in dec:
+                return None
+            total += 1
+            if dec.get("status") == "deferred":
+                deferred += 1
+            if dec.get("projected_to_argmax"):
+                projected += 1
+    if not total:
+        return None
+    return {
+        "evaluation_decisions": total,
+        "deferred": deferred,
+        "deferred_share": deferred / total,
+        "projected_to_argmax": projected,
+    }
+
+
 def main() -> int:
     rescore = json.loads(RESCORE.read_text())
     made = skipped = 0
@@ -67,6 +107,16 @@ def main() -> int:
         meta["derived_from_run_id"] = meta.get("run_id")
         meta["run_id"] = dest.name
         meta["rescored"] = True
+        deferrals = count_deferrals(src)
+        if deferrals:
+            meta["deferrals"] = deferrals
+            meta["deferrals_note"] = (
+                "The runner declined these decisions. This adapter has no abstention type in the "
+                "decision contract, so each declined decision was answered at the argmax option and "
+                "is counted above as a confident correct-or-incorrect answer the runner did not "
+                "choose. The overall accuracy therefore reflects the adapter's projection, not the "
+                "runner's own coverage."
+            )
         meta["rescored_reason"] = (
             "Gold labels corrected for agnews, banking77_12, mnli and sst5 by adopting the "
             "public source label, and for emotion by per-case review. Answers, prompts, "

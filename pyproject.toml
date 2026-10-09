@@ -9,6 +9,7 @@ dependencies = [
   "numpy",
   "matplotlib",
   "pandas",
+  "mimir-decisions[local]==1.2.0",
 ]
 
 [project.optional-dependencies]

@@ -12,14 +12,16 @@ from __future__ import annotations
 
 import collections
 import json
+import os
 import pathlib
 import sys
 
-BASE = pathlib.Path("/home/admin/sysone-bench/datasets/v2")
+REPO = pathlib.Path(__file__).resolve().parent.parent
+BASE = REPO / "datasets" / "v2"
 MANIFEST = BASE / "manifest.v2.1.0.jsonl"
 OLD_MANIFEST = BASE / "manifest.jsonl"
-RAW = pathlib.Path("/home/admin/raw")
-OUT = pathlib.Path("/home/admin/rescored")
+RAW = pathlib.Path(os.environ.get("SYSONE_RESULTS_ROOT", REPO / "results" / "raw"))
+OUT = pathlib.Path(os.environ.get("SYSONE_RESCORE_OUT", REPO / "results" / "raw" / "_rescored"))
 
 
 def load_gold(path: pathlib.Path) -> dict[str, dict]:

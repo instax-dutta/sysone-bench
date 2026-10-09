@@ -26,7 +26,7 @@
   "note": "These rows were scored by scoring each declared option independently. For a model trained to answer with label codes restricted in the next-token distribution, that is a different function of the same weights rather than a different implementation of the same one, and it can under-report the model. Confirmed for lev, whose authors measured 0.980 on banking77 in-distribution against our 0.7292 out-of-distribution, and who describe selecting by argmax over one-token label codes with two option orders averaged. We have not confirmed the same expectation for the other rows carrying this flag, so treat them as unqualified rather than known-low. No number here has been changed and no model has been re-run."
  },
  "scopeTotal": 50,
- "runDirectoriesVerified": 55,
+ "runDirectoriesVerified": 52,
  "distinctMeasurements": 49,
  "referenceClosedApi": {
   "runner": "jev",
@@ -75,7 +75,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "decision-lux-9b",
@@ -116,7 +117,8 @@
     "sst5": 0.1393970079952851,
     "triage": 0.31610619998537004
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "jet",
@@ -157,7 +159,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "kev-4b",
@@ -198,7 +201,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "jpt-9b",
@@ -239,7 +243,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "intern-decision-4b",
@@ -280,7 +285,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "kev-9b",
@@ -321,7 +327,8 @@
     "sst5": 0.49538842984475195,
     "triage": 0.7586066676303744
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "jevk5",
@@ -362,7 +369,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "neohorse-4b",
@@ -403,7 +411,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "jpt-4b",
@@ -444,7 +453,8 @@
     "sst5": 0.08461063308641315,
     "triage": 0.2765486428979784
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "tev1-4b",
@@ -485,7 +495,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "decision-nox",
@@ -526,7 +537,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "decider-2b",
@@ -567,7 +579,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "this-that-12",
@@ -608,7 +621,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "decision-eos",
@@ -649,7 +663,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "hopper-g",
@@ -690,7 +705,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "lumma-fev-4b",
@@ -731,7 +747,8 @@
     "sst5": 0.04460139153525233,
     "triage": 0.13117618148680776
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "lumma-fev-9b",
@@ -772,7 +789,8 @@
     "sst5": 0.07988677697721869,
     "triage": 0.1991460684221238
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "kev-08b",
@@ -813,7 +831,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "intern-decision-2b",
@@ -854,7 +873,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "nimble-v2",
@@ -895,7 +915,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "decision-sol",
@@ -936,7 +957,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "jpt-08b",
@@ -977,7 +999,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "tev1-08b",
@@ -1018,7 +1041,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "mini-jev",
@@ -1059,7 +1083,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": true
+   "readoutCaveat": true,
+   "deferrals": null
   },
   {
    "runner": "bosun-17b",
@@ -1100,7 +1125,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "metask",
@@ -1141,7 +1167,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": true
+   "readoutCaveat": true,
+   "deferrals": null
   },
   {
    "runner": "intern-decision-08b",
@@ -1182,7 +1209,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "lavoir",
@@ -1223,7 +1251,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "decision-kai",
@@ -1264,7 +1293,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "bosun-06b",
@@ -1305,7 +1335,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "laya",
@@ -1346,7 +1377,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "gliner-decide",
@@ -1387,48 +1419,55 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
-   "runner": "jeff",
-   "runId": "jeff-spark-4",
-   "model": "knowledgator/gliformer-large-v1",
-   "revision": "d0a4e53d09cebe6bc963dd9be319d4279084bb2d",
-   "baseModel": "knowledgator/gliformer-large-v1",
+   "runner": "mimir",
+   "runId": "mimir-1.2.0-20261009-v210",
+   "model": "Mythologic/MIMIR-1",
+   "revision": "d2f5a66ea111adb8d3cd5f6c59d66974f073ab80",
+   "baseModel": null,
    "scoring": null,
-   "techniqueReimplementation": true,
-   "vendorCodeExecuted": false,
+   "techniqueReimplementation": false,
+   "vendorCodeExecuted": null,
    "sharding": null,
    "singleDevice": null,
-   "device": "unknown",
+   "device": "cpu",
    "dtype": null,
    "serving": "local",
-   "accuracy": 0.6854838709677419,
+   "accuracy": 0.6717741935483871,
    "cases": 952,
    "decisions": 1240,
    "suites": {
-    "agnews": 0.73125,
-    "banking77_12": 0.8645833333333334,
-    "emotion": 0.6458333333333334,
-    "guardrails": 0.5729166666666666,
-    "mnli": 0.6333333333333333,
-    "moderation": 0.8333333333333334,
-    "multilingual_intent": 0.5166666666666667,
-    "sst5": 0.4166666666666667,
-    "triage": 0.8489583333333334
+    "agnews": 0.9,
+    "banking77_12": 0.8020833333333334,
+    "emotion": 0.625,
+    "guardrails": 0.84375,
+    "mnli": 0.7166666666666667,
+    "moderation": 0.7777777777777778,
+    "multilingual_intent": 0.11666666666666667,
+    "sst5": 0.425,
+    "triage": 0.7708333333333334
    },
    "latencyP50": {
-    "agnews": 0.0268667449709028,
-    "banking77_12": 0.025720058009028435,
-    "emotion": 0.023140626028180122,
-    "guardrails": 0.04039995791390538,
-    "mnli": 0.024413105915300548,
-    "moderation": 0.060664941440336406,
-    "multilingual_intent": 0.02318323391955346,
-    "sst5": 0.02338633907493204,
-    "triage": 0.08331669960170984
+    "agnews": null,
+    "banking77_12": null,
+    "emotion": null,
+    "guardrails": null,
+    "mnli": null,
+    "moderation": null,
+    "multilingual_intent": null,
+    "sst5": null,
+    "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": {
+    "deferred": 1040,
+    "deferred_share": 0.8387096774193549,
+    "evaluation_decisions": 1240,
+    "projected_to_argmax": 169
+   }
   },
   {
    "runner": "gliner-base",
@@ -1469,7 +1508,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "decision-lex",
@@ -1510,7 +1550,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "gliner-multi",
@@ -1551,7 +1592,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "lev",
@@ -1592,7 +1634,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "jobe",
@@ -1633,7 +1676,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": true
+   "readoutCaveat": true,
+   "deferrals": null
   },
   {
    "runner": "verdict",
@@ -1674,7 +1718,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "mojev",
@@ -1715,7 +1760,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "gliner-small",
@@ -1756,7 +1802,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "julia-1",
@@ -1797,7 +1844,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "lumma-fev-06b",
@@ -1838,7 +1886,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "lumma-fev-01b",
@@ -1879,7 +1928,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   },
   {
    "runner": "harsha",
@@ -1920,7 +1970,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": true
+   "readoutCaveat": true,
+   "deferrals": null
   },
   {
    "runner": "lfm2600",
@@ -1961,7 +2012,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": true
+   "readoutCaveat": true,
+   "deferrals": null
   },
   {
    "runner": "lfm350",
@@ -2002,7 +2054,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": true
+   "readoutCaveat": true,
+   "deferrals": null
   },
   {
    "runner": "pngwn",
@@ -2043,7 +2096,8 @@
     "sst5": null,
     "triage": null
    },
-   "readoutCaveat": false
+   "readoutCaveat": false,
+   "deferrals": null
   }
  ],
  "duplicates": {
@@ -2051,12 +2105,6 @@
    "decider-2b": [
     "decider-2b-t4-c0-v210",
     "decider-2b-t4-d0-v210"
-   ],
-   "jeff": [
-    "jeff-spark-1",
-    "jeff-spark-2",
-    "jeff-spark-3",
-    "jeff-spark-4"
    ],
    "tev1-08b": [
     "tev1-08b-20261002-v210",

@@ -106,6 +106,9 @@ def main() -> int:
                 # restricted label codes that is a different function, not a different
                 # implementation, and can under-report it. Confirmed in the thread below.
                 "readoutCaveat": info.get("scoring") in READOUT_CAVEAT_PATHS,
+                # A deferring runner's accuracy is the adapter's projection, not the
+                # model's own coverage. Carried from run metadata, never hand-written.
+                "deferrals": metadata.get("deferrals"),
             }
 
     collisions = coverage["identical_prediction_collisions"]
