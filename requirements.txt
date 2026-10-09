@@ -1,3 +1,4 @@
 laya
 requests
 python-dotenv
+mimir-decisions[local]==1.2.0

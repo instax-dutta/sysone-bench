@@ -86,7 +86,7 @@ Default section order:
 
 ## Child DOX Index
 - `datasets/` - benchmark cases and ground truth. Owns case schema, labeling rules.
-- `runners/` - model adapters (Laya, Jev). Owns the runner interface contract.
+- `runners/` - model adapters (Laya, Jev, Qwen, MIMIR). Owns the runner interface contract.
 - `results/` - run outputs, comparisons, and published reports. Owns result schema, append-only rule, and the report directory contract.
 - `docs/` - design specifications and implementation plans. Owns durable documentation boundaries.
 - `benchmark/` - v2 core contracts, canonical identity, and append-only storage. Owns the core package contract.

@@ -11,6 +11,7 @@
 - Usage accounting must record the requested phase for both phase-aware and legacy methods.
 - The v2 orchestrator calls phase-aware adapters with `phase="benchmark"`, keeps calibration and evaluation counters separate, and requires each adapter response to contain only `answers` plus the optional metadata fields listed below. Response answer maps must have exact non-empty string keys before contract validation.
 - Qwen is a phase-capable v2 adapter. `QwenRunner.predict` accepts the optional `phase` keyword, validates it, deep-copies inputs, and returns only normalized answers.
+- MIMIR is a phase-capable v2 adapter. `MimirRunner.predict` loads `Mythologic/MIMIR-1` through the pinned `mimir-decisions` engine (device from `MIMIR_DEVICE`, default CPU), validates the phase, deep-copies inputs, decides in `certified` mode at 1% risk, projects a choice with no applicable option to the argmax option because the contract has no abstention, renormalizes choice probabilities, records every decision's status in `_raw_model`, and validates the answer ID set at its edge. The package name and version are recorded in the run metadata.
 - Results contain `answers` keyed by exactly the requested question IDs, plus optional `_usage`, `_routing`, and `_raw_model` fields; Jev additionally returns `_response_digest` as redacted response metadata.
 - Routing metadata is optional; valid `routing` or `_routing` is preserved under `_routing`, while missing metadata is counter-neutral and malformed or placeholder model metadata fails clearly without counting a route.
 - Adapters validate missing or extra answer IDs at their edge and normalize vendor output to the laya answer shape:
@@ -69,4 +70,4 @@
 
 # Child DOX Index
 - `pcd/` - vendored parallel constrained decoding. Owns the common engine interface, Torch CPU backend, MLX compatibility path, schema compiler, and collision-safe telemetry.
-- `base.py`, `laya_runner.py`, `jev_runner.py`, `router_runner.py`, and `qwen_runner.py` remain under this contract.
+- `base.py`, `laya_runner.py`, `jev_runner.py`, `router_runner.py`, `qwen_runner.py`, and `mimir_runner.py` remain under this contract.

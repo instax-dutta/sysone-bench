@@ -583,6 +583,10 @@ def default_runner_factory(name: str) -> BaseRunner:
         from runners.jev_runner import JevRunner
 
         return JevRunner()
+    if name == "mimir":
+        from runners.mimir_runner import MimirRunner
+
+        return MimirRunner()
     raise ValueError(f"unknown model: {name}")
 
 
