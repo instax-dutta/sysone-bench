@@ -25,6 +25,33 @@
   "confirmedBy": "https://huggingface.co/interfaze-ai/lev/discussions/1",
   "note": "These rows were scored by scoring each declared option independently. For a model trained to answer with label codes restricted in the next-token distribution, that is a different function of the same weights rather than a different implementation of the same one, and it can under-report the model. Confirmed for lev, whose authors measured 0.980 on banking77 in-distribution against our 0.7292 out-of-distribution, and who describe selecting by argmax over one-token label codes with two option orders averaged. We have not confirmed the same expectation for the other rows carrying this flag, so treat them as unqualified rather than known-low. No number here has been changed and no model has been re-run."
  },
+ "excluded": [
+  [
+   "winnow-e4b",
+   "GGUF only",
+   "A vision-language checkpoint published solely as GGUF. Needs a different runtime."
+  ],
+  [
+   "clm-v0.1-8b",
+   "Contrastive reranker",
+   "Scores state-answer pairs rather than producing typed decisions."
+  ],
+  [
+   "winnow-12b",
+   "GGUF only",
+   "22.3 GiB of bf16 weights published solely as GGUF. Fits current hardware but needs a different runtime."
+  ],
+  [
+   "jeff",
+   "Artifacts lost",
+   "Measured 0.6855 on a DGX Spark, but that run was never mirrored and the host is gone. The row is withdrawn until it is re-run; the broken earlier run is retained under quarantine and is not reported."
+  ],
+  [
+   "seb-9b",
+   "Awaiting a GPU host",
+   "9.65B, added to scope at the author's request. Not yet measured."
+  ]
+ ],
  "scopeTotal": 50,
  "runDirectoriesVerified": 52,
  "distinctMeasurements": 49,

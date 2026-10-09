@@ -522,13 +522,6 @@ function drawCoverage() {
 }
 
 /* -------------------------------------------------------------- hydrate */
-const EXCLUDED = [
-  ["winnow-e4b", "GGUF only", "A vision-language checkpoint published solely as GGUF. Needs a different runtime."],
-  ["clm-v0.1-8b", "Contrastive reranker", "Scores state-answer pairs rather than producing typed decisions."],
-  ["winnow-12b", "GGUF only", "22.3 GiB of bf16 weights published solely as GGUF. Fits current hardware but needs a different runtime."],
-  ["jeff", "Artifacts lost", "Measured 0.6855 on a DGX Spark, but that run was never mirrored and the host is gone. The row is withdrawn until it is re-run; the broken earlier run is retained under quarantine and is not reported."],
-];
-
 function hydrate() {
   const best = rows()[0];
   A("#stat-best-name").textContent = best.runner;
@@ -561,7 +554,7 @@ function hydrate() {
   }
 
   const grid = A("#excluded-grid");
-  grid.innerHTML = EXCLUDED.map(([name, reason, detail]) => `
+  grid.innerHTML = (D.excluded || []).map(([name, reason, detail]) => `
     <div class="card">
       <h3 style="display:flex;justify-content:space-between;gap:.6rem;align-items:baseline">
         <code style="font-size:.9rem">${name}</code>
