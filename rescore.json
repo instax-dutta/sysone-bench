@@ -4138,5 +4138,95 @@
    "correct": 684,
    "accuracy": 0.5516129032258065
   }
+ },
+ "mimir-1.2.0-20261009": {
+  "before": {
+   "cases": 952,
+   "suites": {
+    "triage": {
+     "accuracy": 0.7708333333333334,
+     "decisions": 192
+    },
+    "guardrails": {
+     "accuracy": 0.84375,
+     "decisions": 96
+    },
+    "moderation": {
+     "accuracy": 0.7777777777777778,
+     "decisions": 144
+    },
+    "agnews": {
+     "accuracy": 0.85,
+     "decisions": 160
+    },
+    "emotion": {
+     "accuracy": 0.5885416666666666,
+     "decisions": 192
+    },
+    "banking77_12": {
+     "accuracy": 0.8125,
+     "decisions": 96
+    },
+    "mnli": {
+     "accuracy": 0.7166666666666667,
+     "decisions": 120
+    },
+    "sst5": {
+     "accuracy": 0.4166666666666667,
+     "decisions": 120
+    },
+    "multilingual_intent": {
+     "accuracy": 0.11666666666666667,
+     "decisions": 120
+    }
+   },
+   "decisions": 1240,
+   "correct": 818,
+   "accuracy": 0.6596774193548387
+  },
+  "after": {
+   "cases": 952,
+   "suites": {
+    "triage": {
+     "accuracy": 0.7708333333333334,
+     "decisions": 192
+    },
+    "guardrails": {
+     "accuracy": 0.84375,
+     "decisions": 96
+    },
+    "moderation": {
+     "accuracy": 0.7777777777777778,
+     "decisions": 144
+    },
+    "agnews": {
+     "accuracy": 0.9,
+     "decisions": 160
+    },
+    "emotion": {
+     "accuracy": 0.625,
+     "decisions": 192
+    },
+    "banking77_12": {
+     "accuracy": 0.8020833333333334,
+     "decisions": 96
+    },
+    "mnli": {
+     "accuracy": 0.7166666666666667,
+     "decisions": 120
+    },
+    "sst5": {
+     "accuracy": 0.425,
+     "decisions": 120
+    },
+    "multilingual_intent": {
+     "accuracy": 0.11666666666666667,
+     "decisions": 120
+    }
+   },
+   "decisions": 1240,
+   "correct": 833,
+   "accuracy": 0.6717741935483871
+  }
  }
 }

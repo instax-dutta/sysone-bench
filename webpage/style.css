@@ -261,6 +261,7 @@ tbody tr:hover { background: var(--paper-2); }
   border-left: 2px solid var(--rule); padding-left: 1rem; max-width: 68ch;
 }
 .note-caveat { border-left-color: var(--accent); }
+.note-caveat[hidden] { display: none; }
 .tie-note { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-3); margin-top: 1rem; }
 
 /* ------------------------------------------- small multiples, bare rules */

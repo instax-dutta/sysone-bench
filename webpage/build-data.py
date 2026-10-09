@@ -41,6 +41,18 @@ READOUT_CAVEAT = {
         "rather than known-low. No number here has been changed and no model has been re-run."
     ),
 }
+
+# Named entries that sit outside the measured scope, with the reason each is not
+# measured. Hand-authored prose is fine here; only counts and scores are derived.
+# Rendered by app.js and by tools/build_llms.py so both read one source.
+EXCLUDED_NOTES = [
+    ["winnow-e4b", "GGUF only", "A vision-language checkpoint published solely as GGUF. Needs a different runtime."],
+    ["clm-v0.1-8b", "Contrastive reranker", "Scores state-answer pairs rather than producing typed decisions."],
+    ["winnow-12b", "GGUF only", "22.3 GiB of bf16 weights published solely as GGUF. Fits current hardware but needs a different runtime."],
+    ["jeff", "Artifacts lost", "Measured 0.6855 on a DGX Spark, but that run was never mirrored and the host is gone. The row is withdrawn until it is re-run; the broken earlier run is retained under quarantine and is not reported."],
+    ["seb-9b", "Awaiting a GPU host", "9.65B, added to scope at the author's request. Not yet measured."],
+]
+
 SUITES = [
     "agnews", "banking77_12", "emotion", "guardrails", "mnli",
     "moderation", "multilingual_intent", "sst5", "triage",
@@ -106,6 +118,9 @@ def main() -> int:
                 # restricted label codes that is a different function, not a different
                 # implementation, and can under-report it. Confirmed in the thread below.
                 "readoutCaveat": info.get("scoring") in READOUT_CAVEAT_PATHS,
+                # A deferring runner's accuracy is the adapter's projection, not the
+                # model's own coverage. Carried from run metadata, never hand-written.
+                "deferrals": metadata.get("deferrals"),
             }
 
     collisions = coverage["identical_prediction_collisions"]
@@ -122,6 +137,7 @@ def main() -> int:
         "datasetVersion": "2.1.0",
         "suites": SUITES,
         "readoutCaveat": READOUT_CAVEAT,
+        "excluded": EXCLUDED_NOTES,
         "scopeTotal": 50,
         "runDirectoriesVerified": coverage["run_directories_verified"],
         "distinctMeasurements": coverage["distinct_measurements"],

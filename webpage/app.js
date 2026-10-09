@@ -234,6 +234,25 @@ function drawSuites() {
 }
 
 /* --------------------------------------------------------- ranked list */
+/* ------------------------------------------------------- deferral caveat */
+function drawDeferralNote() {
+  const host = A("#deferral-note");
+  if (!host) return;
+  const r = (D.measurements || []).find((x) => x.runner === state.model);
+  const d = r && r.deferrals;
+  if (!d) { host.innerHTML = ""; host.hidden = true; return; }
+  host.hidden = false;
+  const pct = (d.deferred_share * 100).toFixed(1);
+  host.innerHTML =
+    '<div class="k">Declined answers &middot; ' + r.runner + '</div>' +
+    '<p><strong>' + d.deferred.toLocaleString() + ' of ' + d.evaluation_decisions.toLocaleString() +
+    ' evaluation decisions (' + pct + '%)</strong> were declined by this runner. The decision contract has no ' +
+    'abstention type, so the adapter answered every one of them at the argmax option and each is counted above ' +
+    'as a confident correct-or-incorrect answer the model did not choose. ' +
+    d.projected_to_argmax.toLocaleString() + ' carried an explicit argmax projection in the raw output. ' +
+    'Read this row as the adapter\'s coverage, not the model\'s own.</p>';
+}
+
 function drawReadoutCaveat() {
   const host = A("#readout-caveat");
   const c = D.readoutCaveat;
@@ -261,6 +280,7 @@ function drawCards() {
       r.techniqueReimplementation ? '<span class="pill">reimpl.</span>' : "",
       r.runner === "pngwn" ? '<span class="pill">unresolved</span>' : "",
       r.readoutCaveat ? '<span class="pill caveat" title="Scored per option independently; may under-report a model trained to answer with restricted label codes">readout</span>' : "",
+      r.deferrals ? '<span class="pill caveat" title="This runner declined ' + r.deferrals.deferred + ' of ' + r.deferrals.evaluation_decisions + ' evaluation decisions (' + Math.round(r.deferrals.deferred_share * 100) + '%). The decision contract has no abstention type, so the adapter answered each one at the argmax option. The score below reflects that projection, not the model\'s own coverage.">declined</span>' : "",
     ].join("");
     row.innerHTML =
       '<span class="rk">' + (i + 1) + '</span>' +
@@ -278,6 +298,7 @@ function drawCards() {
       const sel = A("#suite-model");
       if (sel) sel.value = r.runner;
       drawCards();
+      drawDeferralNote();
       drawSuites();
       A("#suites").scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -501,12 +522,6 @@ function drawCoverage() {
 }
 
 /* -------------------------------------------------------------- hydrate */
-const EXCLUDED = [
-  ["winnow-e4b", "GGUF only", "A vision-language checkpoint published solely as GGUF. Needs a different runtime."],
-  ["clm-v0.1-8b", "Contrastive reranker", "Scores state-answer pairs rather than producing typed decisions."],
-  ["winnow-12b", "GGUF only", "22.3 GiB of bf16 weights published solely as GGUF. Fits current hardware but needs a different runtime."],
-];
-
 function hydrate() {
   const best = rows()[0];
   A("#stat-best-name").textContent = best.runner;
@@ -539,7 +554,7 @@ function hydrate() {
   }
 
   const grid = A("#excluded-grid");
-  grid.innerHTML = EXCLUDED.map(([name, reason, detail]) => `
+  grid.innerHTML = (D.excluded || []).map(([name, reason, detail]) => `
     <div class="card">
       <h3 style="display:flex;justify-content:space-between;gap:.6rem;align-items:baseline">
         <code style="font-size:.9rem">${name}</code>
@@ -573,6 +588,7 @@ function hydrate() {
 
 function drawAll() {
   drawStrip();
+  drawDeferralNote();
   drawReadoutCaveat();
   drawCards();
   drawSuites();
