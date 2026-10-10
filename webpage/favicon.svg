@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="sysone-bench">
-  <rect width="32" height="32" rx="4" fill="#f2efe9"/>
-  <rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill="none" stroke="#cdc7ba"/>
-  <g fill="#8a2b1f">
+  <rect width="32" height="32" rx="4" fill="#0b0d0c"/>
+  <rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill="none" stroke="#232a25"/>
+  <g fill="#f2a900">
     <rect x="6" y="8" width="20" height="4" rx="1"/>
     <rect x="6" y="15" width="14" height="4" rx="1"/>
     <rect x="6" y="22" width="8" height="4" rx="1"/>

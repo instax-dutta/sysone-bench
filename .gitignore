@@ -11,3 +11,6 @@ __pycache__/
 # Authoritative mirror is the private HF dataset saidutta69/sysone-bench-gpu-results,
 # verified file-by-file. See results/AGENTS.md.
 results/raw/
+
+# Local design scratch and evidence for the site redesign. Not shipped, not committed.
+.oil-task/

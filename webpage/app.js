@@ -1,7 +1,9 @@
-/* sysone-bench — chart rendering
+/* sysone-bench — chart rendering and interaction
  *
- * Every chart is built as inline SVG from data/results.json. No chart library: the visual language
- * has to stay consistent with the CSS tokens, and a leaderboard is not a generic bar chart.
+ * Every chart is hand-built inline SVG from data/results.json. No chart library: the visual
+ * language has to stay consistent with the CSS tokens, and a leaderboard is not a generic bar
+ * chart. No external runtime: reveals use IntersectionObserver and bars grow with the Web
+ * Animations API, so the page ships with zero script dependencies.
  */
 "use strict";
 
@@ -14,30 +16,34 @@ const el = (name, attrs = {}) => {
 };
 const pct = (x) => (x * 100).toFixed(2);
 const fixed = (x, n = 4) => (x === null || x === undefined ? "—" : Number(x).toFixed(n));
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 let D = null;
 let state = { filter: "all", sort: "accuracy", model: null, compare: "none" };
 
-/* ------------------------------------------------------------- monogram */
-const HUES = [188, 205, 262, 320, 12, 32, 48, 78, 142];
-function modelHue(name) {
-  let h = 0;
-  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
-  return HUES[h % HUES.length];
+/* --------------------------------------------------------------- colours */
+function colour(r) {
+  if (r.techniqueReimplementation) return "var(--dim)";
+  if (r.runner === "pngwn") return "var(--warn)";
+  return "var(--sig)";
 }
-function monogram(name) {
-  const parts = name.replace(/[^a-z0-9]+/gi, "-").split("-").filter(Boolean);
-  const letters = (parts.length > 1
-    ? parts[0][0] + parts[1][0]
-    : name.replace(/[^a-z0-9]/gi, "").slice(0, 2)).toUpperCase();
-  const hue = modelHue(name);
-  return '<span class="mono-mark" style="--mark:hsl(' + hue + ' 62% 58%);--mark-ink:hsl(' +
-    hue + ' 70% 88%)">' + letters + "</span>";
+const CH = ["var(--ch1)", "var(--ch2)", "var(--ch3)", "var(--ch4)", "var(--ch5)"];
+
+/* ---------------------------------------------------------- grow a mark */
+/* Bars are born from their baseline rather than appearing whole, so a redraw reads as a
+   measurement rising into place. Transform-origin is set per orientation. */
+function grow(node, from, origin, dur = 520) {
+  if (REDUCED || !node.animate) return;
+  node.style.transformBox = "fill-box";
+  node.style.transformOrigin = origin;
+  node.animate(
+    [{ transform: from }, { transform: "none" }],
+    { duration: dur, easing: "cubic-bezier(.22,.61,.36,1)", fill: "backwards" }
+  );
 }
 
 /* ------------------------------------------------------------------ load */
 function fail(err) {
-  // Never leave the reader with a blank document. Show the cause, and un-hide every section.
   console.error(err);
   document.querySelectorAll(".reveal").forEach((n) => n.classList.add("in", "failed"));
   const p = A("#leaderboard .band-head p");
@@ -48,7 +54,6 @@ function fail(err) {
       "hard-coded, so the charts stay empty until that file loads.";
   }
 }
-
 window.addEventListener("error", (e) => fail(e.error || e.message));
 window.addEventListener("unhandledrejection", (e) => fail(e.reason));
 
@@ -75,7 +80,6 @@ function visible() {
   if (state.sort === "accuracy") list.sort((a, b) => b.accuracy - a.accuracy);
   else if (state.sort === "runner") list.sort((a, b) => a.runner.localeCompare(b.runner));
   else {
-    // Spread = mean absolute per-suite deviation. A wide spread is not a penalty, it is a shape.
     const spread = (r) => {
       const v = Object.values(r.suites);
       if (!v.length) return 0;
@@ -88,153 +92,87 @@ function visible() {
 }
 
 function kindTag(r) {
-  if (r.runner === "pngwn") return '<span class="tag tag-unresolved">prompt unresolved</span>';
-  if (r.techniqueReimplementation) return '<span class="tag tag-technique">technique reimpl.</span>';
-  if (r.sharding) return '<span class="tag tag-shard">2-gpu shard</span>';
-  return '<span class="tag">vendor readout</span>';
+  if (r.runner === "pngwn") return '<span class="pill">unresolved</span>';
+  if (r.techniqueReimplementation) return '<span class="pill">reimpl.</span>';
+  if (r.sharding) return '<span class="pill">shard</span>';
+  return '<span class="pill">vendor</span>';
 }
 
-function colour(r) {
-  if (r.techniqueReimplementation) return "var(--caveat)";
-  if (r.runner === "pngwn") return "var(--warn)";
-  return "var(--accent)";
+/* Suite sparkline: the nine values as a bare trace. Decorative duplicate of the row, so it is
+   hidden from assistive tech. */
+function sparkline(r) {
+  const vals = D.suites.map((s) => r.suites[s]).filter((v) => v !== undefined);
+  if (vals.length < 2) return "";
+  const w = 120, h = 22, pad = 3;
+  const min = Math.min(...vals), max = Math.max(...vals), span = max - min || 1;
+  const pts = vals
+    .map((v, i) => {
+      const x = pad + (i / (vals.length - 1)) * (w - 2 * pad);
+      const y = h - pad - ((v - min) / span) * (h - 2 * pad);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join(" ");
+  return (
+    `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">` +
+    `<line class="sparkbase" x1="0" y1="${h / 2}" x2="${w}" y2="${h / 2}"/>` +
+    `<polyline class="sparkline" points="${pts}"/></svg>`
+  );
 }
 
-/* ------------------------------------------------------------ leaderboard */
-function drawLeaderboard() {
-  const svg = A("#chart-leaderboard");
-  svg.replaceChildren();
-  const data = visible();
-  const ref = D.referenceClosedApi;
-
-  const rowH = 17;
-  const padL = 168, padR = 64, padT = 30, padB = 26;
-  const w = 1000;
-  const h = padT + data.length * rowH + padB;
-  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-  svg.setAttribute("height", h);
-
-  const min = 0.30, max = 0.92;
-  const x = (v) => padL + ((v - min) / (max - min)) * (w - padL - padR);
-
-  for (let t = 0.3; t <= 0.9; t += 0.1) {
-    svg.append(el("line", { x1: x(t), x2: x(t), y1: padT - 8, y2: h - padB, class: "grid-line" }));
-    const lab = el("text", { x: x(t), y: h - padB + 14, class: "axis-label", "text-anchor": "middle" });
-    lab.textContent = t.toFixed(1);
-    svg.append(lab);
-  }
-
-  // The closed-API reference, drawn as a vertical rule behind the bars so the gap is visible.
-  const rx = x(ref.accuracy);
-  svg.append(el("line", {
-    x1: rx, x2: rx, y1: padT - 14, y2: h - padB,
-    stroke: "var(--closed)", "stroke-width": 1.5, "stroke-dasharray": "3 3", opacity: 0.85,
-  }));
-  const rl = el("text", { x: rx + 5, y: padT - 18, class: "axis-label", fill: "var(--closed)" });
-  rl.textContent = `closed API ${pct(ref.accuracy)}`;
-  svg.append(rl);
-
-  data.forEach((r, i) => {
-    const y = padT + i * rowH;
-    const bw = Math.max(1, x(r.accuracy) - padL);
-    const g = el("g", { class: "bar", tabindex: "0" });
-    g.appendChild(el("title")).textContent =
-      `${r.runner} — ${pct(r.accuracy)}%  ·  ${r.model || ""}  ·  ${r.scoring || "vendor readout"}`;
-
-    g.append(el("rect", { x: 0, y, width: w, height: rowH, fill: "transparent" }));
-
-    const name = el("text", { x: 8, y: y + 12, class: "bar-label" });
-    name.textContent = r.runner.length > 21 ? r.runner.slice(0, 20) + "…" : r.runner;
-    if (r.techniqueReimplementation) name.setAttribute("fill", "var(--caveat)");
-    g.append(name);
-
-    g.append(el("rect", { x: padL, y: y + 3, width: bw, height: rowH - 7, rx: 2, fill: colour(r) }));
-    const val = el("text", { x: padL + bw + 7, y: y + 12, class: "bar-value" });
-    val.textContent = r.accuracy.toFixed(4);
-    g.append(val);
-    svg.append(g);
-  });
-}
-
-/* ----------------------------------------------------------------- table */
-function drawTable() {
-  const body = A("#table-all tbody");
-  body.replaceChildren();
-  visible().forEach((r, i) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td class="rank">${i + 1}</td>
-      <td><code>${r.runner}</code></td>
-      <td class="num">${r.accuracy.toFixed(4)}</td>
-      <td>${kindTag(r)}</td>
-      <td style="color:var(--ink-3);font-size:0.8rem">${r.scoring || "—"}</td>
-      <td class="num" style="color:var(--ink-4);font-size:0.75rem">${r.runId}</td>`;
-    body.append(tr);
-  });
-}
-
-/* ---------------------------------------------------------------- suites */
-function drawSuites() {
-  const svg = A("#chart-suites");
-  svg.replaceChildren();
-  const legend = A("#suite-legend");
-  legend.replaceChildren();
-
-  const pick = state.compare === "top" ? rows().slice(0, 5) : [rows().find((r) => r.runner === state.model)];
-  const series = pick.filter(Boolean);
-  const suites = D.suites;
-
-  const padL = 46, padR = 16, padT = 18, padB = 88;
-  const w = 1000;
-  const h = 330;
-  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-
-  const plotH = h - padT - padB;
-  const band = (w - padL - padR) / suites.length;
-  const y = (v) => padT + plotH - v * plotH;
-
-  for (let t = 0; t <= 1.0001; t += 0.25) {
-    svg.append(el("line", { x1: padL, x2: w - padR, y1: y(t), y2: y(t), class: "grid-line" }));
-    const lab = el("text", { x: padL - 8, y: y(t) + 3, class: "axis-label", "text-anchor": "end" });
-    lab.textContent = t.toFixed(2);
-    svg.append(lab);
-  }
-
-  const hues = ["var(--accent)", "var(--closed)", "var(--caveat)", "var(--ok)", "var(--warn)"];
-  suites.forEach((s, si) => {
-    const bx = padL + si * band;
-    series.forEach((r, ri) => {
-      const v = r.suites[s];
-      if (v === undefined) return;
-      const bw = Math.min(44, (band * 0.6) / series.length);
-      const x0 = bx + (band - bw * series.length) / 2 + ri * bw;
-      const rect = el("rect", {
-        x: x0, y: y(v), width: Math.max(1, bw - 3), height: Math.max(1, plotH - (y(v) - padT)),
-        rx: 3, fill: hues[ri % hues.length], "fill-opacity": .82, class: "bar",
-      });
-      rect.appendChild(el("title")).textContent = `${r.runner} · ${s} · ${pct(v)}%`;
-      svg.append(rect);
+/* ------------------------------------------------------------ the field */
+function drawField(animate = true) {
+  const grid = A("#model-grid");
+  if (!grid) return;
+  grid.replaceChildren();
+  const list = visible();
+  const lo = 0.20, hi = 0.95;
+  list.forEach((r, i) => {
+    const c = colour(r);
+    const row = document.createElement("button");
+    row.className = "model" + (r.techniqueReimplementation ? " re" : "");
+    row.type = "button";
+    row.setAttribute("aria-pressed", String(state.model === r.runner));
+    const flags = [
+      r.sharding ? '<span class="pill">shard</span>' : "",
+      r.techniqueReimplementation ? '<span class="pill">reimpl.</span>' : "",
+      r.runner === "pngwn" ? '<span class="pill">unresolved</span>' : "",
+      r.readoutCaveat ? '<span class="pill caveat" title="Scored per option independently; may under-report a model trained to answer with restricted label codes">readout</span>' : "",
+      r.deferrals ? '<span class="pill caveat" title="This runner declined ' + r.deferrals.deferred + ' of ' + r.deferrals.evaluation_decisions + ' evaluation decisions (' + Math.round(r.deferrals.deferred_share * 100) + '%). The decision contract has no abstention type, so the adapter answered each one at the argmax option. The score below reflects that projection, not the model\'s own coverage.">declined</span>' : "",
+    ].join("");
+    row.innerHTML =
+      '<span class="rk">' + (i + 1) + '</span>' +
+      '<span class="nm" title="' + r.runner + '">' + r.runner + '</span>' +
+      '<span class="model-track"><i style="width:' + (((r.accuracy - lo) / (hi - lo)) * 100).toFixed(1) +
+        '%;background:' + c + '"></i></span>' +
+      '<span class="acc" style="color:' + c + '">' + r.accuracy.toFixed(4) + '</span>' +
+      '<span class="spark">' + sparkline(r) + '</span>' +
+      '<span class="model-flags">' + flags + '</span>';
+    row.addEventListener("click", () => {
+      state.model = r.runner;
+      state.compare = "none";
+      document.querySelectorAll("[data-compare]").forEach((b) =>
+        b.setAttribute("aria-pressed", String(b.dataset.compare === "none")));
+      const sel = A("#suite-model");
+      if (sel) sel.value = r.runner;
+      syncSeg(A('[data-seg="compare"]'));
+      drawField(false);
+      drawDeferralNote();
+      drawSuites();
+      A("#suites").scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "start" });
     });
-    const tick = el("text", {
-      x: bx + band / 2, y: h - padB + 16, class: "axis-label", "text-anchor": "end",
-      transform: `rotate(-34 ${bx + band / 2} ${h - padB + 16})`,
-    });
-    tick.textContent = s;
-    svg.append(tick);
+    grid.append(row);
+    if (animate && !REDUCED && row.animate) {
+      row.animate(
+        [{ opacity: 0, transform: "translateY(7px)" }, { opacity: 1, transform: "none" }],
+        { duration: 380, delay: Math.min(i * 16, 360), easing: "cubic-bezier(.22,.61,.36,1)", fill: "backwards" }
+      );
+    }
   });
-
-  A("#suite-title").textContent =
-    state.compare === "top" ? "Top 5 models, per suite" : `${state.model}, per suite`;
-
-  series.forEach((r, i) => {
-    const d = document.createElement("div");
-    d.innerHTML = `<i style="background:${hues[i % hues.length]}"></i> ${r.runner}`;
-    legend.append(d);
-  });
+  const c = A("#grid-count");
+  if (c) c.textContent = list.length + " shown \u00b7 click any row for its per-suite profile";
 }
 
-/* --------------------------------------------------------- ranked list */
-/* ------------------------------------------------------- deferral caveat */
+/* ------------------------------------------------------ deferral caveat */
 function drawDeferralNote() {
   const host = A("#deferral-note");
   if (!host) return;
@@ -242,11 +180,11 @@ function drawDeferralNote() {
   const d = r && r.deferrals;
   if (!d) { host.innerHTML = ""; host.hidden = true; return; }
   host.hidden = false;
-  const pct = (d.deferred_share * 100).toFixed(1);
+  const share = (d.deferred_share * 100).toFixed(1);
   host.innerHTML =
     '<div class="k">Declined answers &middot; ' + r.runner + '</div>' +
     '<p><strong>' + d.deferred.toLocaleString() + ' of ' + d.evaluation_decisions.toLocaleString() +
-    ' evaluation decisions (' + pct + '%)</strong> were declined by this runner. The decision contract has no ' +
+    ' evaluation decisions (' + share + '%)</strong> were declined by this runner. The decision contract has no ' +
     'abstention type, so the adapter answered every one of them at the argmax option and each is counted above ' +
     'as a confident correct-or-incorrect answer the model did not choose. ' +
     d.projected_to_argmax.toLocaleString() + ' carried an explicit argmax projection in the raw output. ' +
@@ -264,51 +202,66 @@ function drawReadoutCaveat() {
     '<p>' + c.note + ' <a href="' + c.confirmedBy + '">Thread with the authors</a>.</p>';
 }
 
-function drawCards() {
-  const grid = A("#model-grid");
-  if (!grid) return;
-  grid.replaceChildren();
-  const list = visible();
-  const lo = 0.20, hi = 0.95;
-  list.forEach((r, i) => {
-    const row = document.createElement("button");
-    row.className = "model";
-    row.type = "button";
-    row.setAttribute("aria-pressed", String(state.model === r.runner));
-    const flags = [
-      r.sharding ? '<span class="pill">shard</span>' : "",
-      r.techniqueReimplementation ? '<span class="pill">reimpl.</span>' : "",
-      r.runner === "pngwn" ? '<span class="pill">unresolved</span>' : "",
-      r.readoutCaveat ? '<span class="pill caveat" title="Scored per option independently; may under-report a model trained to answer with restricted label codes">readout</span>' : "",
-      r.deferrals ? '<span class="pill caveat" title="This runner declined ' + r.deferrals.deferred + ' of ' + r.deferrals.evaluation_decisions + ' evaluation decisions (' + Math.round(r.deferrals.deferred_share * 100) + '%). The decision contract has no abstention type, so the adapter answered each one at the argmax option. The score below reflects that projection, not the model\'s own coverage.">declined</span>' : "",
-    ].join("");
-    row.innerHTML =
-      '<span class="rk">' + (i + 1) + '</span>' +
-      monogram(r.runner) +
-      '<span class="nm">' + r.runner + '</span>' +
-      '<span class="model-track"><i style="width:' + (((r.accuracy - lo) / (hi - lo)) * 100).toFixed(1) +
-        '%;background:' + (r.techniqueReimplementation ? "var(--caveat)" : "var(--ink)") + '"></i></span>' +
-      '<span class="acc" style="color:' + colour(r) + '">' + r.accuracy.toFixed(4) + '</span>' +
-      '<span class="model-flags">' + flags + '</span>';
-    row.addEventListener("click", () => {
-      state.model = r.runner;
-      state.compare = "none";
-      document.querySelectorAll("[data-compare]").forEach((b) =>
-        b.setAttribute("aria-pressed", String(b.dataset.compare === "none")));
-      const sel = A("#suite-model");
-      if (sel) sel.value = r.runner;
-      drawCards();
-      drawDeferralNote();
-      drawSuites();
-      A("#suites").scrollIntoView({ behavior: "smooth", block: "start" });
+/* --------------------------------------------------------------- suites */
+function drawSuites() {
+  const svg = A("#chart-suites");
+  svg.replaceChildren();
+  const legend = A("#suite-legend");
+  legend.replaceChildren();
+
+  const pick = state.compare === "top" ? rows().slice(0, 5) : [rows().find((r) => r.runner === state.model)];
+  const series = pick.filter(Boolean);
+  const suites = D.suites;
+
+  const padL = 46, padR = 16, padT = 18, padB = 92;
+  const w = 1040, h = 340;
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+
+  const plotH = h - padT - padB;
+  const band = (w - padL - padR) / suites.length;
+  const y = (v) => padT + plotH - v * plotH;
+
+  for (let t = 0; t <= 1.0001; t += 0.25) {
+    svg.append(el("line", { x1: padL, x2: w - padR, y1: y(t), y2: y(t), class: "grid-line" }));
+    const lab = el("text", { x: padL - 8, y: y(t) + 3, class: "axis-label", "text-anchor": "end" });
+    lab.textContent = t.toFixed(2);
+    svg.append(lab);
+  }
+
+  suites.forEach((s, si) => {
+    const bx = padL + si * band;
+    series.forEach((r, ri) => {
+      const v = r.suites[s];
+      if (v === undefined) return;
+      const bw = Math.min(44, (band * 0.6) / series.length);
+      const x0 = bx + (band - bw * series.length) / 2 + ri * bw;
+      const rect = el("rect", {
+        x: x0, y: y(v), width: Math.max(1, bw - 3), height: Math.max(1, plotH - (y(v) - padT)),
+        rx: 1, fill: CH[ri % CH.length], "fill-opacity": .9, class: "bar",
+      });
+      rect.appendChild(el("title")).textContent = `${r.runner} · ${s} · ${pct(v)}%`;
+      svg.append(rect);
+      grow(rect, "scaleY(0)", "bottom");
     });
-    grid.append(row);
+    const tick = el("text", {
+      x: bx + band / 2, y: h - padB + 16, class: "axis-label", "text-anchor": "end",
+      transform: `rotate(-34 ${bx + band / 2} ${h - padB + 16})`,
+    });
+    tick.textContent = s;
+    svg.append(tick);
   });
-  const c = A("#grid-count");
-  if (c) c.textContent = list.length + " shown \u00b7 click any row for its per-suite profile";
+
+  A("#suite-title").textContent =
+    state.compare === "top" ? "Top 5 models, per suite" : `${state.model}, per suite`;
+
+  series.forEach((r, i) => {
+    const d = document.createElement("div");
+    d.innerHTML = `<i style="background:${CH[i % CH.length]}"></i> ${r.runner}`;
+    legend.append(d);
+  });
 }
 
-/* ------------------------------------------------------ suite multiples */
+/* ------------------------------------------------------------ multiples */
 function drawMultiples() {
   const host = A("#suite-multiples");
   if (!host) return;
@@ -328,7 +281,7 @@ function drawMultiples() {
       pct(top[0] ? top[0].suites[suite] : 0) + '% \u00b7 spread ' + pct(spread) + '</div>';
     host.append(box);
 
-    const w = 300, rowH = 13, padL = 112, padR = 38;
+    const w = 300, rowH = 14, padL = 104, padR = 40;
     const h = top.length * rowH + 6;
     const svg = el("svg", { viewBox: "0 0 " + w + " " + h, role: "img" });
     svg.setAttribute("aria-label", "Top five models on " + suite);
@@ -337,12 +290,13 @@ function drawMultiples() {
     top.forEach((r, i) => {
       const y = i * rowH + 2;
       const lab = el("text", { x: 0, y: y + 9, class: "bar-label" });
-      lab.textContent = r.runner.length > 16 ? r.runner.slice(0, 15) + "\u2026" : r.runner;
+      lab.textContent = r.runner.length > 15 ? r.runner.slice(0, 14) + "\u2026" : r.runner;
       svg.append(lab);
       const bw = Math.max(1, x(r.suites[suite]) - padL);
-      const bar = el("rect", { x: padL, y: y + 2, width: bw, height: rowH - 5, rx: 2, fill: colour(r) });
+      const bar = el("rect", { x: padL, y: y + 2, width: bw, height: rowH - 6, rx: 1, fill: colour(r) });
       bar.appendChild(el("title")).textContent = r.runner + " \u00b7 " + suite + " \u00b7 " + pct(r.suites[suite]) + "%";
       svg.append(bar);
+      grow(bar, "scaleX(0)", "left", 460);
       const v = el("text", { x: padL + bw + 5, y: y + 9, class: "bar-value" });
       v.textContent = r.suites[suite].toFixed(2);
       svg.append(v);
@@ -357,49 +311,47 @@ function drawStrip() {
   svg.replaceChildren();
   const list = rows().slice().sort((a, b) => a.accuracy - b.accuracy);
   const ref = D.referenceClosedApi;
-  const padL = 14, padR = 58, padT = 22, padB = 30;
-  const w = 520, h = 250;
+  const padL = 16, padR = 66, padT = 26, padB = 32;
+  const w = 600, h = 236;
   svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
   const min = 0.25, max = 0.92;
   const x = (v) => padL + ((v - min) / (max - min)) * (w - padL - padR);
 
   for (let t = 0.3; t <= 0.9; t += 0.1) {
-    svg.append(el("line", { x1: x(t), x2: x(t), y1: padT - 8, y2: h - padB, class: "grid-line" }));
-    const lab = el("text", { x: x(t), y: h - padB + 15, class: "axis-label", "text-anchor": "middle" });
+    svg.append(el("line", { x1: x(t), x2: x(t), y1: padT - 10, y2: h - padB, class: "grid-line" }));
+    const lab = el("text", { x: x(t), y: h - padB + 16, class: "axis-label", "text-anchor": "middle" });
     lab.textContent = t.toFixed(1);
     svg.append(lab);
   }
-  const jitter = (i) => padT + 10 + ((i * 37) % 100) / 100 * (h - padT - padB - 16);
+  const jitter = (i) => padT + 8 + (((i * 37) % 100) / 100) * (h - padT - padB - 14);
 
   list.forEach((r, i) => {
-    const c = el("circle", {
-      cx: x(r.accuracy), cy: jitter(i), r: 3.4,
-      fill: r.techniqueReimplementation ? "var(--caveat)" : r.runner === "pngwn" ? "var(--warn)" : "var(--accent)",
-      opacity: 0.85,
-    });
+    const c = el("circle", { cx: x(r.accuracy), cy: jitter(i), r: 3.4, fill: colour(r), opacity: 0.88 });
     c.appendChild(el("title")).textContent = `${r.runner} \u2014 ${pct(r.accuracy)}%`;
     svg.append(c);
+    if (!REDUCED && c.animate) {
+      c.animate([{ opacity: 0, transform: "scale(.4)" }, { opacity: .88, transform: "none" }],
+        { duration: 420, delay: Math.min(i * 8, 320), easing: "cubic-bezier(.22,.61,.36,1)", fill: "backwards" });
+    }
   });
 
   const rx = x(ref.accuracy);
-  svg.append(el("line", { x1: rx, x2: rx, y1: padT - 14, y2: h - padB,
-    stroke: "var(--closed)", "stroke-width": 1.5, "stroke-dasharray": "3 3" }));
-  const t = el("text", { x: rx + 4, y: padT - 18, class: "axis-label", fill: "var(--closed)" });
-  t.textContent = "Jev";
+  svg.append(el("line", { x1: rx, x2: rx, y1: padT - 16, y2: h - padB,
+    stroke: "var(--ref)", "stroke-width": 1.4, "stroke-dasharray": "2 3" }));
+  const t = el("text", { x: rx + 5, y: padT - 18, class: "axis-label", fill: "var(--ref)" });
+  t.textContent = `Jev 1.13.0 \u00b7 ${ref.accuracy.toFixed(4)}`;
   svg.append(t);
 
   const best = list[list.length - 1];
   const bl = el("text", {
-    x: x(best.accuracy) - 8, y: padT + 4, class: "bar-value",
-    fill: "var(--accent)", "text-anchor": "end",
+    x: x(best.accuracy) - 8, y: padT + 4, class: "bar-value", fill: "var(--sig)", "text-anchor": "end",
   });
   bl.textContent = "best " + best.accuracy.toFixed(4);
   svg.append(bl);
 }
 
 /* --------------------------------------------------------------- heatmap */
-/* Transposed: suites down the side, models across. 43 rows by 9 columns is a tall strip in a
-   wide container; 9 rows by 43 columns fills it and reads left-to-right in score order. */
+/* Transposed: suites down the side, models across, in score order so it reads left to right. */
 function drawHeatmap() {
   const svg = A("#chart-heatmap");
   svg.replaceChildren();
@@ -435,10 +387,10 @@ function drawHeatmap() {
     list.forEach((r, ci) => {
       const v = r.suites[suite];
       const rect = el("rect", {
-        x: padL + ci * (cw + gap), y, width: cw, height: ch, rx: 3,
+        x: padL + ci * (cw + gap), y, width: cw, height: ch, rx: 2,
         fill: v === undefined
-          ? "var(--surface-2)"
-          : `color-mix(in oklab, var(--accent) ${Math.round(v * 100)}%, var(--surface-2))`,
+          ? "var(--bg-3)"
+          : `color-mix(in oklab, var(--sig) ${Math.round(v * 100)}%, var(--bg-2))`,
         opacity: r.techniqueReimplementation ? 0.5 : 1,
       });
       rect.appendChild(el("title")).textContent =
@@ -454,14 +406,13 @@ function drawPrecision() {
   svg.replaceChildren();
   const host = D.measurements.find((r) => r.runner === "tev1-08b");
   const pairs = [
-    ["CPU · fp32", 0.7629, "var(--closed)"],
-    ["T4 · fp16", host ? host.accuracy : 0.7734, "var(--accent)"],
+    ["CPU \u00b7 fp32", 0.7629, "var(--ink-3)"],
+    ["T4 \u00b7 fp16", host ? host.accuracy : 0.7734, "var(--sig)"],
   ];
-  const padL = 54, padT = 16, padB = 42, padR = 74;
-  const w = 520, h = 220;
+  const padL = 58, padT = 16, padB = 46, padR = 78;
+  const w = 560, h = 240;
   const plotH = h - padT - padB;
   svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-  // Truncated axis, stated on the chart, because the whole point is a 0.0105 gap.
   const min = 0.70, max = 0.80;
   const y = (v) => padT + plotH - ((v - min) / (max - min)) * plotH;
 
@@ -472,24 +423,25 @@ function drawPrecision() {
     svg.append(lab);
   }
   const axisNote = el("text", { x: w - padR, y: h - 8, class: "axis-label", "text-anchor": "end" });
-  axisNote.textContent = "axis truncated to 0.70–0.80";
+  axisNote.textContent = "axis truncated to 0.70\u20130.80";
   svg.append(axisNote);
 
   pairs.forEach(([label, v, fill], i) => {
-    const bw = 96, x0 = padL + 24 + i * (bw + 52);
-    svg.append(el("rect", { x: x0, y: y(v), width: bw, height: Math.max(1, h - padB - y(v)), rx: 3, fill }));
-    svg.lastChild.appendChild(el("title")).textContent = `${label} · ${pct(v)}%`;
+    const bw = 96, x0 = padL + 26 + i * (bw + 56);
+    const rect = el("rect", { x: x0, y: y(v), width: bw, height: Math.max(1, h - padB - y(v)), rx: 1, fill });
+    rect.appendChild(el("title")).textContent = `${label} \u00b7 ${pct(v)}%`;
+    svg.append(rect);
+    grow(rect, "scaleY(0)", "bottom");
     const vt = el("text", { x: x0 + bw / 2, y: y(v) - 7, class: "bar-value", "text-anchor": "middle" });
     vt.textContent = v.toFixed(4);
     svg.append(vt);
-    const lt = el("text", { x: x0 + bw / 2, y: h - padB + 17, class: "axis-label", "text-anchor": "middle" });
+    const lt = el("text", { x: x0 + bw / 2, y: h - padB + 18, class: "axis-label", "text-anchor": "middle" });
     lt.textContent = label;
     svg.append(lt);
   });
 
-  const gapY = y(0.7629) - 26;
-  const gl = el("text", { x: w - padR, y: gapY + 8, class: "axis-label", fill: "var(--warn)", "text-anchor": "end" });
-  gl.textContent = "Δ 0.0105";
+  const gl = el("text", { x: w - padR, y: y(0.7629) - 18, class: "axis-label", fill: "var(--warn)", "text-anchor": "end" });
+  gl.textContent = "\u0394 0.0105";
   svg.append(gl);
 }
 
@@ -498,12 +450,12 @@ function drawCoverage() {
   const svg = A("#chart-coverage");
   svg.replaceChildren();
   const items = [
-    ["Run directories verified", D.runDirectoriesVerified, "var(--accent)"],
-    ["Distinct runners", 44, "var(--accent)"],
-    ["Distinct measurements", D.distinctMeasurements, "var(--ok)"],
+    ["Run directories verified", D.runDirectoriesVerified, "var(--sig)"],
+    ["Distinct measurements", D.distinctMeasurements, "var(--sig)"],
+    ["Entries unmeasured", D.scopeTotal - D.distinctMeasurements, "var(--dim)"],
   ];
-  const padL = 176, padT = 14, rowH = 40;
-  const w = 560, h = padT + items.length * rowH + 10;
+  const padL = 176, padT = 14, rowH = 42;
+  const w = 600, h = padT + items.length * rowH + 10;
   const max = Math.max(...items.map((i) => i[1]));
   svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
   svg.setAttribute("height", h);
@@ -511,30 +463,50 @@ function drawCoverage() {
   items.forEach(([label, v, fill], i) => {
     const y = padT + i * rowH;
     const bw = (v / max) * (w - padL - 66);
-    const t = el("text", { x: 0, y: y + 21, class: "bar-label" });
+    const t = el("text", { x: 0, y: y + 22, class: "bar-label" });
     t.textContent = label;
     svg.append(t);
-    svg.append(el("rect", { x: padL, y: y + 5, width: bw, height: 20, rx: 3, fill }));
-    const vt = el("text", { x: padL + bw + 8, y: y + 21, class: "bar-value" });
+    const bar = el("rect", { x: padL, y: y + 6, width: bw, height: 20, rx: 1, fill });
+    svg.append(bar);
+    grow(bar, "scaleX(0)", "left");
+    const vt = el("text", { x: padL + bw + 8, y: y + 22, class: "bar-value" });
     vt.textContent = v;
     svg.append(vt);
   });
+}
+
+/* -------------------------------------------------------------- numerals */
+function countUp(node, value, { decimals = 4, grouped = false, dur = 760 } = {}) {
+  const fmt = (x) => (grouped
+    ? Math.round(x).toLocaleString("en-US")
+    : Number(x).toFixed(decimals));
+  if (REDUCED) { node.textContent = fmt(value); return; }
+  const t0 = performance.now();
+  (function frame(t) {
+    const k = Math.min(1, (t - t0) / dur);
+    const e = 1 - Math.pow(1 - k, 3);
+    node.textContent = fmt(value * e);
+    if (k < 1) requestAnimationFrame(frame);
+    else node.textContent = fmt(value);
+  })(t0);
 }
 
 /* -------------------------------------------------------------- hydrate */
 function hydrate() {
   const best = rows()[0];
   A("#stat-best-name").textContent = best.runner;
-  A("#stat-measured").textContent = D.distinctMeasurements;
-  A("#stat-best").textContent = best.accuracy.toFixed(4);
-  A("#stat-closed").textContent = D.referenceClosedApi.accuracy.toFixed(4);
-  A("#stat-gap").textContent = D.decisions.toLocaleString("en-US");
+  countUp(A("#stat-best"), best.accuracy, { decimals: 4 });
+  countUp(A("#stat-closed"), D.referenceClosedApi.accuracy, { decimals: 4 });
+  countUp(A("#stat-gap"), D.decisions, { grouped: true });
+  const gap = best.accuracy - D.referenceClosedApi.accuracy;
+  const dl = A("#delta-line");
+  if (dl) dl.innerHTML = "<b>\u2212" + Math.abs(gap).toFixed(4) + "</b> against the closed-API reference";
 
   const sel = A("#suite-model");
   rows().forEach((r) => {
     const o = document.createElement("option");
     o.value = r.runner;
-    o.textContent = `${r.runner} — ${r.accuracy.toFixed(4)}`;
+    o.textContent = `${r.runner} \u2014 ${r.accuracy.toFixed(4)}`;
     sel.append(o);
   });
   state.model = best.runner;
@@ -542,9 +514,9 @@ function hydrate() {
   const list = A("#collapse-list");
   const dup = D.duplicates;
   const row = (name, why) =>
-    `<div style="display:flex;gap:.6rem;align-items:baseline;padding:.5rem 0;border-bottom:1px solid var(--line-soft)">
+    `<div style="display:flex;gap:.6rem;align-items:baseline;padding:.5rem 0;border-bottom:1px solid var(--line)">
        <code style="font-size:.8rem;color:var(--ink)">${name}</code>
-       <span style="font-size:.78rem;color:var(--ink-3);margin-left:auto;text-align:right">${why}</span>
+       <span style="font-size:.76rem;color:var(--ink-3);margin-left:auto;text-align:right">${why}</span>
      </div>`;
   for (const [runner, dirs] of Object.entries(dup.repeatedRuns || {})) {
     list.innerHTML += row(runner, `${dirs.length} directories, one model`);
@@ -555,15 +527,12 @@ function hydrate() {
 
   const grid = A("#excluded-grid");
   grid.innerHTML = (D.excluded || []).map(([name, reason, detail]) => `
-    <div class="card">
-      <h3 style="display:flex;justify-content:space-between;gap:.6rem;align-items:baseline">
-        <code style="font-size:.9rem">${name}</code>
-      </h3>
-      <p style="color:var(--warn);font-size:.78rem;font-family:var(--font-num);margin-bottom:.5rem">${reason}</p>
-      <p style="font-size:.85rem">${detail}</p>
+    <div>
+      <h4>${name}</h4>
+      <p class="reason">${reason}</p>
+      <p>${detail}</p>
     </div>`).join("");
 
-  // Every count in the copy is filled from the generated data, never hand-typed.
   const counts = {
     measurements: D.distinctMeasurements,
     dirs: D.runDirectoriesVerified,
@@ -590,7 +559,7 @@ function drawAll() {
   drawStrip();
   drawDeferralNote();
   drawReadoutCaveat();
-  drawCards();
+  drawField();
   drawSuites();
   drawMultiples();
   drawHeatmap();
@@ -598,19 +567,34 @@ function drawAll() {
   drawCoverage();
 }
 
+/* ---------------------------------------------------- sliding segment */
+function syncSeg(seg) {
+  if (!seg) return;
+  const active = seg.querySelector('.chip[aria-pressed="true"]');
+  const thumb = seg.querySelector(".seg-thumb");
+  if (!active || !thumb) return;
+  thumb.style.width = active.offsetWidth + "px";
+  thumb.style.transform = `translateX(${active.offsetLeft}px)`;
+}
+function syncAllSegs() {
+  document.querySelectorAll(".seg").forEach(syncSeg);
+}
+
+/* ----------------------------------------------------------------- wire */
 function wire() {
   document.querySelectorAll("[data-filter]").forEach((btn) => {
     btn.addEventListener("click", () => {
       state.filter = btn.dataset.filter;
       document.querySelectorAll("[data-filter]").forEach((b) =>
         b.setAttribute("aria-pressed", String(b === btn)));
-      drawCards();
+      syncSeg(btn.closest(".seg"));
+      drawField();
     });
   });
 
   A("#sort-by").addEventListener("change", (e) => {
     state.sort = e.target.value;
-    drawCards();
+    drawField();
   });
 
   A("#suite-model").addEventListener("change", (e) => {
@@ -618,6 +602,7 @@ function wire() {
     state.compare = "none";
     document.querySelectorAll("[data-compare]").forEach((b) =>
       b.setAttribute("aria-pressed", String(b.dataset.compare === "none")));
+    syncSeg(A('[data-seg="compare"]'));
     drawDeferralNote();
     drawSuites();
   });
@@ -627,48 +612,41 @@ function wire() {
       state.compare = btn.dataset.compare;
       document.querySelectorAll("[data-compare]").forEach((b) =>
         b.setAttribute("aria-pressed", String(b === btn)));
+      syncSeg(btn.closest(".seg"));
       drawSuites();
     });
   });
 
+  // Reveals: once each, resolved to full opacity, never stranded.
   const nodes = Array.from(document.querySelectorAll(".reveal"));
-  const show = (n) => n.classList.add("in");
-  nodes.forEach(show);
+  if (REDUCED || !("IntersectionObserver" in window)) {
+    nodes.forEach((n) => n.classList.add("in"));
+  } else {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { rootMargin: "0px 0px -6% 0px", threshold: 0.01 });
+    nodes.forEach((n) => io.observe(n));
+  }
 
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const hasGsap = typeof window.gsap !== "undefined";
-
-  // Rail: ticks mark the accuracy scale, and the scale marker tracks the scroll position.
-  const ticks = document.getElementById("rail-ticks");
-  const rail = document.getElementById("rail");
-  if (ticks) {
-    [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9].forEach((t) => {
-      const row = document.createElement("div");
-      const major = Math.round(t * 10) % 2 === 0;
-      row.className = "rail-tick" + (major ? " major" : "");
-      row.style.flex = "1 1 0";
-      row.innerHTML = "<b>" + t.toFixed(1) + "</b><i></i>";
-      ticks.append(row);
+  // Segment thumbs: place after fonts settle so widths are final, and keep them on resize.
+  // The .ready class disables the transition so the first placement is instant, never a
+  // grow-from-zero.
+  const thumbs = document.querySelectorAll(".seg-thumb");
+  thumbs.forEach((t) => t.classList.add("ready"));
+  syncAllSegs();
+  requestAnimationFrame(() => thumbs.forEach((t) => t.classList.remove("ready")));
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      thumbs.forEach((t) => t.classList.add("ready"));
+      syncAllSegs();
+      requestAnimationFrame(() => thumbs.forEach((t) => t.classList.remove("ready")));
     });
   }
-  if (rail) rail.classList.add("on");
+  window.addEventListener("resize", syncAllSegs);
 
-  // Smooth scrolling via Lenis, driven by GSAP's ticker so ScrollTrigger stays in step with it.
-  // GSAP's own ScrollSmoother is a Club plugin and is not on the public CDN, so Lenis stands in.
-  if (!hasGsap || reduced || typeof Lenis === "undefined") return;
-
-  gsap.registerPlugin(ScrollTrigger);
-
-  const lenis = new Lenis({
-    lerp: 0.11,
-    smoothWheel: true,
-    syncTouch: false,
-    wheelMultiplier: 1,
-    touchMultiplier: 1.4,
-  });
-  lenis.on("scroll", ScrollTrigger.update);
-  gsap.ticker.add((time) => lenis.raf(time * 1000));
-  gsap.ticker.lagSmoothing(0);
+  // Anchor links: native smooth scroll, skipped under reduced motion.
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
     a.addEventListener("click", (e) => {
       const id = a.getAttribute("href");
@@ -676,22 +654,7 @@ function wire() {
       const target = document.querySelector(id);
       if (!target) return;
       e.preventDefault();
-      lenis.scrollTo(target, { offset: -70, duration: 1.2 });
+      target.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "start" });
     });
   });
-
-  gsap.utils.toArray(".reveal").forEach((node) => {
-    gsap.fromTo(node, { y: 26, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 0.9, ease: "power3.out",
-      scrollTrigger: { trigger: node, start: "top 88%", once: true },
-    });
-  });
-
-  // The measurement rail tracks reading position, so it reads as an instrument rather than trim.
-  if (rail) {
-    gsap.to(rail, {
-      scrollTrigger: { trigger: document.body, start: "top top", end: "bottom bottom", scrub: 0.4 },
-      opacity: 1, ease: "none",
-    });
-  }
 }

@@ -55,14 +55,14 @@
   caveat changes no number and requires no re-run; say so on the page.
 - Charts are hand-built inline SVG in `app.js`. Keep them accessible: `role`, `aria-label`, and a
   `<title>` per mark.
-- Smooth scrolling uses Lenis plus GSAP ScrollTrigger. GSAP `ScrollSmoother` is a paid Club plugin and
-  is not available; do not reintroduce it.
-- `html` must keep `scroll-behavior: auto` and `overscroll-behavior-y: none`. Native smooth scrolling
-  fights Lenis and produces rubber-band scrolling. Drive Lenis with `lerp`, not a long `duration`.
-- Anything pinned with GSAP must not use `pinSpacing: false` against a margin-offset heading, which
-  collapses the flow and overlaps the following paragraph.
-- Wide fixed-pixel charts, such as the heatmap, live inside an `overflow-x: auto` wrapper so they stay
-  scrollable on narrow viewports. Page-level horizontal overflow must stay false.
+- No external script runtime. `index.html` loads only Google Fonts; reveals use `IntersectionObserver`
+  and bars grow with the Web Animations API. Do not add a scroll or animation library back.
+- `html` must keep `scroll-behavior: auto` and `overscroll-behavior-y: none`; the page uses native
+  scrolling. Anchor links use `scrollIntoView`, skipped under `prefers-reduced-motion`.
+- Wide fixed-pixel charts live inside an `overflow-x: auto` wrapper so they stay scrollable on narrow
+  viewports. The text-heavy charts (`#chart-strip`, `#chart-suites`, `#chart-precision`,
+  `#chart-coverage`) keep a `min-width` on narrow screens inside `.scroll-x` so their axis labels stay
+  legible instead of scaling to a few pixels. Page-level horizontal overflow must stay false.
 - Reveal animations must resolve to full opacity in both normal and `prefers-reduced-motion` modes.
   No content may be left stranded invisible.
 - No secrets, tokens, or keys in this directory. `vercel.json` carries headers and caching only.
@@ -86,19 +86,21 @@
   HTTP 200 after adding it.
 
 ## Work Guidance
-- Design direction is an editorial data essay: warm paper, near-black ink, hairline rules, no cards,
-  no panels, no shadows, no grain. It should read like a printed research report.
-- Type: Newsreader for display and body, IBM Plex Mono for every number, label, and axis. Numerals
-  are the primary graphic, so set them large and let the prose stay in a narrow measure.
-- One accent only: oxblood `--accent` for emphasis and open-weights figures. `--closed` slate is
-  reserved for the closed-API reference and must never be reused for an open model. Reimplementations
-  are `--caveat` grey.
-- The ranked field list is `.models` / `.model`, not a card grid. Columns are rank, name, hairline
-  bar, score, flags. The bar is a 3px rule that fills, never a slab.
+- Design direction is a calibration lab: a metrology instrument for an abstract thing. Graphite bench,
+  bone ink, hairline rules, no cards, no shadows, no glow. It should read like an instrument panel,
+  not a marketing page and not the dark-purple-glow AI-tool template.
+- Type: Space Grotesk for display, labels and prose; IBM Plex Mono for every number, label and axis.
+  Numerals are the primary graphic, so set them large.
+- Colour is meaning, one hue each: `--sig` sodium-amber for open weights, `--ref` cold cyan for the
+  closed-API reference only, `--dim` grey for technique reimplementations, `--warn` red for unresolved.
+  `--ch1..--ch5` are instrument channel colours used only in compare-top-5.
+- The first screen is the instrument and the field, not a hero headline. The masthead is compact; the
+  readout (best open score, closed reference, field strip) leads straight into the ranked field.
+- The ranked field is `.models` / `.model`, not a card grid: rank, name, a 3px hairline bar, score,
+  the nine-suite sparkline, flags.
 - `app.js` owns data colour on chart marks. CSS owns only `fill-opacity` and hover. Setting `fill` in
   CSS on `.bar` flattens the compare-top-5 encoding to one grey, so do not reintroduce it.
-- Wide fixed-pixel charts need their own scroll wrapper or they widen the whole page on mobile.
-- Section headings use an oxblood rule above them; charts sit on a single hairline top border.
+- Section headings use a 2px amber rule above them; charts sit on a single hairline top border.
 - Keep long model names clear of their bars. Label gutters must exceed the widest truncated name at
   the rendered font size, or names run underneath the marks.
 - Run a local static server for preview. `file://` will not work because `app.js` fetches the data file.
@@ -118,9 +120,10 @@
   to a value in `results.json`. The one permitted exception is a withdrawn measurement's old score,
   which may appear inside its `EXCLUDED_NOTES` reason to document what was pulled.
 - Verify the deferral note appears for a deferring model and hides for one that does not, through both
-  the ranked-list click and the `#suite-model` select. Scroll with real wheel events when checking
-  reveals: Lenis overrides `window.scrollTo`, so a scripted scroll reports stranded reveals that are
-  not stranded.
+  the ranked-list click and the `#suite-model` select. Reveals use `IntersectionObserver` on native
+  scroll, so a scripted scroll to each section plus a short wait is enough to check none are stranded.
+- Confirm the text-heavy charts keep a legible `min-width` at 390px inside `.scroll-x`, and that the
+  page-level horizontal overflow stays false at both widths.
 - Verify `favicon.svg`, `icon-512.png`, `apple-touch-icon.png`, `og.png` and `llms-full.txt` all
   return HTTP 200, and that the icon is legible at 16px.
 - `llms.txt` must link `llms-full.txt`, and the counts quoted in both must match `results.json`.

@@ -30,31 +30,30 @@ dropped rather than shown.
 | `robots.txt` | Explicitly permits GPTBot, ClaudeBot, PerplexityBot and others |
 | `sitemap.xml` | Single-URL sitemap |
 | `vercel.json` | Security headers, asset caching, CORS on the data file |
-| `favicon.svg` | Icon mark: three ranked bars in oxblood on paper. Source of truth for the icon |
+| `favicon.svg` | Icon mark: three ranked bars in amber on graphite. Source of truth for the icon |
 | `icon-512.png` | Raster of `favicon.svg` at 512, for manifest and social fallbacks |
 | `apple-touch-icon.png` | Full-bleed 180 square. iOS applies its own mask, so no pre-rounded corners |
 | `og.png` | 1200x630 social card |
 
 ## Social image and icons
 
-`og.png` is rendered by a headless-Chromium pass, using the same paper, ink, oxblood accent and type
-as the site. It deliberately prints no volatile fact: no model count, no best open score, no ranking.
-A social card is a static PNG, so any of those would be a false claim the moment a new model is
-measured. It carries the stable method facts only - sealed case count, scored decisions per model,
-closed-API reference, seed - and lists the nine suites as a ruled list rather than as bars,
-because equal-length bars would assert a magnitude that does not exist.
+`og.png` is rendered by a headless-Chromium pass, using the same graphite, bone, amber and cyan as the
+site. It deliberately prints no volatile fact: no model count, no best open score, no ranking. A social
+card is a static PNG, so any of those would be a false claim the moment a new model is measured. It
+carries the stable method facts only - sealed case count, scored decisions per model, closed-API
+reference, seed - and lists the nine suites as a ruled list rather than as bars, because equal-length
+bars would assert a magnitude that does not exist.
 
 Regenerate it if the method framing changes, using these constraints:
 
-1. Build a 1200x630 HTML card that reads `data/results.json` for the model count, best open score,
-   closed reference and decision count, and draws the top scores as a ranked strip normalised across
-   the displayed range.
-2. Screenshot it at 1200x630 with the viewport matched, and assert `scrollHeight <= 630` and that the
-   footer sits above the fold. An earlier pass silently clipped the stats.
-3. Assert the frame: `scrollHeight <= 630`, `scrollWidth <= 1200`, the footer sits above the fold, and
-   the stats block does not collide with the footer rule.
-4. `apple-touch-icon.png` and `icon-512.png` are the same mark rendered at 180 and 512 with the
-   wrapper sized to the viewport. A fixed-size wrapper leaves the mark in the corner of a larger canvas.
+1. Build a 1200x630 HTML card in the site palette that carries only stable method facts: sealed case
+   count, scored decisions per model, the closed-API reference, seed, and the nine suites as a ruled
+   list. Never read the model count, best open score or ranking into it.
+2. Screenshot it at 1200x630 with the viewport matched, and assert `scrollHeight <= 630`,
+   `scrollWidth <= 1200`, and that the footer sits above the fold. An earlier pass silently clipped the
+   stats and the footer.
+3. `apple-touch-icon.png` and `icon-512.png` are the same mark rendered at 180 and 512, full-bleed with
+   no pre-rounded corners. A fixed-size wrapper leaves the mark in the corner of a larger canvas.
 
 All four files are committed assets. Serving the site still requires no build step.
 
@@ -67,17 +66,21 @@ Then open `http://127.0.0.1:8899`. A server is required, not `file://`, because 
 
 ## Design
 
-An editorial data essay. Warm paper, near-black ink, hairline rules, no cards, no shadows, no grain.
-Newsreader for prose, IBM PlexMono for every number. The numbers are the graphic.
+A calibration lab. Graphite bench, bone ink, hairline rules, no cards, no shadows, no glow.
+Space Grotesk for display and prose, IBM Plex Mono for every number. Sodium-amber for open weights,
+cold cyan reserved for the closed-API reference, grey for technique reimplementations, red for
+unresolved. The numbers are the graphic. No external script runtime: reveals use `IntersectionObserver`
+and bars grow with the Web Animations API.
 
 ## Charts
 
-Five, all inline SVG built by `app.js`:
+Six, all inline SVG built by `app.js`:
 
-1. **Field** - all 43 measurements as a ranked list with hairline bars, plus a strip plot in the hero
+1. **Field** - all 49 measurements as a ranked list with hairline bars and a nine-suite sparkline per
+   row, plus a strip plot in the readout
 2. **Per-suite** - grouped bars for one model, or the top five
-3. **Heatmap** - 43 models against 9 suites, horizontally scrollable
+3. **Heatmap** - 49 models against 9 suites, horizontally scrollable
 4. **Precision** - tev1-08b on CPU fp32 against T4 fp16, on a truncated axis that says so
-5. **Coverage** - verified directories against distinct measurements
+5. **Coverage** - verified directories, distinct measurements and unmeasured entries
 
 Axes that do not start at zero state it on the chart.

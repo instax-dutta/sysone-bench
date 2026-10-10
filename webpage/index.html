@@ -12,7 +12,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/icon-512.png" sizes="512x512" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta name="theme-color" content="#f2efe9">
+<meta name="theme-color" content="#0b0d0c">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -32,7 +32,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,200..700&family=IBM+Plex+Mono:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap">
 <link rel="stylesheet" href="style.css">
 <script>document.documentElement.classList.add("js");</script>
 
@@ -135,77 +135,83 @@
 
 <a class="skip" href="#leaderboard">Skip to results</a>
 
-<div class="rail" id="rail" aria-hidden="true">
-  <div class="rail-ticks" id="rail-ticks"></div>
-  <div class="rail-seal">sealed · 1190 cases · 1240 decisions · seed 42</div>
-</div>
-
-<nav class="nav">
-  <div class="wrap nav-in">
-    <a class="nav-brand" href="/">sysone<span>-bench</span></a>
-    <div class="nav-links">
-      <a href="#leaderboard">Leaderboard</a>
-      <a href="#suites">Suites</a>
-      <a href="#precision">Precision</a>
+<nav class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" href="/">sysone<i>-bench</i></a>
+    <div class="bar-links">
+      <a href="#leaderboard">Field</a>
+      <a href="#suites">Channels</a>
+      <a href="#precision">Reference</a>
       <a href="#coverage">Coverage</a>
       <a href="#method">Method</a>
       <a href="#data">Data</a>
     </div>
+    <div class="bar-meta">
+      <span>dataset <b>2.1.0</b></span>
+      <span>seed <b>42</b></span>
+      <span class="lamp">sealed</span>
+    </div>
   </div>
 </nav>
 
-<header class="hero">
-  <div class="wrap">
-    <h1 class="hero-title">Every System One model, graded on the <em>same bytes</em>.</h1>
-    <p class="hero-lede">
+<header class="masthead">
+  <div class="wrap mast-grid">
+    <div>
+      <p class="eyebrow">Independent measurement · no vendor affiliation</p>
+      <h1 class="mast-title">Every System One model, graded on the <em>same bytes</em>.</h1>
+    </div>
+    <p class="mast-lede">
       Self-reported scores are not comparable, because each one comes from its own prompt. So we
       ignore them. Every model here is run by us, against the same <strong>1,190 sealed cases</strong>
       and <strong>1,240 scored decisions</strong> at seed 42, with inputs verified byte-identical
       before a single number is read.
     </p>
+  </div>
+</header>
 
-    <div class="readout-band">
-      <div class="wrap">
+<section class="readout">
+  <div class="wrap readout-grid">
+    <div class="readout-main">
+      <p class="eyebrow">Best open-weights · accuracy</p>
+      <p class="bignum"><span id="stat-best">0.8581</span></p>
+      <p class="leadname"><span id="stat-best-name">decider-4b</span> <span class="tagline">open weights</span></p>
+      <p class="delta" id="delta-line">against the closed-API reference</p>
       <dl class="proof">
         <div>
           <dt>Models measured</dt>
-          <dd id="stat-measured">49</dd>
+          <dd><span data-count="measurements">49</span></dd>
           <small>all run here, none inherited</small>
-        </div>
-        <div>
-          <dt>Best open model</dt>
-          <dd id="stat-best">0.8581</dd>
-          <small><span id="stat-best-name">kev-4b</span> · open weights</small>
         </div>
         <div>
           <dt>Closed reference</dt>
           <dd id="stat-closed">0.9065</dd>
-          <small>Jev 1.13.0 · closed</small>
+          <small>Jev 1.13.0 · closed API</small>
         </div>
         <div>
           <dt>Decisions each</dt>
           <dd id="stat-gap">1,240</dd>
           <small>scored, one manifest</small>
         </div>
-      </dl>
-
-      <figure class="chart readout-plot" style="margin:0">
-        <figcaption class="chart-head">
-          <h3>Where the field sits</h3>
-          <p>Each mark is one model, on accuracy.</p>
-        </figcaption>
-        <svg id="chart-strip" role="img" aria-label="Strip plot of accuracy for every measured model against the closed API reference"></svg>
-        <div class="legend" style="margin-top:.9rem">
-          <div><i style="background:var(--accent)"></i> vendor readout</div>
-          <div><i style="background:var(--caveat)"></i> technique reimpl.</div>
-          <div><i style="background:var(--warn)"></i> unresolved</div>
-          <div><i style="background:var(--closed)"></i> Jev 1.13.0</div>
+        <div>
+          <dt>Suites</dt>
+          <dd><span data-count="suites">9</span></dd>
+          <small>one metric, nine tasks</small>
         </div>
-      </figure>
-      </div>
+      </dl>
     </div>
+
+    <figure class="plot">
+      <figcaption class="eyebrow">Where the field sits · each mark is one model</figcaption>
+      <div class="scroll-x"><svg id="chart-strip" role="img" aria-label="Strip plot of accuracy for every measured model against the closed API reference"></svg></div>
+      <div class="legend">
+        <span><i class="l-sig"></i> vendor readout</span>
+        <span><i class="l-dim"></i> technique reimpl.</span>
+        <span><i class="l-warn"></i> unresolved</span>
+        <span><i class="l-ref"></i> Jev 1.13.0</span>
+      </div>
+    </figure>
   </div>
-</header>
+</section>
 
 <section data-band="leaderboard" id="leaderboard">
   <div class="wrap">
@@ -214,17 +220,21 @@
       <p>
         All <span data-count="measurements">49</span> measurements, ranked by accuracy on the <span data-count="decisions">1,240</span> evaluation decisions. Rows marked as
         technique reimplementations are our reading of a published method over a public base
-        checkpoint, not the authors' own code.
+        checkpoint, not the authors' own code. The sparkline beside each row is that model's nine
+        suite values.
       </p>
     </div>
 
     <div class="controls reveal">
-      <label for="filter-kind">Show</label>
-      <button class="chip" data-filter="all" aria-pressed="true">All <span data-count="measurements">49</span></button>
-      <button class="chip" data-filter="vendor" aria-pressed="false">Vendor readout</button>
-      <button class="chip" data-filter="technique" aria-pressed="false">Technique reimpl.</button>
-      <span class="spacer" style="margin-left:auto"></span>
-      <label for="sort-by">Sort</label>
+      <span class="lab">Show</span>
+      <div class="seg" data-seg="filter">
+        <span class="seg-thumb" aria-hidden="true"></span>
+        <button class="chip" data-filter="all" aria-pressed="true">All <span data-count="measurements">49</span></button>
+        <button class="chip" data-filter="vendor" aria-pressed="false">Vendor readout</button>
+        <button class="chip" data-filter="technique" aria-pressed="false">Technique reimpl.</button>
+      </div>
+      <span class="spacer"></span>
+      <label class="lab" for="sort-by">Sort</label>
       <select id="sort-by">
         <option value="accuracy">Accuracy</option>
         <option value="runner">Name</option>
@@ -238,7 +248,7 @@
 
     <div class="models reveal" id="model-grid"></div>
 
-    <p class="reveal" style="margin-top:1rem;color:var(--ink-4);font-size:.82rem" id="grid-count"></p>
+    <p class="reveal grid-count" id="grid-count"></p>
   </div>
 </section>
 
@@ -254,10 +264,11 @@
     </div>
 
     <div class="controls reveal">
-      <label for="suite-model">Model</label>
+      <label class="lab" for="suite-model">Model</label>
       <select id="suite-model"></select>
-      <span class="spacer" style="margin-left:auto"></span>
-      <div class="chip-row">
+      <span class="spacer"></span>
+      <div class="seg" data-seg="compare">
+        <span class="seg-thumb" aria-hidden="true"></span>
         <button class="chip" data-compare="none" aria-pressed="true">Single</button>
         <button class="chip" data-compare="top" aria-pressed="false">Compare top 5</button>
       </div>
@@ -268,11 +279,11 @@
         <h3 id="suite-title">Per-suite accuracy</h3>
         <p><span data-count="suites">Nine</span> suites, <span data-count="decisions">1,240</span> evaluation decisions total.</p>
       </div>
-      <svg id="chart-suites" role="img" aria-label="Grouped bar chart of per-suite accuracy"></svg>
+      <div class="scroll-x"><svg id="chart-suites" role="img" aria-label="Grouped bar chart of per-suite accuracy"></svg></div>
       <div class="legend" id="suite-legend"></div>
     </div>
 
-    <div class="reveal" style="margin-top:1.5rem">
+    <div class="reveal multiples-wrap">
       <div class="chart-head">
         <h3>Nine suites, side by side</h3>
         <p>Top five models in each suite, with the suite spread stated. A model strong here and weak
@@ -281,10 +292,10 @@
       <div class="multiples" id="suite-multiples"></div>
     </div>
 
-    <div class="chart reveal" style="margin-top:1rem">
+    <div class="chart reveal heatmap-chart">
       <div class="chart-head">
         <h3>Suite heatmap</h3>
-        <p>All <span data-count="measurements">49</span> measurements against all <span data-count="suites">9</span> suites, in score order left to right. Darker is more correct; the dimmer columns are technique reimplementations.</p>
+        <p>All <span data-count="measurements">49</span> measurements against all <span data-count="suites">9</span> suites, in score order left to right. Fuller amber is more correct; the dimmer columns are technique reimplementations.</p>
       </div>
       <div class="heatmap-scroll">
         <svg id="chart-heatmap" role="img" aria-label="Heatmap of accuracy for all models across nine suites"></svg>
@@ -310,7 +321,7 @@
           <h3>tev1-08b: CPU fp32 against T4 fp16</h3>
           <p>Same bytes, same revision, two hosts.</p>
         </div>
-        <svg id="chart-precision" role="img" aria-label="Bar chart comparing tev1-08b accuracy on CPU and on a T4"></svg>
+        <div class="scroll-x"><svg id="chart-precision" role="img" aria-label="Bar chart comparing tev1-08b accuracy on CPU and on a T4"></svg></div>
       </div>
       <div class="note note-caveat reveal" style="align-self:start">
         <p style="margin:0"><strong>0.0105 apart.</strong> Precision at this scale is small but not
@@ -321,11 +332,11 @@
       </div>
     </div>
 
-    <div class="note reveal" style="margin-top:1rem">
+    <div class="note reveal" style="margin-top:1.4rem">
       <p style="margin:0"><strong>The top three open models are tied.</strong>
-      <span id="tie-note">kev-4b, jpt-9b and jet sit within 0.0048 of each other</span> — roughly
-      six decisions out of 1,240. The leaderboard order among them is not meaningful at this sample
-      size, and the table is not evidence that the first place is a real lead.</p>
+      <span id="tie-note">decider-4b, decision-lux-9b and jet sit within 0.0048 of each other</span> — a gap
+      that is not meaningful at this sample size, and the table is not evidence that the first place is a
+      real lead.</p>
     </div>
   </div>
 </section>
@@ -346,11 +357,11 @@
           <h3>Run directories against distinct measurements</h3>
           <p>Three directories are each worth one measurement.</p>
         </div>
-        <svg id="chart-coverage" role="img" aria-label="Comparison of run directories versus distinct measurements"></svg>
+        <div class="scroll-x"><svg id="chart-coverage" role="img" aria-label="Comparison of run directories versus distinct measurements"></svg></div>
       </div>
-      <div class="card reveal">
+      <div class="panel reveal">
         <h3>Why <span data-count="dirs">52</span> directories are <span data-count="measurements">49</span> measurements</h3>
-        <p style="margin-bottom:1rem">
+        <p>
           The auditor fingerprints the evaluation-phase answers of every run and collapses anything
           that cannot be told apart.
         </p>
@@ -358,7 +369,7 @@
       </div>
     </div>
 
-    <div class="grid-3 reveal" style="margin-top:1rem" id="excluded-grid"></div>
+    <div class="excluded reveal" id="excluded-grid"></div>
   </div>
 </section>
 
@@ -368,44 +379,44 @@
       <h2>What makes a number on this site trustworthy</h2>
     </div>
 
-    <div class="grid-2 reveal">
-      <div class="card reveal wide">
+    <div class="grid-2 reveal" id="method-grid">
+      <div class="panel">
         <h3>One sealed manifest</h3>
         <p>1,190 cases and 1,550 typed questions, digest verified before every run. No model sees a
         different question set than any other.</p>
       </div>
-      <div class="card reveal">
+      <div class="panel">
         <h3>Immutable revisions</h3>
         <p>Every row records a full 40-character model revision, plus the base model and base
         revision for adapter and technique entries.</p>
       </div>
-      <div class="card reveal">
+      <div class="panel">
         <h3>Per-row provenance</h3>
         <p>Device, dtype, serving mode, and the scoring readout actually used. Technique entries
         additionally set <code>technique_reimplementation</code>.</p>
       </div>
-      <div class="card reveal">
+      <div class="panel">
         <h3>Checksummed artifacts</h3>
         <p>Each run ships <code>checksums.sha256</code> over its own artifacts. Every number on this
         page traces back to a directory that verifies.</p>
       </div>
-      <div class="card reveal">
+      <div class="panel">
         <h3>Derived coverage</h3>
         <p><code>ops/panel_coverage.py</code> computes the headline count from artifacts and detects
         identical predictions. The number is generated, not maintained.</p>
       </div>
-      <div class="card reveal">
+      <div class="panel">
         <h3>Our own model list</h3>
         <p>The 49 models in scope were compiled here from public releases, model cards and
         published work. No third party's results, prompts or leaderboard entries were used as input. Two candidate entries with no published weights were removed from scope entirely.</p>
       </div>
-      <div class="card reveal">
+      <div class="panel">
         <h3>Failure modes recorded</h3>
         <p>Models that could not be measured are listed with the reason. Two are published only as GGUF and need a different runtime; one is a reranker, a different task shape.</p>
       </div>
     </div>
 
-    <div class="note reveal" style="margin-top:1.5rem">
+    <div class="note reveal" style="margin-top:1.6rem">
       <p style="margin:0"><strong>Ground truth, plainly.</strong>
       In version <code>2.0.0</code> one human reviewer read every case and corrected an AI draft of
       every answer, under protocol <code>human-reviewed-ai-assisted-v1</code>, with no second reviewer
@@ -430,19 +441,19 @@
     </div>
 
     <div class="grid-2">
-      <div class="card reveal">
+      <div class="panel reveal">
         <h3>Run it yourself</h3>
-        <p style="margin-bottom:0.9rem">From a clone of the repository:</p>
-        <pre class="mono" style="margin:0;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);padding:1rem;overflow-x:auto;font-size:0.8rem;line-height:1.75;color:var(--ink-2)"><code>uv sync --extra vendor
-python run.py --models <span style="color:var(--accent)">kev-4b</span> \
+        <p>From a clone of the repository:</p>
+        <pre class="mono"><code>uv sync --extra vendor
+python run.py --models <span class="hl">kev-4b</span> \
   --manifest datasets/v2/manifest.jsonl
 python ops/panel_coverage.py \
   --results-root ~/sysone-bench-results</code></pre>
       </div>
-      <div class="card reveal">
+      <div class="panel reveal">
         <h3>Sealed manifest</h3>
-        <p style="margin-bottom:0.9rem">Every run on this site is graded against these bytes:</p>
-        <p class="hash mono" style="font-size:0.74rem;line-height:1.8;margin:0;word-break:break-all;color:var(--ink-3)">
+        <p>Every run on this site is graded against these bytes:</p>
+        <p class="hash mono">
           sha256 &nbsp;a938cc2483a592dc84e0d5baac12594491bcaa5b4ceb6b7c3b0def71b36297bd<br>
           digest &nbsp;4272a7a25ebcb324235696ad808544e157a31e3f9c04421da731a08dfb9d5768<br>
           cases &nbsp;&nbsp;1190 &nbsp;·&nbsp; evaluation 952 &nbsp;·&nbsp; decisions 1240 &nbsp;·&nbsp; seed 42
@@ -450,12 +461,12 @@ python ops/panel_coverage.py \
       </div>
     </div>
 
-    <div class="grid-3 reveal" style="margin-top:1rem">
-      <div class="card"><h3>For AI answer engines</h3><p>A plain-language summary of every claim on
+    <div class="grid-3 reveal" style="margin-top:1.4rem">
+      <div class="panel"><h3>For AI answer engines</h3><p>A plain-language summary of every claim on
         this page, with the numbers, lives in <a href="llms.txt"><code>llms.txt</code></a>, and the complete results in one document in <a href="llms-full.txt"><code>llms-full.txt</code></a>.</p></div>
-      <div class="card"><h3>Structured data</h3><p>This page ships JSON-LD for the dataset, the
+      <div class="panel"><h3>Structured data</h3><p>This page ships JSON-LD for the dataset, the
         publisher and the FAQ, so the figures can be cited rather than paraphrased.</p></div>
-      <div class="card"><h3>Contribute a measurement</h3><p>Eight panel entries still need an
+      <div class="panel"><h3>Contribute a measurement</h3><p>Eight panel entries still need an
         adapter. The acceptance checklist and per-model VRAM estimates are in
         <code>docs/panel-hardware-requirements.md</code>.</p></div>
     </div>
@@ -481,16 +492,13 @@ python ops/panel_coverage.py \
     <div>
       <h3>Scope</h3>
       <p id="foot-scope"><span data-count="scope">50</span> System One decision models in scope.</p>
-      <p id="foot-count">43 measured.</p>
+      <p id="foot-count">49 measured.</p>
       <p>The list of models was assembled by us from public releases, model cards and published
       work. None of it is inherited from anyone's results.</p>
     </div>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
