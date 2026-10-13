@@ -587,6 +587,10 @@ def default_runner_factory(name: str) -> BaseRunner:
         from runners.mimir_runner import MimirRunner
 
         return MimirRunner()
+    if name == "largha":
+        from runners.largha_runner import LarghaRunner
+
+        return LarghaRunner()
     raise ValueError(f"unknown model: {name}")
 
 
