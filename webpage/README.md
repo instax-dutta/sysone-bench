@@ -29,7 +29,7 @@ dropped rather than shown.
 | `index.html` | Rendered page with static headline facts and JSON-LD (dataset, publisher, FAQ) |
 | `style.css` | Editorial design system: paper, ink, hairlines. One oxblood accent |
 | `vendor/lenis.min.js` | Vendored Lenis 1.3.27 (MIT); local smooth scroll, no CDN runtime |
-| `app.js` | Hand-built SVG charts, ranked field list, filters, Lenis smooth scroll, reveal-on-scroll |
+| `app.js` | Hand-built SVG charts, ranked field list, filters, Lenis smooth scroll; no scroll-triggered reveals |
 | `data/results.json` | Generated. Do not edit by hand |
 | `llms.txt` | Plain-language summary for AI answer engines |
 | `llms-full.txt` | Generated. Every result and caveat in one self-contained document |
@@ -75,11 +75,11 @@ Then open `http://127.0.0.1:8899`. A server is required, not `file://`, because 
 
 ## Design
 
-A calibration lab. Graphite bench, bone ink, hairline rules, no cards, no shadows, no glow.
-Space Grotesk for display and prose, IBM Plex Mono for every number. Sodium-amber for open weights,
-cold cyan reserved for the closed-API reference, grey for technique reimplementations, red for
-unresolved. The numbers are the graphic. No external script runtime: reveals use `IntersectionObserver`
-and bars grow with the Web Animations API.
+The measurement ledger. Warm paper, ink serif display, hairline rules, one oxide-red accent; no
+cards, shadows or glow. Newsreader for display and lede, IBM Plex Mono for every number. Oxide red
+marks measured values, technique rows are dimmed, unresolved rows carry a caveat. The numbers are the
+graphic. No CDN script runtime: Lenis is vendored locally, and content stays fully opaque while
+scrolling because scroll-triggered reveal animations were removed.
 
 ## Charts
 

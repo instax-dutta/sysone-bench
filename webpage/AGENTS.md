@@ -63,19 +63,20 @@
   `<title>` per mark.
 - No CDN script runtime. `index.html` loads Google Fonts plus the locally vendored
   `vendor/lenis.min.js` (MIT, Lenis 1.3.27) before `app.js`; no other script dependency is allowed.
-  Reveals use `IntersectionObserver` and bars use CSS keyframes, not a second animation library.
+  Do not add scroll-triggered reveal or bar-grow animations: staggered opacity and transform changes
+  on long lists create a translucent band that moves with the viewport and looks like a broken bar.
 - Smooth scrolling is owned by Lenis in `app.js` with `autoRaf: true`; it must be skipped under
   `prefers-reduced-motion`, where anchor links fall back to native `scrollIntoView`. Nested chart
   wrappers carry `data-lenis-prevent` so their horizontal scrolling stays native.
 - `html` keeps `scroll-behavior: auto` and `overscroll-behavior-y: none`; Lenis smooths the native
-  scroll position rather than transforming the page, so sticky layout and IntersectionObserver still
-  work. Anchor targets have `scroll-margin-top` under the sticky masthead.
+  scroll position rather than transforming the page, so sticky layout still works. Anchor targets have
+  `scroll-margin-top` under the sticky masthead.
 - Wide fixed-pixel charts live inside an `overflow-x: auto` wrapper so they stay scrollable on narrow
   viewports. The text-heavy charts (`#chart-strip`, `#chart-suites`, `#chart-precision`,
   `#chart-coverage`) keep a `min-width` on narrow screens inside `.scroll-x` so their axis labels stay
   legible instead of scaling to a few pixels. Page-level horizontal overflow must stay false.
-- Reveal animations must resolve to full opacity in both normal and `prefers-reduced-motion` modes.
-  No content may be left stranded invisible.
+- Content stays fully opaque while scrolling in both normal and `prefers-reduced-motion` modes.
+  No content may be left stranded invisible, and no animation may run on ledger rows or their bars.
 - No secrets, tokens, or keys in this directory. `CNAME` carries the custom domain only; the
   deploy workflow is owned by `.github/workflows/deploy-pages.yml`.
 - `favicon.svg` is the icon source of truth. `icon-512.png` and `apple-touch-icon.png` are rasters of
@@ -112,8 +113,8 @@
   sparkline, provenance flags. `app.js` renders all rows from `data/results.json`.
 - `app.js` owns SVG geometry and fills. CSS owns layout only. Do not set SVG `fill` in CSS.
 - Section headings use the eyebrow mono label; charts sit inside a single hairline border.
-- Reveals are additive animation only: content is visible before IntersectionObserver runs, so a
-  full-page capture or a crawler never sees an empty section.
+- Content is static on scroll: a full-page capture, a crawler and a live reader all see the same
+  fully opaque section. Only the hero film and its codec-free scan fallback animate.
 - Run a local static server for preview. `file://` will not work because `app.js` fetches the data file.
 
 ## Verification
@@ -133,9 +134,9 @@
   to a value in `results.json`. The one permitted exception is a withdrawn measurement's old score,
   which may appear inside its `EXCLUDED_NOTES` reason to document what was pulled.
 - Verify the deferral note appears for a deferring model and hides for one that does not, through both
-  the ranked-list click and the `#suite-model` select. Reveals use `IntersectionObserver` on the
-  native scroll position Lenis drives, so a scripted scroll to each section plus a short wait is enough
-  to check none are stranded.
+  the ranked-list click and the `#suite-model` select. Step through several scroll positions and assert
+  `document.getAnimations()` is empty for ledger rows and their bars, so no translucent band moves
+  through the bottom of the viewport.
 - Confirm `html` gains the `lenis` class in a normal browser, `window.lenis` exists, anchor clicks use
   `lenis.scrollTo`, and with reduced motion the class is absent and anchors fall back to native scroll.
 - Confirm the text-heavy charts keep a legible `min-width` at 390px inside `.scroll-x`, and that the

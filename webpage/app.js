@@ -127,7 +127,6 @@
     rows.forEach((m, i) => {
       const row = document.createElement("div");
       row.className = "ledger-row";
-      row.dataset.i = String(i);
       const flags = [m.techniqueReimplementation ? "technique" : null, m.readoutCaveat ? "readout caveat" : null, m.deferrals ? "deferred" : null, m.sharding ? "2-GPU shard" : null].filter(Boolean);
       row.innerHTML = `<span class="rank">${String(i + 1).padStart(2, "0")}</span><span class="who">${esc(m.runner)}</span><span class="score">${fmt(m.accuracy)}</span><span></span><span class="flags">${esc(flags.join(" · "))}</span>`;
       row.children[3].appendChild(sparkline(m));
@@ -247,22 +246,6 @@
     $("#gold-note").innerHTML = `<p><strong>Ground truth, plainly.</strong> Version 2.0.0 used one human reviewer who corrected an AI draft of every answer under protocol <code>human-reviewed-ai-assisted-v1</code>: no second reviewer, no adjudication and no inter-annotator statistic. Version 2.1.0 re-anchors four public suites on their source labels and keeps a per-case human decision on the emotion disagreements. Emotion remains single-reviewed.</p>`;
   }
 
-  function observe() {
-    const targets = $$(".band-head, .chart, .panel, .note, .method-grid article, .ledger, .ledger-row");
-    if (reduced || !("IntersectionObserver" in window)) { targets.forEach((n) => n.classList.add("in")); return; }
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (!e.isIntersecting) return;
-        if (e.target.classList.contains("ledger-row")) {
-          e.target.style.animationDelay = `${(Number(e.target.dataset.i || 0) % 12) * 22}ms`;
-        }
-        e.target.classList.add("in");
-        io.unobserve(e.target);
-      });
-    }, { rootMargin: "0px 0px -8% 0px" });
-    targets.forEach((n) => { n.classList.add("reveal"); io.observe(n); });
-  }
-
   function initSmoothScroll() {
     let lenis = null;
     if (!reduced && typeof Lenis !== "undefined") {
@@ -304,7 +287,7 @@
     renderLedger();
     const select = $("#model-select");
     select.innerHTML = data.measurements.map((m) => `<option value="${esc(m.runner)}">${esc(m.runner)} · ${fmt(m.accuracy)}</option>`).join("");
-    suiteChart(); heatmap(); precision(); coverage(); notes(); observe();
+    suiteChart(); heatmap(); precision(); coverage(); notes();
     const film = $("#field-film");
     if (film) {
       const revealFilm = () => {
