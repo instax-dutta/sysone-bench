@@ -45,16 +45,11 @@
    "jeff",
    "Artifacts lost",
    "Measured 0.6855 on a DGX Spark, but that run was never mirrored and the host is gone. The row is withdrawn until it is re-run; the broken earlier run is retained under quarantine and is not reported."
-  ],
-  [
-   "seb-9b",
-   "Awaiting a GPU host",
-   "9.65B, added to scope at the author's request. Not yet measured."
   ]
  ],
  "scopeTotal": 50,
- "runDirectoriesVerified": 52,
- "distinctMeasurements": 49,
+ "runDirectoriesVerified": 53,
+ "distinctMeasurements": 50,
  "referenceClosedApi": {
   "runner": "jev",
   "model": "Jev 1.13.0",
@@ -63,6 +58,48 @@
   "inPanel": false
  },
  "measurements": [
+  {
+   "runner": "seb-9b",
+   "runId": "seb-9b-t4",
+   "model": "ironbcc/seb-9b",
+   "revision": "4ae564d62fb69a86d5624c9176c6e271c539485f",
+   "baseModel": "Qwen/Qwen3.5-9B",
+   "scoring": "option_key_logits",
+   "techniqueReimplementation": false,
+   "vendorCodeExecuted": false,
+   "sharding": "device_map=auto across all visible GPUs",
+   "singleDevice": false,
+   "device": "cuda",
+   "dtype": "bfloat16",
+   "serving": "local",
+   "accuracy": 0.8701612903225806,
+   "cases": 952,
+   "decisions": 1240,
+   "suites": {
+    "agnews": 0.88125,
+    "banking77_12": 0.8958333333333334,
+    "emotion": 0.828125,
+    "guardrails": 1.0,
+    "mnli": 0.8,
+    "moderation": 0.9305555555555556,
+    "multilingual_intent": 1.0,
+    "sst5": 0.5583333333333333,
+    "triage": 0.9375
+   },
+   "latencyP50": {
+    "agnews": 1.3696903370002929,
+    "banking77_12": 2.201305571000148,
+    "emotion": 1.3499497014997814,
+    "guardrails": 1.81740706100004,
+    "mnli": 1.344231734999994,
+    "moderation": 2.725825390499949,
+    "multilingual_intent": 1.360603256000104,
+    "sst5": 1.292544603000124,
+    "triage": 4.027053738000063
+   },
+   "readoutCaveat": false,
+   "deferrals": null
+  },
   {
    "runner": "decider-4b",
    "runId": "decider-4b-t4-d0-v210",
@@ -2127,6 +2164,22 @@
    "deferrals": null
   }
  ],
+ "precision": {
+  "tev1-08b": [
+   {
+    "runId": "tev1-08b-20261002-v210",
+    "device": "cpu",
+    "dtype": null,
+    "accuracy": 0.7532258064516129
+   },
+   {
+    "runId": "tev1-08b-t4-g1-v210",
+    "device": "cuda",
+    "dtype": "float16",
+    "accuracy": 0.7637096774193548
+   }
+  ]
+ },
  "duplicates": {
   "repeatedRuns": {
    "decider-2b": [

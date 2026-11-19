@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "project": "sysone-bench website redesign",
+  "brief": "A static, citable measurement record for 50 System One decision models. User reads the headline result, scans the full field, checks per-suite evidence and method, and downloads one JSON file.",
+  "round": "01",
+  "candidates": [
+    {
+      "id": "baseline",
+      "name": "Current: calibration bench",
+      "concept": "Dark graphite instrument bench with amber signal; dense ruled charts.",
+      "typography": "Space Grotesk display, IBM Plex Mono numerals",
+      "palette": [
+        "#0b0d0c",
+        "#efe9db",
+        "#d9a441"
+      ],
+      "traits": [
+        "dark canvas",
+        "amber signal bars",
+        "compact ruled rows"
+      ],
+      "kind": "html",
+      "source": "baseline.html",
+      "baseline": true
+    },
+    {
+      "id": "ledger",
+      "name": "Measurement ledger",
+      "concept": "Reading an archival measurement ledger: paper, ink, one oxide-red accent, numbers set like evidence.",
+      "typography": "Georgia serif display 54px, mono numerals 96px, 12px mono captions",
+      "palette": [
+        "#f3efe4",
+        "#161412",
+        "#9a3b2c",
+        "#c9c2b2"
+      ],
+      "traits": [
+        "warm paper ground",
+        "serif headline plus huge mono numeral",
+        "hairline ruled table with tick-mark bars"
+      ],
+      "kind": "html",
+      "source": "ledger.html"
+    },
+    {
+      "id": "instrument",
+      "name": "Calibration instrument",
+      "concept": "A benchtop instrument face: engraved labels, tick scales, tactile panel, one status LED.",
+      "typography": "Arial Narrow bold display, mono readouts",
+      "palette": [
+        "#dfe4e2",
+        "#14201f",
+        "#0f6b60",
+        "#e2603f"
+      ],
+      "traits": [
+        "cool ceramic panel",
+        "physical tick scale with indicator dot",
+        "teal bars and oxide status dot"
+      ],
+      "kind": "html",
+      "source": "instrument.html"
+    }
+  ]
+}

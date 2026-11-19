@@ -22,31 +22,31 @@ generating free text. Three question types are used:
 
 ## Headline results
 
-49 System One decision models measured, of a 50-entry scope, with 1 awaiting measurement.
+50 System One decision models measured, of a 50-entry scope, all measured.
 Counts are derived from checksum-verified run directories by a script, not maintained by hand.
 
 Closed API reference, not a panel entry:
 
-- **Jev 1.13.0 - 0.9065** (closed API at closed API at api.typesafe.ai)
+- **Jev 1.13.0 - 0.9065** (closed API at api.typesafe.ai)
 
 Best open-weights models:
 
-| Rank | Model | Accuracy |
-|---:|---|---:|
-| 1 | `decider-4b` | 0.8581 | `Mapika/decider-4b` | `eb5fbdfc9448` |
-| 2 | `decision-lux-9b` | 0.8484 | `llm-semantic-router/Decision-1.0-Lux-9B` | `2064c84daf59` |
-| 3 | `jet` | 0.8452 | `michaljach/jet` | `fbc3d2daa679` |
-| 4 | `kev-4b` | 0.8444 | `jaredpalmer/kev-4b` | `6cfce5c2fa4b` |
-| 5 | `jpt-9b` | 0.8379 | `kirp/jpt-9b` | `b447cc7ee105` |
-| 6 | `intern-decision-4b` | 0.8315 | `internlm/Intern-Decision-4B` | `0e5e6aa7d6d7` |
-| 7 | `kev-9b` | 0.8290 | `jaredpalmer/kev-9b` | `db029f08b290` |
-| 8 | `jevk5` | 0.8282 | `alibiserikbay/JevK5` | `c4f7fdb3aeab` |
-| 9 | `neohorse-4b` | 0.8282 | `TokenRhythm/NeoHorse-Jev-4B` | `434cb21d3a99` |
-| 10 | `jpt-4b` | 0.8274 | `kirp/jpt-4b` | `78312f855b8b` |
+| Rank | Model | Accuracy | Weights | Revision |
+|---:|---|---:|---|---|
+| 1 | `seb-9b` | 0.8702 | `ironbcc/seb-9b` | `4ae564d62fb6` |
+| 2 | `decider-4b` | 0.8581 | `Mapika/decider-4b` | `eb5fbdfc9448` |
+| 3 | `decision-lux-9b` | 0.8484 | `llm-semantic-router/Decision-1.0-Lux-9B` | `2064c84daf59` |
+| 4 | `jet` | 0.8452 | `michaljach/jet` | `fbc3d2daa679` |
+| 5 | `kev-4b` | 0.8444 | `jaredpalmer/kev-4b` | `6cfce5c2fa4b` |
+| 6 | `jpt-9b` | 0.8379 | `kirp/jpt-9b` | `b447cc7ee105` |
+| 7 | `intern-decision-4b` | 0.8315 | `internlm/Intern-Decision-4B` | `0e5e6aa7d6d7` |
+| 8 | `kev-9b` | 0.8290 | `jaredpalmer/kev-9b` | `db029f08b290` |
+| 9 | `jevk5` | 0.8282 | `alibiserikbay/JevK5` | `c4f7fdb3aeab` |
+| 10 | `neohorse-4b` | 0.8282 | `TokenRhythm/NeoHorse-Jev-4B` | `434cb21d3a99` |
 
-The best open model trails the closed API reference by **0.0484**.
+The best open model trails the closed API reference by **0.0363**.
 
-The top three open models sit within **0.0129** of each other, roughly 15 decisions out of 1,240.
+The top three open models sit within **0.0218** of each other, roughly 26 decisions out of 1,240.
 At this sample size they are effectively tied and the ordering among them is not meaningful.
 
 ## Rows that declined to answer
@@ -74,14 +74,14 @@ is bf16 and every CPU row is fp32, so precision is recorded per row, not treated
 
 ## Coverage, and what is missing
 
-52 verified run directories but **49 distinct measurements**.
+53 verified run directories but **50 distinct measurements**.
 - `decider-2b`: 2 directories, one measurement (`decider-2b-t4-c0-v210`, `decider-2b-t4-d0-v210`)
 - `tev1-08b`: 2 directories, one measurement (`tev1-08b-20261002-v210`, `tev1-08b-t4-g1-v210`)
 - `mini-jev` and `openvons`: byte-identical answers on all 1,240 decisions, so they count once
 
 A measurement whose checksum fails is dropped rather than published.
 
-5 entries sit outside the measured scope, each with a recorded reason:
+4 entries sit outside the measured scope, each with a recorded reason:
 
 | Entry | Reason | Why |
 |---|---|---|
@@ -89,9 +89,8 @@ A measurement whose checksum fails is dropped rather than published.
 | `clm-v0.1-8b` | Contrastive reranker | Scores state-answer pairs rather than producing typed decisions. |
 | `winnow-12b` | GGUF only | 22.3 GiB of bf16 weights published solely as GGUF. Fits current hardware but needs a different runtime. |
 | `jeff` | Artifacts lost | Measured 0.6855 on a DGX Spark, but that run was never mirrored and the host is gone. The row is withdrawn until it is re-run; the broken earlier run is retained under quarantine and is not reported. |
-| `seb-9b` | Awaiting a GPU host | 9.65B, added to scope at the author's request. Not yet measured. |
 
-The scope is 50 entries. 49 are measured and 1 awaits measurement.
+The scope is 50 entries. 50 are measured.
 
 ## Caveats stated plainly
 

@@ -5,7 +5,12 @@
 - Presents published benchmark results to humans and to AI answer engines.
 
 ## Ownership
-- Owns site structure, copy, visual design, generated site data, GEO files, and Vercel deploy config.
+- Owns site structure, copy, visual design, generated site data, GEO files, and the GitHub Pages deploy config.
+- `index.html`, `style.css` and `app.js` are the rebuilt "measurement ledger" site: paper ground,
+  ink typography, one oxide-red accent, data rendered at load time from `data/results.json`.
+- `visuals/scenes.py` owns the ManimGX scenes. `assets/*.mp4` and `assets/*-poster.png` are rendered
+  from `data/results.json`; regenerate them after a data change with `manimgx render`, then
+  `manimgx inspect` first. The scene sources and evidence live in `redesign/`, not in Skill dirs.
 - Does not own result artifacts, ground truth, coverage rules, or model adapters. Those belong to
   `results/`, `datasets/`, `ops/`, and `runners/`.
 
@@ -23,8 +28,8 @@
   no-JS fallback and is expected to drift; it is never the source of truth.
 - Share metadata in `<head>` and anything inside JSON-LD cannot be data-driven in a buildless site.
   Those must carry no count or score that changes when a model is added. Keep them method-level.
-- Site counts must stay internally consistent: 49 distinct measurements, 52 verified run directories,
-  50-entry scope, so 1 entry is unmeasured. Every entry that is not measured needs a recorded reason in
+- Site counts must stay internally consistent: 50 distinct measurements, 53 verified run directories,
+  50-entry scope, so 0 entries are unmeasured. Every entry that is not measured needs a recorded reason in
   `webpage/build-data.py` `EXCLUDED_NOTES`, which emits `excluded` into `results.json` for `app.js`
   and `tools/build_llms.py` to read. There is no second hand-maintained list; adding an entry to
   `app.js` directly is a bug.
@@ -65,7 +70,8 @@
   legible instead of scaling to a few pixels. Page-level horizontal overflow must stay false.
 - Reveal animations must resolve to full opacity in both normal and `prefers-reduced-motion` modes.
   No content may be left stranded invisible.
-- No secrets, tokens, or keys in this directory. `vercel.json` carries headers and caching only.
+- No secrets, tokens, or keys in this directory. `CNAME` carries the custom domain only; the
+  deploy workflow is owned by `.github/workflows/deploy-pages.yml`.
 - `favicon.svg` is the icon source of truth. `icon-512.png` and `apple-touch-icon.png` are rasters of
   it, and the touch icon must stay full-bleed because iOS applies its own mask.
 - `og.png` is a static PNG, so anything printed on it goes stale the moment another model lands.
@@ -86,30 +92,31 @@
   HTTP 200 after adding it.
 
 ## Work Guidance
-- Design direction is a calibration lab: a metrology instrument for an abstract thing. Graphite bench,
-  bone ink, hairline rules, no cards, no shadows, no glow. It should read like an instrument panel,
-  not a marketing page and not the dark-purple-glow AI-tool template.
-- Type: Space Grotesk for display, labels and prose; IBM Plex Mono for every number, label and axis.
-  Numerals are the primary graphic, so set them large.
-- Colour is meaning, one hue each: `--sig` sodium-amber for open weights, `--ref` cold cyan for the
-  closed-API reference only, `--dim` grey for technique reimplementations, `--warn` red for unresolved.
-  `--ch1..--ch5` are instrument channel colours used only in compare-top-5.
-- The first screen is the instrument and the field, not a hero headline. The masthead is compact; the
-  readout (best open score, closed reference, field strip) leads straight into the ranked field.
-- The ranked field is `.models` / `.model`, not a card grid: rank, name, a 3px hairline bar, score,
-  the nine-suite sparkline, flags.
-- `app.js` owns data colour on chart marks. CSS owns only `fill-opacity` and hover. Setting `fill` in
-  CSS on `.bar` flattens the compare-top-5 encoding to one grey, so do not reintroduce it.
-- Section headings use a 2px amber rule above them; charts sit on a single hairline top border.
-- Keep long model names clear of their bars. Label gutters must exceed the widest truncated name at
-  the rendered font size, or names run underneath the marks.
+- Design direction is the measurement ledger (approved in `redesign/DESIGN.md`): warm paper, ink
+  typography, hairline rules, one oxide-red accent. No glow, gradients, cards, shadows, or dark
+  developer-tool template.
+- Type: Newsreader or Iowan Old Style serif for display and lede, IBM Plex Mono for every number,
+  label and axis. Numerals are the primary graphic; the headline score is set over 100px.
+- Colour is meaning: `--oxide` for measured values and the closed-reference comparison, `--rule`
+  for hairlines, `--muted` for secondary copy. Technique rows are dimmed through SVG opacity, not a
+  second accent.
+- The first screen is the headline measurement plus the animated ledger film, then the proof strip.
+  The masthead is one compact row with the dataset version.
+- The ranked field is `.ledger` / `.ledger-row`, not a card grid: rank, name, score, nine-suite
+  sparkline, provenance flags. `app.js` renders all rows from `data/results.json`.
+- `app.js` owns SVG geometry and fills. CSS owns layout only. Do not set SVG `fill` in CSS.
+- Section headings use the eyebrow mono label; charts sit inside a single hairline border.
+- Reveals are additive animation only: content is visible before IntersectionObserver runs, so a
+  full-page capture or a crawler never sees an empty section.
 - Run a local static server for preview. `file://` will not work because `app.js` fetches the data file.
 
 ## Verification
 - `node --check webpage/app.js` for syntax.
 - Preview on `http://127.0.0.1:8899`. Console must be clean.
-- Check at 1440px and 390px: page-level horizontal overflow must be false at both, and
+- Check at 1280px and 390px: page-level horizontal overflow must be false at both, and
   `.heatmap-scroll` must still scroll.
+- `manimgx inspect webpage/visuals/scenes.py <Scene>` must report no layout problems before any
+  render; both MP4s and their posters must be committed.
 - Walk the full page at both widths and confirm no `.reveal` is left below full opacity, in both
   normal and `prefers-reduced-motion` modes.
 - Exercise both leaderboard sort directions, both suite compare modes, and the model selector. The

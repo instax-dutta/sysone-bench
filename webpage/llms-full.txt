@@ -18,13 +18,13 @@ split, 1,240 scored decisions per model at seed 42.
 
 ## Headline result
 
-**49 distinct measurements** from 52 verified run directories, against a 50-entry scope.
+**50 distinct measurements** from 53 verified run directories, against a 50-entry scope.
 
-- Best open-weights: **`decider-4b` at 0.8581**
+- Best open-weights: **`seb-9b` at 0.8702**
 - Closed API reference, not a panel entry: **Jev 1.13.0 at 0.9065**
-- Gap: 0.0484
+- Gap: 0.0363
 
-The top three open models sit within 0.0129 of each other, roughly 15 decisions out of 1,240, so their
+The top three open models sit within 0.0218 of each other, roughly 26 decisions out of 1,240, so their
 ordering is not meaningful at this sample size.
 
 ## Full ranking, all measurements
@@ -34,55 +34,56 @@ into this open-weights ranking.
 
 | # | Model | Accuracy | Weights | Pinned revision |
 |---|---|---|---|---|
-| 1 | `decider-4b` | 0.8581 | `Mapika/decider-4b` | `eb5fbdfc9448` |
-| 2 | `decision-lux-9b` | 0.8484 | `llm-semantic-router/Decision-1.0-Lux-9B` | `2064c84daf59` |
-| 3 | `jet` | 0.8452 | `michaljach/jet` | `fbc3d2daa679` |
-| 4 | `kev-4b` | 0.8444 | `jaredpalmer/kev-4b` | `6cfce5c2fa4b` |
-| 5 | `jpt-9b` | 0.8379 | `kirp/jpt-9b` | `b447cc7ee105` |
-| 6 | `intern-decision-4b` | 0.8315 | `internlm/Intern-Decision-4B` | `0e5e6aa7d6d7` |
-| 7 | `kev-9b` | 0.8290 | `jaredpalmer/kev-9b` | `db029f08b290` |
-| 8 | `jevk5` | 0.8282 | `alibiserikbay/JevK5` | `c4f7fdb3aeab` |
-| 9 | `neohorse-4b` | 0.8282 | `TokenRhythm/NeoHorse-Jev-4B` | `434cb21d3a99` |
-| 10 | `jpt-4b` | 0.8274 | `kirp/jpt-4b` | `78312f855b8b` |
-| 11 | `tev1-4b` | 0.8242 | `togethercomputer/Tev1-4B-experimental` | `0b7becf017da` |
-| 12 | `decision-nox` | 0.8000 | `llm-semantic-router/Decision-1.0-Nox` | `7f65e1db2c55` |
-| 13 | `decider-2b` | 0.7976 | `Mapika/decider-2b` | `533964dae8be` |
-| 14 | `this-that-12` | 0.7871 | `flock-io/this-that-model-1.2` | `c4d1c30b8d51` |
-| 15 | `decision-eos` | 0.7815 | `llm-semantic-router/Decision-1.0-Eos-0.8B` | `bbdc2221d0ec` |
-| 16 | `hopper-g` | 0.7798 | `HopitAI/hopper-g` | `d60a1d6ca3f3` |
-| 17 | `lumma-fev-4b` | 0.7758 | `FrontiersMind/Lumma-fev-4b` | `6fea60ae613c` |
-| 18 | `lumma-fev-9b` | 0.7742 | `FrontiersMind/Lumma-fev-9b` | `51c4b084f40b` |
-| 19 | `kev-08b` | 0.7726 | `jaredpalmer/kev-0.8b` | `bf75a6a8848e` |
-| 20 | `intern-decision-2b` | 0.7718 | `internlm/Intern-Decision-2B` | `8797836c65fc` |
-| 21 | `nimble-v2` | 0.7702 | `bespokelabs/Bespoke-Nimble-9B-v2` | `4b8c04d1ac2c` |
-| 22 | `decision-sol` | 0.7694 | `llm-semantic-router/Decision-1.0-Sol` | `fc210c8fcc7f` |
-| 23 | `jpt-08b` | 0.7645 | `kirp/jpt-0.8b` | `1431c0509bbc` |
-| 24 | `tev1-08b` | 0.7637 | `togethercomputer/Tev1-0.8B-experimental` | `6bb2dff14b38` |
-| 25 | `mini-jev` | 0.7621 | `Qwen/Qwen3-4B-Instruct-2507` | `cdbee75f17c0` |
-| 26 | `bosun-17b` | 0.7452 | `Hanno-Labs/bosun-v3.1-1.7b` | `1d8dc82a20e4` |
-| 27 | `metask` | 0.7395 | `wayfind/metask-jev-4b-policy-mix` | `ea20fe85b287` |
-| 28 | `intern-decision-08b` | 0.7242 | `internlm/Intern-Decision-0.8B` | `85a0cc5a99d6` |
-| 29 | `lavoir` | 0.7105 | `moganai/lavoir` | `4c5eaeb99b23` |
-| 30 | `decision-kai` | 0.7089 | `llm-semantic-router/Decision-1.0-Kai` | `69aef4060caf` |
-| 31 | `bosun-06b` | 0.7000 | `Hanno-Labs/bosun-v3.1-0.6b` | `1d8b6f9611f9` |
-| 32 | `laya` | 0.6976 | `convaiinnovations/laya` | `55cf4c4ebb4e` |
-| 33 | `gliner-decide` | 0.6927 | `fastino/GLiNER2.5-Decide` | `5a7adf72a23b` |
-| 34 | `mimir` | 0.6718 | `Mythologic/MIMIR-1` | `d2f5a66ea111` |
-| 35 | `gliner-base` | 0.6355 | `fastino/gliner2.5-base-v1` | `ca9062476407` |
-| 36 | `decision-lex` | 0.5968 | `llm-semantic-router/decision-1.0-lex` | `1f9750a75ae9` |
-| 37 | `gliner-multi` | 0.5718 | `fastino/gliner2.5-multi-v1` | `2ca71aafb344` |
-| 38 | `lev` | 0.5637 | `interfaze-ai/lev` | `7bdc748dffeb` |
-| 39 | `jobe` | 0.5516 | `Qwen/Qwen3.5-4B-Base` | `1001bb4d826a` |
-| 40 | `verdict` | 0.5516 | `heman10x/rlcd-modernbert-151m` | `8af2496eb63c` |
-| 41 | `mojev` | 0.5435 | `MoLeMo-Lab/mojev` | `0c8695b6252f` |
-| 42 | `gliner-small` | 0.5363 | `fastino/gliner2.5-small-v1` | `7132dc4561c3` |
-| 43 | `julia-1` | 0.5258 | `SupersonicLabs/Julia-1` | `a85b127321d5` |
-| 44 | `lumma-fev-06b` | 0.5145 | `FrontiersMind/Lumma-fev-0.6b` | `59272e2c1050` |
-| 45 | `lumma-fev-01b` | 0.4290 | `FrontiersMind/Lumma-fev-0.1b` | `085f4705aa86` |
-| 46 | `harsha` | 0.4290 | `Qwen/Qwen2.5-1.5B` | `8faed761d45a` |
-| 47 | `lfm2600` | 0.3758 | `monotykamary/LFM2.5-2.6B-RLCD` | `31455458983b` |
-| 48 | `lfm350` | 0.3492 | `notnotsamuel/LFM2.5-350M-RLCD` | `deb589d803d1` |
-| 49 | `pngwn` | 0.2597 | `pngwn/system-one-qwen3.5-4b-scorer-v2b` | `3ec7785bf6aa` |
+| 1 | `seb-9b` | 0.8702 | `ironbcc/seb-9b` | `4ae564d62fb6` |
+| 2 | `decider-4b` | 0.8581 | `Mapika/decider-4b` | `eb5fbdfc9448` |
+| 3 | `decision-lux-9b` | 0.8484 | `llm-semantic-router/Decision-1.0-Lux-9B` | `2064c84daf59` |
+| 4 | `jet` | 0.8452 | `michaljach/jet` | `fbc3d2daa679` |
+| 5 | `kev-4b` | 0.8444 | `jaredpalmer/kev-4b` | `6cfce5c2fa4b` |
+| 6 | `jpt-9b` | 0.8379 | `kirp/jpt-9b` | `b447cc7ee105` |
+| 7 | `intern-decision-4b` | 0.8315 | `internlm/Intern-Decision-4B` | `0e5e6aa7d6d7` |
+| 8 | `kev-9b` | 0.8290 | `jaredpalmer/kev-9b` | `db029f08b290` |
+| 9 | `jevk5` | 0.8282 | `alibiserikbay/JevK5` | `c4f7fdb3aeab` |
+| 10 | `neohorse-4b` | 0.8282 | `TokenRhythm/NeoHorse-Jev-4B` | `434cb21d3a99` |
+| 11 | `jpt-4b` | 0.8274 | `kirp/jpt-4b` | `78312f855b8b` |
+| 12 | `tev1-4b` | 0.8242 | `togethercomputer/Tev1-4B-experimental` | `0b7becf017da` |
+| 13 | `decision-nox` | 0.8000 | `llm-semantic-router/Decision-1.0-Nox` | `7f65e1db2c55` |
+| 14 | `decider-2b` | 0.7976 | `Mapika/decider-2b` | `533964dae8be` |
+| 15 | `this-that-12` | 0.7871 | `flock-io/this-that-model-1.2` | `c4d1c30b8d51` |
+| 16 | `decision-eos` | 0.7815 | `llm-semantic-router/Decision-1.0-Eos-0.8B` | `bbdc2221d0ec` |
+| 17 | `hopper-g` | 0.7798 | `HopitAI/hopper-g` | `d60a1d6ca3f3` |
+| 18 | `lumma-fev-4b` | 0.7758 | `FrontiersMind/Lumma-fev-4b` | `6fea60ae613c` |
+| 19 | `lumma-fev-9b` | 0.7742 | `FrontiersMind/Lumma-fev-9b` | `51c4b084f40b` |
+| 20 | `kev-08b` | 0.7726 | `jaredpalmer/kev-0.8b` | `bf75a6a8848e` |
+| 21 | `intern-decision-2b` | 0.7718 | `internlm/Intern-Decision-2B` | `8797836c65fc` |
+| 22 | `nimble-v2` | 0.7702 | `bespokelabs/Bespoke-Nimble-9B-v2` | `4b8c04d1ac2c` |
+| 23 | `decision-sol` | 0.7694 | `llm-semantic-router/Decision-1.0-Sol` | `fc210c8fcc7f` |
+| 24 | `jpt-08b` | 0.7645 | `kirp/jpt-0.8b` | `1431c0509bbc` |
+| 25 | `tev1-08b` | 0.7637 | `togethercomputer/Tev1-0.8B-experimental` | `6bb2dff14b38` |
+| 26 | `mini-jev` | 0.7621 | `Qwen/Qwen3-4B-Instruct-2507` | `cdbee75f17c0` |
+| 27 | `bosun-17b` | 0.7452 | `Hanno-Labs/bosun-v3.1-1.7b` | `1d8dc82a20e4` |
+| 28 | `metask` | 0.7395 | `wayfind/metask-jev-4b-policy-mix` | `ea20fe85b287` |
+| 29 | `intern-decision-08b` | 0.7242 | `internlm/Intern-Decision-0.8B` | `85a0cc5a99d6` |
+| 30 | `lavoir` | 0.7105 | `moganai/lavoir` | `4c5eaeb99b23` |
+| 31 | `decision-kai` | 0.7089 | `llm-semantic-router/Decision-1.0-Kai` | `69aef4060caf` |
+| 32 | `bosun-06b` | 0.7000 | `Hanno-Labs/bosun-v3.1-0.6b` | `1d8b6f9611f9` |
+| 33 | `laya` | 0.6976 | `convaiinnovations/laya` | `55cf4c4ebb4e` |
+| 34 | `gliner-decide` | 0.6927 | `fastino/GLiNER2.5-Decide` | `5a7adf72a23b` |
+| 35 | `mimir` | 0.6718 | `Mythologic/MIMIR-1` | `d2f5a66ea111` |
+| 36 | `gliner-base` | 0.6355 | `fastino/gliner2.5-base-v1` | `ca9062476407` |
+| 37 | `decision-lex` | 0.5968 | `llm-semantic-router/decision-1.0-lex` | `1f9750a75ae9` |
+| 38 | `gliner-multi` | 0.5718 | `fastino/gliner2.5-multi-v1` | `2ca71aafb344` |
+| 39 | `lev` | 0.5637 | `interfaze-ai/lev` | `7bdc748dffeb` |
+| 40 | `jobe` | 0.5516 | `Qwen/Qwen3.5-4B-Base` | `1001bb4d826a` |
+| 41 | `verdict` | 0.5516 | `heman10x/rlcd-modernbert-151m` | `8af2496eb63c` |
+| 42 | `mojev` | 0.5435 | `MoLeMo-Lab/mojev` | `0c8695b6252f` |
+| 43 | `gliner-small` | 0.5363 | `fastino/gliner2.5-small-v1` | `7132dc4561c3` |
+| 44 | `julia-1` | 0.5258 | `SupersonicLabs/Julia-1` | `a85b127321d5` |
+| 45 | `lumma-fev-06b` | 0.5145 | `FrontiersMind/Lumma-fev-0.6b` | `59272e2c1050` |
+| 46 | `lumma-fev-01b` | 0.4290 | `FrontiersMind/Lumma-fev-0.1b` | `085f4705aa86` |
+| 47 | `harsha` | 0.4290 | `Qwen/Qwen2.5-1.5B` | `8faed761d45a` |
+| 48 | `lfm2600` | 0.3758 | `monotykamary/LFM2.5-2.6B-RLCD` | `31455458983b` |
+| 49 | `lfm350` | 0.3492 | `notnotsamuel/LFM2.5-350M-RLCD` | `deb589d803d1` |
+| 50 | `pngwn` | 0.2597 | `pngwn/system-one-qwen3.5-4b-scorer-v2b` | `3ec7785bf6aa` |
 
 ## Rows that declined to answer
 
@@ -95,6 +96,7 @@ intent routing. Every model is scored on all 9 suites, as a percentage.
 
 | Model | agnews | banking77_12 | emotion | guardrails | mnli | moderation | multilingual_intent | sst5 | triage |
 |---|---|---|---|---|---|---|---|---|---|
+| `seb-9b` | 88.1 | 89.6 | 82.8 | 100.0 | 80.0 | 93.1 | 100.0 | 55.8 | 93.8 |
 | `decider-4b` | 92.5 | 91.7 | 79.2 | 83.3 | 84.2 | 94.4 | 100.0 | 48.3 | 94.3 |
 | `decision-lux-9b` | 84.4 | 88.5 | 73.4 | 97.9 | 91.7 | 93.1 | 97.5 | 52.5 | 90.1 |
 | `jet` | 89.4 | 90.6 | 79.2 | 83.3 | 82.5 | 93.1 | 96.7 | 49.2 | 92.7 |
@@ -155,7 +157,7 @@ intent routing. Every model is scored on all 9 suites, as a percentage.
 
 ## Counting rule
 
-**49 distinct measurements**. Repeated runs collapse:
+**50 distinct measurements**. Repeated runs collapse:
 
 - `decider-2b`: 2 directories, one measurement (`decider-2b-t4-c0-v210`, `decider-2b-t4-d0-v210`)
 - `tev1-08b`: 2 directories, one measurement (`tev1-08b-20261002-v210`, `tev1-08b-t4-g1-v210`)
@@ -165,7 +167,7 @@ A measurement whose checksum fails is dropped rather than published.
 
 ## Not measured, and why
 
-5 entries sit outside the measured scope, each with a recorded reason:
+4 entries sit outside the measured scope, each with a recorded reason:
 
 | Entry | Reason | Why |
 |---|---|---|
@@ -173,9 +175,8 @@ A measurement whose checksum fails is dropped rather than published.
 | `clm-v0.1-8b` | Contrastive reranker | Scores state-answer pairs rather than producing typed decisions. |
 | `winnow-12b` | GGUF only | 22.3 GiB of bf16 weights published solely as GGUF. Fits current hardware but needs a different runtime. |
 | `jeff` | Artifacts lost | Measured 0.6855 on a DGX Spark, but that run was never mirrored and the host is gone. The row is withdrawn until it is re-run; the broken earlier run is retained under quarantine and is not reported. |
-| `seb-9b` | Awaiting a GPU host | 9.65B, added to scope at the author's request. Not yet measured. |
 
-The scope is 50 entries: 49 measured, 1 awaiting measurement.
+The scope is 50 entries: 50 measured.
 
 ## Caveats, stated plainly
 
@@ -197,7 +198,7 @@ The scope is 50 entries: 49 measured, 1 awaiting measurement.
 - Manifest sha256 `0d21a64c6b61b6be7b49050dbd89f89f934912a7b586734e475308e9c9422ea2`
 - Logical digest `4272a7a25ebcb324235696ad808544e157a31e3f9c04421da731a08dfb9d5768`
 - Seed 42, dataset version `2.1.0`
-- 52 verified run directories, 49 distinct measurements
+- 53 verified run directories, 50 distinct measurements
 - Every run records model, full revision, device, dtype, serving mode and scoring readout.
 - Full run directories are mirrored to a private dataset and verified byte for byte.
 

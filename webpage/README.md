@@ -76,7 +76,7 @@ and bars grow with the Web Animations API.
 
 Six, all inline SVG built by `app.js`:
 
-1. **Field** - all 49 measurements as a ranked list with hairline bars and a nine-suite sparkline per
+1. **Field** - all 50 measurements as a ranked list with hairline bars and a nine-suite sparkline per
    row, plus a strip plot in the readout
 2. **Per-suite** - grouped bars for one model, or the top five
 3. **Heatmap** - 49 models against 9 suites, horizontally scrollable

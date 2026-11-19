@@ -50,7 +50,6 @@ EXCLUDED_NOTES = [
     ["clm-v0.1-8b", "Contrastive reranker", "Scores state-answer pairs rather than producing typed decisions."],
     ["winnow-12b", "GGUF only", "22.3 GiB of bf16 weights published solely as GGUF. Fits current hardware but needs a different runtime."],
     ["jeff", "Artifacts lost", "Measured 0.6855 on a DGX Spark, but that run was never mirrored and the host is gone. The row is withdrawn until it is re-run; the broken earlier run is retained under quarantine and is not reported."],
-    ["seb-9b", "Awaiting a GPU host", "9.65B, added to scope at the author's request. Not yet measured."],
 ]
 
 SUITES = [
@@ -123,6 +122,32 @@ def main() -> int:
                 "deferrals": metadata.get("deferrals"),
             }
 
+    # The only model measured on two hosts against one pinned revision. Derived from the
+    # run directories so the precision comparison can never drift from the recorded runs.
+    precision: dict[str, list[dict[str, object]]] = {"tev1-08b": []}
+    for root in (RESULTS_ROOT / "cpu" / "runs", RESULTS_ROOT / "gpu"):
+        if not root.is_dir():
+            continue
+        for run in sorted(root.iterdir()):
+            if not run.is_dir() or not (run / "metadata.json").exists() or not (run / "summary.json").exists():
+                continue
+            try:
+                meta = json.loads((run / "metadata.json").read_text())
+                summ = json.loads((run / "summary.json").read_text())
+            except (OSError, ValueError):
+                continue
+            info = meta.get("model") if isinstance(meta.get("model"), dict) else meta
+            if info.get("runner") == "tev1-08b" and run.name.endswith("-v210"):
+                precision["tev1-08b"].append(
+                    {
+                        "runId": run.name,
+                        "device": info.get("device"),
+                        "dtype": info.get("dtype"),
+                        "accuracy": summ.get("accuracy"),
+                    }
+                )
+    precision["tev1-08b"].sort(key=lambda row: str(row.get("device")))
+
     collisions = coverage["identical_prediction_collisions"]
     counted_once = {r for runners in collisions.values() for r in runners[1:]}
     ordered = [r for r in (row["runner"] for row in coverage["measurements"])]
@@ -149,6 +174,7 @@ def main() -> int:
             "inPanel": False,
         },
         "measurements": [by_runner[r] for r in ordered if r in by_runner],
+        "precision": precision,
         "duplicates": {
             "repeatedRuns": coverage["repeated_runs_of_one_runner"],
             "identicalPredictions": collisions,
