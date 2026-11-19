@@ -10,16 +10,16 @@ There was no way to check cross-vendor claims before this. Laya's author had no 
 access, and the published vendor numbers come from different prompts. Two numbers from
 different prompts are not a comparison.
 
-## Expanded panel: 49 of 50 measured
+## Expanded panel: 50 of 50 measured
 
 The three-model result below is the sealed v2.0.0 release. Since then the scope was widened to the
-Decision Index 0.2.1 panel, and **49 distinct measurements** are complete against the same sealed
+Decision Index 0.2.1 panel, and **50 distinct measurements** are complete against the same sealed
 manifest, re-scored onto the corrected dataset 2.1.0 gold.
 
 Counts are derived by `ops/panel_coverage.py` from finished run directories, never from a
 hand-kept tally. It verifies every artifact against its own `checksums.sha256` and fingerprints
 the evaluation-phase answers, so repeat runs and identical runs collapse instead of inflating the
-number. It found 52 verified directories but only **49** distinct measurements:
+number. It found 53 verified directories and **50** distinct measurements:
 
 | Runner | Directories | Counted once because |
 | :--- | :--- | :--- |
@@ -42,28 +42,29 @@ Its 0.9065 comes from the sealed v2.0.0 release below, measured on the same mani
 
 | model | params | entry kind | accuracy | notes |
 |---|---:|---|---:|---|
-| `kev-4b` | 4.66B | LoRA + head | **0.8556** | best open model; runs on 1x T4 |
-| `jpt-9b` | 9.65B | LoRA | 0.8548 | needed a 2-GPU shard, 18 GiB |
-| `jet` | 4.66B | LoRA | 0.8524 | letter-logit readout over a scalar scorer |
-| `jevk5` | 4.66B | LoRA | 0.8508 | letter-logit readout |
-| `intern-decision-4b` | 4.66B | full fine-tune | 0.8460 | remote code manages its own precision |
-| `tev1-4b` | 4.66B | full fine-tune | 0.8460 | see the `tev1-08b` CPU/T4 pair below |
-| `decider-4b` | 4.66B | full fine-tune | 0.8411 | eager path, avoids T4 compile stalls |
-| `neohorse-4b` | 4.66B | head / adapter | 0.8266 | reproduced exactly on a second run |
-| `decision-nox` | 4.66B | head / adapter | 0.8048 | vendor-managed precision |
-| `hopper-g` | 4.66B | LoRA | 0.7911 | matches the vendor's self-reported board score |
+| `seb-9b` | 9.65B | full fine-tune | **0.8702** | best open model; option-key logits, 2x T4 shard |
+| `decider-4b` | 4.66B | full fine-tune | 0.8581 | eager path, avoids T4 compile stalls |
+| `decision-lux-9b` | 9.65B | full fine-tune | 0.8484 | measured on a DGX Spark (117 GB unified) |
+| `jet` | 4.66B | LoRA | 0.8452 | letter-logit readout over a scalar scorer |
+| `kev-4b` | 4.66B | LoRA + head | 0.8444 | runs on 1x T4 |
+| `jpt-9b` | 9.65B | LoRA | 0.8379 | needed a 2-GPU shard, 18 GiB |
+| `intern-decision-4b` | 4.66B | full fine-tune | 0.8315 | remote code manages its own precision |
+| `kev-9b` | 8.9B | LoRA + head | 0.8290 | measured on a DGX Spark |
+| `jevk5` | 4.66B | LoRA | 0.8282 | letter-logit readout |
+| `neohorse-4b` | 4.66B | head / adapter | 0.8282 | reproduced exactly on a second run |
 
-The best open model trails the closed reference by 0.0509. The gap to the top three open models
-is 0.0048, so those three are effectively tied at this sample size.
+The best open model trails the closed reference by 0.0363. The top ten span 0.0420, so fine
+rank inside that band is not a stable claim at this sample size.
 
-Every row is bf16 on a T4 except `intern-decision-4b`, whose remote code selects its own numerics.
+Numerics and hosts are recorded per row in the generated site data. Most T4 rows are fp16 or bf16;
+`seb-9b`, `jpt-9b` and `nimble-v2` use a 2-GPU shard.
 
 `tev1-08b` is the only model measured on two hosts, which makes it the one direct read on precision
 cost: **0.7629 on CPU fp32 against 0.7734 on T4 fp16**, a 0.0105 gap on identical bytes and one
 pinned revision. `decider-2b` differed 0.7895 on Kaggle against 0.7927 on Colab, but those runs were
 not byte-identical in configuration, so it is a weaker signal.
 
-Full 49-row table with scoring method and provenance flags:
+Full 50-row table with scoring method and provenance flags:
 [`docs/decision-index-panel-coverage.md`](docs/decision-index-panel-coverage.md).
 
 Two caveats carried in the table rather than hidden:

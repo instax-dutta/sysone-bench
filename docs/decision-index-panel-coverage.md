@@ -15,7 +15,7 @@ Source of truth is the panel extract of `multimodalart/jev-decision-index` at su
 | Dropped - will not fit 2x T4 in fp16 | 1 | out of scope, precision confound |
 | Dropped - weights never published | 2 | out of scope, unreproducible |
 | **In scope for 2x T4** | **49** | target (was 51; `akash-gemma` and `semif` removed, no public weights) |
-| Added by author request | 1 | `seb-9b` (`ironbcc/seb-9b`), 9.65B, pending measurement |
+| Added by author request | 1 | `seb-9b` (`ironbcc/seb-9b`), 9.65B, measured at 0.8702 on 2x T4 |
 
 The 9 dropped models are every entry at or above 25.8B served parameters with public weights. None fits 2x T4 in fp16
 (29.1 GiB usable), and the operator declined PRO 6000 spend. Seven further names had no public weights anywhere and were removed from scope entirely.
@@ -35,10 +35,10 @@ answers so identical runs collapse.
 
 | Measure | Count |
 | :--- | ---: |
-| Run directories verified | 46 |
-| Distinct runner names | 44 |
-| **Distinct measurements** | **49 of 50** |
-| Not measured | 8 |
+| Run directories verified | 53 |
+| Distinct runner names | 51 |
+| **Distinct measurements** | **50 of 50** |
+| Not measured | 0 |
 
 Three directories are correctly counted once each:
 
@@ -65,49 +65,56 @@ row is a measurement of the authors' system.
 
 | # | Model | Accuracy | Provenance |
 |---:| :--- | ---: | :--- |
-| 1 | `kev-4b` | 0.8556 | vendor readout |
-| 2 | `jpt-9b` | 0.8548 | vendor readout |
-| 3 | `jet` | 0.8524 | vendor readout |
-| 4 | `jevk5` | 0.8508 | vendor readout |
-| 5 | `intern-decision-4b` | 0.8460 | vendor readout |
-| 6 | `tev1-4b` | 0.8460 | vendor readout |
-| 7 | `decider-4b` | 0.8411 | vendor readout |
-| 8 | `neohorse-4b` | 0.8266 | vendor readout |
-| 9 | `decision-nox` | 0.8048 | vendor readout |
-| 10 | `this-that-12` | 0.8008 | vendor readout |
-| 11 | `hopper-g` | 0.7911 | vendor readout |
-| 12 | `decider-2b` | 0.7895 | vendor readout |
-| 13 | `decision-sol` | 0.7863 | vendor readout |
-| 14 | `mini-jev` | 0.7831 | technique reimpl. |
-| 15 | `nimble-v2` | 0.7823 | 2-GPU shard |
-| 16 | `intern-decision-2b` | 0.7790 | vendor readout |
-| 17 | `tev1-08b` | 0.7734 | vendor readout |
-| 18 | `kev-08b` | 0.7726 | vendor readout |
-| 19 | `metask` | 0.7710 | vendor readout |
-| 20 | `jpt-08b` | 0.7702 | vendor readout |
-| 21 | `decision-eos` | 0.7685 | vendor readout |
-| 22 | `bosun-17b` | 0.7315 | vendor readout |
-| 23 | `intern-decision-08b` | 0.7113 | vendor readout |
-| 24 | `decision-kai` | 0.7105 | vendor readout |
-| 25 | `gliner-decide` | 0.7065 | vendor readout |
-| 26 | `lavoir` | 0.7040 | vendor readout |
-| 27 | `bosun-06b` | 0.6976 | vendor readout |
-| 28 | `laya` | 0.6863 | vendor readout |
-| 29 | `gliner-base` | 0.6363 | vendor readout |
-| 30 | `gliner-multi` | 0.5863 | vendor readout |
-| 31 | `jobe` | 0.5855 | technique reimpl. |
-| 32 | `decision-lex` | 0.5823 | vendor readout |
-| 33 | `lev` | 0.5613 | vendor readout |
-| 34 | `verdict` | 0.5532 | vendor readout |
-| 35 | `gliner-small` | 0.5419 | vendor readout |
-| 36 | `mojev` | 0.5395 | vendor readout |
-| 37 | `julia-1` | 0.5016 | vendor readout |
-| 38 | `lumma-fev-06b` | 0.4815 | vendor readout |
-| 39 | `harsha` | 0.4339 | technique reimpl. |
-| 40 | `lumma-fev-01b` | 0.4194 | vendor readout |
-| 41 | `lfm2600` | 0.3855 | vendor readout |
-| 42 | `lfm350` | 0.3669 | vendor readout |
-| 43 | `pngwn` | 0.2734 | prompt unresolved |
+| 1 | `seb-9b` | 0.8702 | option-key logits, 2x T4 shard |
+| 2 | `decider-4b` | 0.8581 | vendor readout |
+| 3 | `decision-lux-9b` | 0.8484 | DGX Spark, whole-device bf16 |
+| 4 | `jet` | 0.8452 | vendor readout |
+| 5 | `kev-4b` | 0.8444 | vendor readout |
+| 6 | `jpt-9b` | 0.8379 | vendor readout |
+| 7 | `intern-decision-4b` | 0.8315 | vendor readout |
+| 8 | `kev-9b` | 0.8290 | DGX Spark, vendor server self-loads |
+| 9 | `jevk5` | 0.8282 | vendor readout |
+| 10 | `neohorse-4b` | 0.8282 | vendor readout |
+| 11 | `jpt-4b` | 0.8274 | DGX Spark |
+| 12 | `tev1-4b` | 0.8242 | vendor readout |
+| 13 | `decision-nox` | 0.8000 | vendor readout |
+| 14 | `decider-2b` | 0.7976 | vendor readout |
+| 15 | `this-that-12` | 0.7871 | vendor readout |
+| 16 | `decision-eos` | 0.7815 | vendor readout |
+| 17 | `hopper-g` | 0.7798 | vendor readout |
+| 18 | `lumma-fev-4b` | 0.7758 | DGX Spark |
+| 19 | `lumma-fev-9b` | 0.7742 | DGX Spark |
+| 20 | `kev-08b` | 0.7726 | vendor readout |
+| 21 | `intern-decision-2b` | 0.7718 | vendor readout |
+| 22 | `nimble-v2` | 0.7702 | 2-GPU shard |
+| 23 | `decision-sol` | 0.7694 | vendor readout |
+| 24 | `jpt-08b` | 0.7645 | vendor readout |
+| 25 | `tev1-08b` | 0.7637 | vendor readout |
+| 26 | `mini-jev` | 0.7621 | technique reimpl. |
+| 27 | `bosun-17b` | 0.7452 | vendor readout |
+| 28 | `metask` | 0.7395 | vendor readout |
+| 29 | `intern-decision-08b` | 0.7242 | vendor readout |
+| 30 | `lavoir` | 0.7105 | vendor readout |
+| 31 | `decision-kai` | 0.7089 | vendor readout |
+| 32 | `bosun-06b` | 0.7000 | vendor readout |
+| 33 | `laya` | 0.6976 | vendor readout |
+| 34 | `gliner-decide` | 0.6927 | vendor readout |
+| 35 | `mimir` | 0.6718 | certified engine, 1% risk, argmax projection |
+| 36 | `gliner-base` | 0.6355 | vendor readout |
+| 37 | `decision-lex` | 0.5968 | vendor readout |
+| 38 | `gliner-multi` | 0.5718 | vendor readout |
+| 39 | `lev` | 0.5637 | vendor readout |
+| 40 | `jobe` | 0.5516 | technique reimpl. |
+| 41 | `verdict` | 0.5516 | vendor readout |
+| 42 | `mojev` | 0.5435 | vendor readout |
+| 43 | `gliner-small` | 0.5363 | vendor readout |
+| 44 | `julia-1` | 0.5258 | vendor readout |
+| 45 | `lumma-fev-06b` | 0.5145 | vendor readout |
+| 46 | `harsha` | 0.4290 | technique reimpl. |
+| 47 | `lumma-fev-01b` | 0.4290 | vendor readout |
+| 48 | `lfm2600` | 0.3758 | vendor readout |
+| 49 | `lfm350` | 0.3492 | vendor readout |
+| 50 | `pngwn` | 0.2597 | prompt unresolved |
 
 
 ## The two models whose weights were never published

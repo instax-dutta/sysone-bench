@@ -59,7 +59,8 @@ Proven for `nimble-v2`: 18.0 GiB bf16 ran 10.4 GB + 9.2 GB across two T4s, 2191 
 | `decision-lux-9b` | 9.65B | 18.0 | 36.0 | **measured**, 0.8484 (GB10 Spark, fits whole-device) |
 | `kev-9b` | 9.65B | 18.0 | 36.0 | **measured**, 0.8290 (GB10 Spark, vendor server self-loads on one device) |
 | `nimble-v2` | 9.65B | 18.0 | 36.0 | **measured**, 0.7823 |
-| `jpt-9b` | 9.65B | 18.0 | 36.0 | measured, 0.8548 |
+| `jpt-9b` | 9.65B | 18.0 | 36.0 | measured, 0.8379 |
+| `seb-9b` | 9.65B | 18.0 | 36.0 | **measured**, 0.8702 on 2x T4 with `device_map=auto`, option-key logits |
 | `winnow-12b` | 11.96B | 22.3 | 44.6 | **GGUF only**; 22.3 GiB fits a GB10 whole, runtime still required |
 | `jev-omni` | 11.96B | 22.3 | 44.6 | Gemma-4-12B LoRA; needs the shard path exercised |
 

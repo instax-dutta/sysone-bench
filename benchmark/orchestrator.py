@@ -553,6 +553,7 @@ _VENDOR_RUNNERS: dict[str, tuple[str, str]] = {
         "InternDecision4BRunner",
     ),
     "mojev": ("runners.vendor.mojev", "MojevRunner"),
+    "seb-9b": ("runners.vendor.seb", "Seb9BRunner"),
 }
 
 
