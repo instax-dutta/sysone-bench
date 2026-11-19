@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>sysone-bench — fifty independent measurements, one sealed manifest</title>
-<meta name="description" content="An independent measurement record for System One decision models. Every model is run by us against one sealed manifest at a pinned revision, with byte-identical inputs and checksummed artifacts.">
+<title>sysone-bench — an independent benchmark of System One decision models</title>
+<meta name="description" content="sysone-bench is an independent benchmark of System One decision models. Every model is run by us against one sealed manifest at a pinned revision, with byte-identical inputs and checksummed artifacts.">
 <link rel="canonical" href="https://sysone.sdad.pro/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -14,7 +14,7 @@
 <meta name="theme-color" content="#f3efe4">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="sysone-bench">
-<meta property="og:title" content="sysone-bench — fifty independent measurements, one sealed manifest">
+<meta property="og:title" content="sysone-bench — an independent benchmark of System One decision models">
 <meta property="og:description" content="One sealed manifest, pinned revisions, checksummed artifacts. Every number is a measurement we performed, not a vendor-published score.">
 <meta property="og:url" content="https://sysone.sdad.pro/">
 <meta property="og:image" content="https://sysone.sdad.pro/og.png">
@@ -37,7 +37,7 @@
       "@id": "https://sysone.sdad.pro/#website",
       "url": "https://sysone.sdad.pro/",
       "name": "sysone-bench",
-      "description": "Independent measurements of System One decision models.",
+      "description": "An independent benchmark of System One decision models.",
       "inLanguage": "en",
       "publisher": { "@id": "https://sysone.sdad.pro/#org" }
     },
@@ -65,7 +65,7 @@
     {
       "@type": "Dataset",
       "@id": "https://sysone.sdad.pro/#dataset",
-      "name": "sysone-bench sealed manifest and panel measurements",
+      "name": "sysone-bench decision-model benchmark: sealed manifest and panel measurements",
       "description": "A sealed manifest of typed decision questions with independent measurements of System One decision models. Inputs are verified byte-identical before scoring and every run records pinned revisions, device, dtype and readout.",
       "url": "https://sysone.sdad.pro/",
       "creator": { "@id": "https://sysone.sdad.pro/#org" },
@@ -138,9 +138,9 @@
 <section class="hero" aria-labelledby="hero-title">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="eyebrow">One input · every model · one metric</p>
-      <h1 id="hero-title">Fifty models.<br><em>One sealed manifest.</em></h1>
-      <p class="lede">Self-reported scores are not comparable, because each one comes from its own prompt. We ignore them. Every model here is run by us against the same cases at seed 42, with inputs verified byte-identical before a number is read.</p>
+      <p class="eyebrow">Independent decision-model benchmark · one sealed manifest</p>
+      <h1 id="hero-title">A benchmark for<br><em>decision models.</em></h1>
+      <p class="lede">sysone-bench is an independent benchmark of System One decision models. Self-reported scores are not comparable, because each one comes from its own prompt. We ignore them. Every model here is run by us against the same cases at seed 42, with inputs verified byte-identical before a number is read.</p>
       <div class="hero-figure">
         <p class="eyebrow">Best open-weights · evaluation accuracy</p>
         <p class="big-num" id="best-score">0.8702</p>
@@ -166,7 +166,7 @@
 <section id="field" aria-labelledby="field-title">
   <div class="wrap">
     <div class="band-head">
-      <p class="eyebrow">01 / The field</p>
+      <p class="eyebrow">01 / The benchmark field</p>
       <h2 id="field-title">All <span data-count="measurements">50</span> measurements, ranked</h2>
       <p>Every row is an independent run against <span data-count="decisions">1,240</span> evaluation decisions. The nine marks beside a name are that model's suite accuracies. Fine rank inside the top band is not a stable claim at this sample size. Technique reimplementations are our reading of a published method over a public base checkpoint, not the authors' code.</p>
     </div>
@@ -193,7 +193,7 @@
 <section id="suites" aria-labelledby="suite-title">
   <div class="wrap">
     <div class="band-head">
-      <p class="eyebrow">02 / The evidence</p>
+      <p class="eyebrow">02 / Benchmark evidence</p>
       <h2 id="suite-title">Where models agree, and where they diverge</h2>
       <p>Aggregate accuracy hides the shape of a model. Pick one to see its nine suites, or compare the top five in each suite.</p>
     </div>
@@ -258,7 +258,7 @@
 <section id="method" aria-labelledby="method-title">
   <div class="wrap">
     <div class="band-head">
-      <p class="eyebrow">05 / The method</p>
+      <p class="eyebrow">05 / The benchmark method</p>
       <h2 id="method-title">What makes a number here trustworthy</h2>
     </div>
     <div class="method-grid">
@@ -280,7 +280,7 @@
 <section id="data" aria-labelledby="data-title">
   <div class="wrap">
     <div class="band-head">
-      <p class="eyebrow">06 / The record</p>
+      <p class="eyebrow">06 / The benchmark record</p>
       <h2 id="data-title">The whole result is one JSON file</h2>
       <p>Every number, chart and table on this page is rendered from <a href="data/results.json"><code>data/results.json</code></a>. Nothing is typed by hand.</p>
     </div>
