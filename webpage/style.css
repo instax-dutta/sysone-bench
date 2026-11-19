@@ -37,6 +37,11 @@ p { margin: 0 0 1em; }
 .hero { border-bottom: 1px solid var(--rule); padding: clamp(24px, 3.5vw, 44px) 0 0; }
 .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: start; }
 .lede { max-width: 52ch; font: 400 16px/1.5 var(--serif); color: var(--muted); margin-top: 18px; }
+.cta-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin: 20px 0 0; }
+.cta { display: inline-block; background: var(--oxide); color: var(--paper); font: 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; padding: 11px 16px; }
+.cta:hover { background: var(--ink); color: var(--paper); }
+.cta-quiet { font: 11px var(--mono); letter-spacing: .05em; color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 2px; }
+.cta-quiet:hover { color: var(--oxide); border-color: var(--oxide); }
 .hero-figure { margin-top: 24px; padding-top: 14px; border-top: 2px solid var(--ink); }
 .big-num { font: 500 clamp(64px, 7vw, 86px)/.9 var(--mono); letter-spacing: -.085em; margin: 0; font-variant-numeric: tabular-nums; }
 .best-name { font: 500 20px var(--mono); margin: 14px 0 2px; }
