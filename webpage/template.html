@@ -151,7 +151,10 @@
     <figure class="hero-film">
       <div class="film-frame">
         <img class="film-poster" src="assets/field-race-poster.png" width="1280" height="720" alt="Ledger of the ten highest measured accuracies, from seb-9b at 0.8702 downward">
-        <video id="field-film" src="assets/field-race.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Animated ledger of the ten highest measured accuracies"></video>
+        <video id="field-film" autoplay muted loop playsinline preload="auto" aria-label="Animated ledger of the ten highest measured accuracies">
+          <source src="assets/field-race.webm" type="video/webm">
+          <source src="assets/field-race.mp4" type="video/mp4">
+        </video>
       </div>
       <figcaption>Each row is a run we performed at a pinned revision. The bars are the measured accuracies, not vendor claims.</figcaption>
     </figure>
