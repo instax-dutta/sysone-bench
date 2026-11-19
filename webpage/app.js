@@ -169,14 +169,14 @@
 
   function heatmap() {
     const host = $("#heatmap");
-    const labelW = 190, cellW = 56, rowH = 13, headH = 72;
+    const labelW = 190, cellW = 56, rowH = 13, headH = 110;
     const W = labelW + data.suites.length * cellW;
     const H = headH + data.measurements.length * rowH + 8;
     const s = mount(host, W, H);
     data.suites.forEach((suite, i) => {
       const x = labelW + i * cellW + cellW / 2;
-      const t = text(s, x, headH - 12, suite.replace("_", " "), 9, "end", "#5d574d");
-      t.setAttribute("transform", `rotate(-45 ${x} ${headH - 12})`);
+      const t = text(s, x, headH - 22, suite.replace("_", " "), 9, "end", "#5d574d");
+      t.setAttribute("transform", `rotate(-55 ${x} ${headH - 22})`);
     });
     data.measurements.forEach((m, r) => {
       const y = headH + r * rowH;
