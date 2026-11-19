@@ -17,6 +17,13 @@
     s.setAttribute("role", "img");
     return s;
   }
+  function mount(host, w, h) {
+    host.replaceChildren();
+    host.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    host.setAttribute("width", w);
+    host.setAttribute("height", h);
+    return host;
+  }
   function text(parent, x, y, value, size = 11, anchor = "start", fill = "#161412") {
     const t = document.createElementNS(NS, "text");
     t.setAttribute("x", x); t.setAttribute("y", y);
@@ -118,6 +125,7 @@
     rows.forEach((m, i) => {
       const row = document.createElement("div");
       row.className = "ledger-row";
+      row.dataset.i = String(i);
       const flags = [m.techniqueReimplementation ? "technique" : null, m.readoutCaveat ? "readout caveat" : null, m.deferrals ? "deferred" : null, m.sharding ? "2-GPU shard" : null].filter(Boolean);
       row.innerHTML = `<span class="rank">${String(i + 1).padStart(2, "0")}</span><span class="who">${esc(m.runner)}</span><span class="score">${fmt(m.accuracy)}</span><span></span><span class="flags">${esc(flags.join(" · "))}</span>`;
       row.children[3].appendChild(sparkline(m));
@@ -129,12 +137,11 @@
 
   function suiteChart() {
     const host = $("#suite-chart");
-    host.replaceChildren();
     const compareTop = $(".chip[data-compare][aria-pressed='true']")?.dataset.compare === "top";
     const chosen = $("#model-select").value;
     const series = compareTop ? data.measurements.slice(0, 5) : [data.measurements.find((m) => m.runner === chosen) || data.measurements[0]];
     const W = 980, H = 300, left = 40, top = 20, bottom = 54, plotH = H - top - bottom;
-    const s = svg(W, H);
+    const s = mount(host, W, H);
     s.setAttribute("aria-label", compareTop ? "Top five models by suite" : `Per-suite accuracy for ${chosen}`);
     for (let i = 0; i <= 10; i += 2) {
       const y = top + plotH * (1 - i / 10);
@@ -156,36 +163,35 @@
       const label = text(s, left + si * group + group / 2, H - 30, suite.replace("_", " "), 10, "middle", "#161412");
       label.setAttribute("transform", `rotate(-28 ${left + si * group + group / 2} ${H - 30})`);
     });
-    host.appendChild(s);
   }
 
   function heatmap() {
     const host = $("#heatmap");
-    host.replaceChildren();
-    const W = 180 + data.suites.length * 58, rowH = 9, H = 28 + data.measurements.length * rowH;
-    const s = svg(W, H);
+    const labelW = 190, cellW = 56, rowH = 13, headH = 72;
+    const W = labelW + data.suites.length * cellW;
+    const H = headH + data.measurements.length * rowH + 8;
+    const s = mount(host, W, H);
     data.suites.forEach((suite, i) => {
-      const t = text(s, 186 + i * 58, 14, suite, 9, "middle", "#5d574d");
-      t.setAttribute("transform", `rotate(-35 ${186 + i * 58} 14)`);
+      const x = labelW + i * cellW + cellW / 2;
+      const t = text(s, x, headH - 12, suite.replace("_", " "), 9, "end", "#5d574d");
+      t.setAttribute("transform", `rotate(-45 ${x} ${headH - 12})`);
     });
     data.measurements.forEach((m, r) => {
-      const y = 24 + r * rowH;
-      text(s, 0, y + 7, m.runner, 9, "start", "#161412");
+      const y = headH + r * rowH;
+      text(s, 0, y + 9, m.runner, 8.5, "start", "#161412");
       data.suites.forEach((suite, i) => {
         const v = pct(m.suites[suite]);
         const shade = v >= 0.9 ? 0.95 : v >= 0.8 ? 0.72 : v >= 0.7 ? 0.5 : v >= 0.5 ? 0.3 : 0.15;
-        rect(s, 180 + i * 58, y, 52, rowH - 1, m.techniqueReimplementation ? "#8b8377" : "#9a3b2c", shade);
+        rect(s, labelW + i * cellW, y, cellW - 3, rowH - 1, m.techniqueReimplementation ? "#8b8377" : "#9a3b2c", shade);
       });
     });
-    host.appendChild(s);
   }
 
   function precision() {
     const rows = data.precision?.["tev1-08b"] || [];
     if (rows.length < 2) return;
     const host = $("#precision-chart");
-    host.replaceChildren();
-    const W = 480, H = 180, s = svg(W, H);
+    const W = 480, H = 180, s = mount(host, W, H);
     const max = 1, base = H - 40;
     line(s, 30, base, W - 10, base, "#161412");
     rows.forEach((r, i) => {
@@ -196,24 +202,21 @@
       text(s, x + 45, base + 18, `${r.device} · ${r.dtype || "default"}`, 10, "middle", "#5d574d");
       text(s, x + 45, base + 32, r.runId, 9, "middle", "#5d574d");
     });
-    host.appendChild(s);
     const gap = Math.abs(rows[0].accuracy - rows[1].accuracy);
     $("#precision-note").innerHTML = `<p><strong>${gap.toFixed(4)} apart.</strong> Precision at this scale is small but not zero, so it is recorded per row rather than assumed constant. The two runs use one pinned revision and identical bytes.</p>`;
   }
 
   function coverage() {
     const host = $("#coverage-chart");
-    host.replaceChildren();
     const pairs = [["Verified run directories", data.runDirectoriesVerified], ["Distinct measurements", data.distinctMeasurements]];
-    const W = 460, H = 150, s = svg(W, H);
+    const W = 560, H = 140, barX = 250, barMax = 250, s = mount(host, W, H);
     pairs.forEach(([label, value], i) => {
-      const y = 18 + i * 58;
+      const y = 16 + i * 56;
       text(s, 0, y + 14, label, 11, "start");
-      const w = (W - 190) * value / Math.max(...pairs.map((p) => p[1]));
-      const bar = rect(s, 190, y, w, 18, "#9a3b2c", 0.85);
-      text(s, 196 + w, y + 14, String(value), 13, "start");
+      const w = barMax * value / Math.max(...pairs.map((p) => p[1]));
+      rect(s, barX, y, w, 18, "#9a3b2c", 0.85);
+      text(s, barX + w + 10, y + 14, String(value), 13, "start");
     });
-    host.appendChild(s);
     const list = $("#collapse-list");
     const rep = data.duplicates.repeatedRuns || {}, ids = data.duplicates.identicalPredictions || {};
     const parts = [];
@@ -242,10 +245,17 @@
   }
 
   function observe() {
-    const targets = $$(".band-head, .chart, .panel, .note, .method-grid article, .ledger");
-    if (reduced || !("IntersectionObserver" in window)) { targets.forEach((n) => n.classList.add("reveal", "in")); return; }
+    const targets = $$(".band-head, .chart, .panel, .note, .method-grid article, .ledger, .ledger-row");
+    if (reduced || !("IntersectionObserver" in window)) { targets.forEach((n) => n.classList.add("in")); return; }
     const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        if (e.target.classList.contains("ledger-row")) {
+          e.target.style.animationDelay = `${(Number(e.target.dataset.i || 0) % 12) * 22}ms`;
+        }
+        e.target.classList.add("in");
+        io.unobserve(e.target);
+      });
     }, { rootMargin: "0px 0px -8% 0px" });
     targets.forEach((n) => { n.classList.add("reveal"); io.observe(n); });
   }
@@ -265,14 +275,16 @@
     const select = $("#model-select");
     select.innerHTML = data.measurements.map((m) => `<option value="${esc(m.runner)}">${esc(m.runner)} · ${fmt(m.accuracy)}</option>`).join("");
     suiteChart(); heatmap(); precision(); coverage(); notes(); observe();
-    // Keep the settled ledger frame as the first paint; start the loop only after the
-    // reader has had a moment to read it. Reduced-motion users keep the still frame.
     const film = $("#field-film");
-    if (film && !reduced) {
-      setTimeout(() => {
-        film.parentElement.classList.add("playing");
-        film.play().catch(() => film.parentElement.classList.remove("playing"));
-      }, 1500);
+    if (film) {
+      const revealFilm = () => {
+        if (film.currentTime > 1) film.parentElement.classList.add("ready");
+      };
+      film.addEventListener("timeupdate", revealFilm);
+      film.addEventListener("loadeddata", revealFilm);
+    }
+    if (data.scopeTotal - data.distinctMeasurements === 0) {
+      $("#coverage-title").textContent = "Every entry in scope has a recorded measurement";
     }
     $$("[data-filter]").forEach((b) => b.addEventListener("click", () => {
       $$("[data-filter]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); renderLedger();
