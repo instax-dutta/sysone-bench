@@ -7,6 +7,7 @@
 <meta name="description" content="An independent measurement record for System One decision models. Every model is run by us against one sealed manifest at a pinned revision, with byte-identical inputs and checksummed artifacts.">
 <link rel="canonical" href="https://sysone.sdad.pro/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="icon-512.png" sizes="512x512" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -47,7 +48,19 @@
       "url": "https://sysone.sdad.pro/",
       "description": "Independent benchmarking of System One decision models with no vendor affiliation.",
       "logo": "https://sysone.sdad.pro/icon-512.png",
-      "sameAs": ["https://github.com/instax-dutta/sysone-bench"]
+      "sameAs": [
+        "https://github.com/instax-dutta/sysone-bench",
+        "https://systemonemodels.org/",
+        "https://jevdirectory.org/"
+      ],
+      "employee": { "@id": "https://sysone.sdad.pro/#maintainer" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sysone.sdad.pro/#maintainer",
+      "name": "instax-dutta",
+      "url": "https://github.com/instax-dutta",
+      "sameAs": ["https://github.com/instax-dutta"]
     },
     {
       "@type": "Dataset",
@@ -57,11 +70,22 @@
       "url": "https://sysone.sdad.pro/",
       "creator": { "@id": "https://sysone.sdad.pro/#org" },
       "version": "2.1.0",
+      "datePublished": "2026-09-26",
+      "dateModified": "2026-11-19",
+      "inLanguage": "en",
+      "sameAs": ["https://github.com/instax-dutta/sysone-bench"],
       "measurementTechnique": "Each model is run by the benchmark operator against one sealed manifest at a pinned weight revision and a fixed seed. Vendor-published scores are not reused.",
+      "variableMeasured": [
+        { "@type": "PropertyValue", "name": "evaluation accuracy", "description": "Accuracy over the sealed evaluation decisions, per model and per suite." },
+        { "@type": "PropertyValue", "name": "calibration error", "description": "Raw and fitted expected calibration error for choice and noul decisions." },
+        { "@type": "PropertyValue", "name": "device and dtype", "description": "Recorded execution hardware and numerical precision for each measurement." }
+      ],
       "license": "https://github.com/instax-dutta/sysone-bench/blob/master/LICENSE",
       "isAccessibleForFree": true,
       "distribution": {
         "@type": "DataDownload",
+        "name": "sysone-bench generated results",
+        "description": "All current measurements, per-suite values and provenance flags in one JSON file.",
         "encodingFormat": "application/json",
         "contentUrl": "https://sysone.sdad.pro/data/results.json"
       }
@@ -73,12 +97,12 @@
         {
           "@type": "Question",
           "name": "What does sysone-bench measure?",
-          "acceptedAnswer": { "@type": "Answer", "text": "It measures System One decision models on typed decisions: multiple choice, ordinal scores and binary judgements. Every model answers the same sealed cases from one manifest at seed 42." }
+          "acceptedAnswer": { "@type": "Answer", "text": "It measures System One decision models on typed decisions: multiple choice, ordinal scores and binary judgements. Every model receives the same sealed cases from one manifest at seed 42; for locally run models the input bytes are verified identical before scoring." }
         },
         {
           "@type": "Question",
           "name": "Why are these numbers comparable?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Inputs are verified byte-identical before any number is compared. Each run records the full model revision, device, dtype, serving mode and scoring readout. Vendor-published figures come from different prompts and are not reused." }
+          "acceptedAnswer": { "@type": "Answer", "text": "For locally run models, inputs are verified byte-identical before any number is compared. Each run records the full model revision, device, dtype, serving mode and scoring readout. Vendor-published figures come from different prompts and are not reused." }
         },
         {
           "@type": "Question",
@@ -106,7 +130,7 @@
       <a href="#method">Method</a>
       <a href="#data">Data</a>
     </nav>
-    <p class="edition">Dataset <span id="edition-version">2.1.0</span> · independent · no affiliation</p>
+    <p class="edition">Dataset <span id="edition-version">2.1.0</span> · as of <span id="as-of">2026-11-19</span> · independent · no affiliation</p>
   </div>
 </header>
 
@@ -119,14 +143,14 @@
       <p class="lede">Self-reported scores are not comparable, because each one comes from its own prompt. We ignore them. Every model here is run by us against the same cases at seed 42, with inputs verified byte-identical before a number is read.</p>
       <div class="hero-figure">
         <p class="eyebrow">Best open-weights · evaluation accuracy</p>
-        <p class="big-num" id="best-score">—</p>
-        <p class="best-name"><span id="best-name">—</span> <span class="tag" id="best-tag">open weights</span></p>
-        <p class="gap-line"><span id="gap-value">—</span> behind <span id="closed-name">the closed API reference</span></p>
+        <p class="big-num" id="best-score">0.8702</p>
+        <p class="best-name"><span id="best-name">seb-9b</span> <span class="tag" id="best-tag">open weights</span></p>
+        <p class="gap-line"><span id="gap-value">0.0363</span> behind <span id="closed-name">Jev 1.13.0 (0.9065)</span></p>
       </div>
     </div>
     <figure class="hero-film">
       <div class="film-frame">
-        <img class="film-poster" src="assets/field-race-poster.png" alt="Ledger of the ten highest measured accuracies, from seb-9b at 0.8702 downward">
+        <img class="film-poster" src="assets/field-race-poster.png" width="1280" height="720" alt="Ledger of the ten highest measured accuracies, from seb-9b at 0.8702 downward">
         <video id="field-film" src="assets/field-race.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Animated ledger of the ten highest measured accuracies"></video>
       </div>
       <figcaption>Each row is a run we performed at a pinned revision. The bars are the measured accuracies, not vendor claims.</figcaption>
@@ -139,8 +163,8 @@
   <div class="wrap">
     <div class="band-head">
       <p class="eyebrow">01 / The field</p>
-      <h2 id="field-title">All <span data-count="measurements">—</span> measurements, ranked</h2>
-      <p>Every row is an independent run against <span data-count="decisions">—</span> evaluation decisions. The nine marks beside a name are that model's suite accuracies. Technique reimplementations are our reading of a published method over a public base checkpoint, not the authors' code.</p>
+      <h2 id="field-title">All <span data-count="measurements">50</span> measurements, ranked</h2>
+      <p>Every row is an independent run against <span data-count="decisions">1,240</span> evaluation decisions. The nine marks beside a name are that model's suite accuracies. Fine rank inside the top band is not a stable claim at this sample size. Technique reimplementations are our reading of a published method over a public base checkpoint, not the authors' code.</p>
     </div>
     <div class="controls">
       <div class="seg" role="group" aria-label="Filter measurements">
@@ -155,8 +179,8 @@
         <option value="spread">Suite spread</option>
       </select>
     </div>
-    <div class="note" id="deferral-note" hidden></div>
-    <div class="note" id="readout-note" hidden></div>
+    <div class="note" id="deferral-note"><p>Deferrals are recorded per run in <code>data/results.json</code>; a deferring model is called out here when present.</p></div>
+    <div class="note" id="readout-note"><p>Each row records the readout used. Rows carrying a readout caveat are explained in <code>llms-full.txt</code>, and no number is changed by the caveat.</p></div>
     <div class="ledger" id="ledger"></div>
     <p class="ledger-count" id="ledger-count"></p>
   </div>
@@ -178,7 +202,7 @@
       </div>
     </div>
     <div class="chart">
-      <div class="chart-head"><h3>Per-suite accuracy</h3><p>Nine suites · <span data-count="decisions">—</span> decisions</p></div>
+      <div class="chart-head"><h3>Per-suite accuracy</h3><p>Nine suites · <span data-count="decisions">1,240</span> decisions</p></div>
       <div class="scroll-x"><svg id="suite-chart" role="img" aria-label="Per-suite accuracy bars"></svg></div>
     </div>
     <div class="chart">
@@ -200,9 +224,9 @@
         <div class="chart-head"><h3>tev1-08b · two hosts</h3><p>Same manifest, same revision.</p></div>
         <div class="scroll-x"><svg id="precision-chart" role="img" aria-label="Accuracy of tev1-08b on CPU fp32 and T4 fp16"></svg></div>
       </div>
-      <div class="note" id="precision-note"></div>
+      <div class="note" id="precision-note"><p>The two host runs for this model are published under <code>precision</code> in <code>data/results.json</code>, both against dataset 2.1.0.</p></div>
     </div>
-    <div class="note" id="tie-note"></div>
+    <div class="note" id="tie-note"><p>Fine rank inside the top band is not a stable claim at this sample size; the spread is stated in <code>llms-full.txt</code>.</p></div>
   </div>
 </section>
 
@@ -210,7 +234,7 @@
   <div class="wrap">
     <div class="band-head">
       <p class="eyebrow">04 / The audit</p>
-      <h2 id="coverage-title"><span data-count="unmeasured">—</span> entries unmeasured, each with a recorded reason</h2>
+      <h2 id="coverage-title"><span data-count="unmeasured">0</span> entries unmeasured, each with a recorded reason</h2>
       <p>Coverage is derived from finished run directories by a script, never by hand. The audit verifies checksums, fingerprints evaluation answers and collapses runs that cannot be told apart.</p>
     </div>
     <div class="two-col">
@@ -219,7 +243,7 @@
         <div class="scroll-x"><svg id="coverage-chart" role="img" aria-label="Run directories versus distinct measurements"></svg></div>
       </div>
       <div class="panel">
-        <h3>Why <span data-count="dirs">—</span> directories are <span data-count="measurements">—</span> measurements</h3>
+        <h3>Why <span data-count="dirs">53</span> directories are <span data-count="measurements">50</span> measurements</h3>
         <div id="collapse-list"></div>
       </div>
     </div>
@@ -242,10 +266,10 @@
       <article><h3>Our own model list</h3><p>The panel was assembled from public releases, model cards and published work. No third-party leaderboard was used as input.</p></article>
     </div>
     <figure class="method-film">
-      <img src="assets/same-bytes-poster.png" alt="One sealed manifest fanning out to independently measured models">
+      <img src="assets/same-bytes-poster.png" width="1280" height="720" alt="One sealed manifest fanning out to independently measured models">
       <figcaption>The same bytes go to every model. The revision, device and readout are recorded per run. <a href="assets/same-bytes.mp4">View the ManimGX animation</a>.</figcaption>
     </figure>
-    <div class="note" id="gold-note"></div>
+    <div class="note" id="gold-note"><p><strong>Ground truth, plainly.</strong> Version 2.0.0 used one human reviewer correcting an AI draft under <code>human-reviewed-ai-assisted-v1</code>: no second reviewer, no adjudication. Version 2.1.0 re-anchors four public suites on source labels; emotion remains single-reviewed.</p></div>
   </div>
 </section>
 
@@ -267,9 +291,9 @@ python ops/panel_coverage.py --results-root results/raw</code></pre>
       </div>
       <div class="panel">
         <h3>Sealed bytes</h3>
-        <p class="hash">sha256 <span id="hash-manifest">—</span></p>
-        <p class="hash">logical digest <span id="hash-logical">—</span></p>
-        <p class="hash"><span data-count="cases">—</span> cases · <span id="hash-eval">—</span> evaluation · <span data-count="decisions">—</span> decisions · seed <span id="hash-seed">—</span></p>
+        <p class="hash">sha256 <span id="hash-manifest">0d21a64c6b61b6be7b49050dbd89f89f934912a7b586734e475308e9c9422ea2</span></p>
+        <p class="hash">logical digest <span id="hash-logical">4272a7a25ebcb324235696ad808544e157a31e3f9c04421da731a08dfb9d5768</span></p>
+        <p class="hash"><span data-count="cases">1,190</span> cases · <span id="hash-eval">952</span> evaluation · <span data-count="decisions">1,240</span> decisions · seed <span id="hash-seed">42</span></p>
       </div>
     </div>
     <div class="three-col">
@@ -277,6 +301,7 @@ python ops/panel_coverage.py --results-root results/raw</code></pre>
       <div class="panel"><h3>Structured data</h3><p>This page ships JSON-LD for the dataset, publisher and FAQ, with method facts only so it does not go stale when a model is added.</p></div>
       <div class="panel"><h3>Contribute</h3><p>The acceptance checklist and per-model VRAM estimates live in <code>docs/panel-hardware-requirements.md</code> in the repository.</p></div>
     </div>
+    <div class="note" id="sources-note"><p><strong>Sources and reuse.</strong> The public-label suites (agnews, banking77_12, mnli and sst5) keep their upstream versions, licences and citations in <code>datasets/v2/sources.lock.json</code>. Site and benchmark code are MIT; cite this dataset by its version and <code>data/results.json</code>. sysone-bench is independent of the unrelated System One Bench at systemonebench.dev.</p></div>
   </div>
 </section>
 </main>
@@ -286,6 +311,7 @@ python ops/panel_coverage.py --results-root results/raw</code></pre>
     <div>
       <h3>sysone-bench</h3>
       <p>An independent benchmark of System One decision models. No vendor affiliation, no vendor-published figure treated as comparable.</p>
+      <p>No vendor funding and no vendor review of these results. Two compute hosts were loaned for measurement sessions: the DGX Spark is credited below, and T4 sessions were provided by the benchmark operator.</p>
       <p>Thanks to MrDragonFox for lending a DGX Spark, on which the larger models in the panel were measured.</p>
     </div>
     <div>
@@ -294,7 +320,7 @@ python ops/panel_coverage.py --results-root results/raw</code></pre>
     </div>
     <div>
       <h3>Scope</h3>
-      <p><span data-count="scope">—</span> models in scope · <span data-count="measurements">—</span> measured.</p>
+      <p><span data-count="scope">50</span> models in scope · <span data-count="measurements">50</span> measured.</p>
       <p>The list was assembled from public releases, model cards and published work.</p>
     </div>
   </div>

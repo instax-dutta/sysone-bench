@@ -153,7 +153,7 @@ intent routing. Every model is scored on all 9 suites, as a percentage.
 - 952 of the 1,190 cases are in the evaluation split; the remainder is
   calibration and is never scored.
 - One seed, no per-suite tuning. A suite is scored exactly as the manifest declares it.
-- Every GPU row is bf16 and every CPU row is fp32. Latency is not comparable across rows.
+- Dtype is recorded per row and varies across the panel. Latency is not comparable across rows.
 
 ## Counting rule
 
@@ -189,7 +189,7 @@ The scope is 50 entries: 50 measured.
 - **Technique reimplementations** are our reading of a published method over a public base
   checkpoint, not the authors' code. They set `technique_reimplementation: true`.
 - **pngwn scored 0.2597** but its vendor never published the prompt format
-  its scorer was trained on, so it is recorded as unresolved.
+  its scorer was trained on, so the row is flagged as an unresolved readout.
 - **Withdrawn rows are not reported.** An entry whose artifacts cannot be reproduced is removed
   from the ranking and listed above with the reason, rather than published from a superseded run.
 

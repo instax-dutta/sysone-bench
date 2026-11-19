@@ -1,13 +1,14 @@
 # sysone-bench
 
 > An independent head-to-head benchmark of System One decision models. No vendor affiliation,
-> no API access. Every model answers the same sealed 1,190 cases and is graded on 1,240 scored
+> no privileged access to model internals. Every locally run model answers the same sealed 1,190 cases and is graded on 1,240 scored
 > evaluation decisions at seed 42.
 
 Site: https://sysone.sdad.pro/
 Repository: https://github.com/instax-dutta/sysone-bench
 Data: https://sysone.sdad.pro/data/results.json
 Full results as one document: https://sysone.sdad.pro/llms-full.txt
+As of: 2026-11-19 · dataset version 2.1.0
 
 ## What this benchmark measures
 
@@ -64,13 +65,15 @@ prompts. This benchmark fixes the inputs instead:
 - Logical digest `4272a7a25ebcb324235696ad808544e157a31e3f9c04421da731a08dfb9d5768` (over question bytes, invariant across gold corrections)
 - Seed 42, dataset version 2.1.0
 - 952 evaluation cases, 1,240 scored decisions per model
+- Full 40-character revisions are in `data/results.json`; tables below show 12-character prefixes.
 - Every run records a full 40-character model revision, plus base model and base revision for
   adapter and technique entries, plus device, dtype, serving mode, and the scoring readout used
 
 ## Precision effect, measured rather than assumed
 
-One model was run on two hosts against identical bytes and one pinned revision. Every GPU row
-is bf16 and every CPU row is fp32, so precision is recorded per row, not treated as constant.
+One model was run on two hosts against identical bytes and one pinned revision. The two
+host rows are published in `data/results.json` under `precision`; both are dataset 2.1.0.
+Precision is recorded per row rather than treated as constant across the panel.
 
 ## Coverage, and what is missing
 
@@ -102,6 +105,6 @@ The scope is 50 entries. 50 are measured.
 - **Rows tagged "technique reimplementation"** are our reading of a published method over a
   public base checkpoint, not the authors' code.
 - **pngwn scored 0.2597** but its vendor never published the prompt format
-  its scorer was trained on. It is recorded as unresolved rather than as a measurement.
+  its scorer was trained on. It stays in the measurement count with an unresolved-readout flag.
 - **Latency is not comparable across rows.** CPU rows and container-capped rows were measured
   under different CPU and memory limits, so latency must not be charted across the panel.

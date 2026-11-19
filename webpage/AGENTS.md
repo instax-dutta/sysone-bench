@@ -8,6 +8,7 @@
 - Owns site structure, copy, visual design, generated site data, GEO files, and the GitHub Pages deploy config.
 - `index.html`, `style.css` and `app.js` are the rebuilt "measurement ledger" site: paper ground,
   ink typography, one oxide-red accent, data rendered at load time from `data/results.json`.
+- `template.html` is the source page; `prerender.py` renders it into `index.html` from generated data at publish time. Never hand-edit `index.html`.
 - `visuals/scenes.py` owns the ManimGX scenes. `assets/*.mp4` and `assets/*-poster.png` are rendered
   from `data/results.json`; regenerate them after a data change with `manimgx render`, then
   `manimgx inspect` first. The scene sources and evidence live in `redesign/`, not in Skill dirs.

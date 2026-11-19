@@ -1,10 +1,12 @@
 # webpage
 
-Static site for sysone-bench. No framework, no build step. Deploys to Vercel as-is.
+Static site for sysone-bench. No framework, no build step. Every push to `master` that touches this
+directory deploys the folder through `.github/workflows/deploy-pages.yml` to GitHub Pages.
 
-    npx vercel --prod        # or connect the directory in the Vercel dashboard
+Preview locally with `python3 -m http.server 8899` from this directory.
 
-Custom domain: `sysone.sdad.pro`.
+Custom domain: `sysone.sdad.pro`. The committed `CNAME` file attaches it once DNS points at the
+GitHub Pages address `instax-dutta.github.io`.
 
 ## Regenerating the data
 
@@ -12,6 +14,7 @@ Every number on the site is rendered from `data/results.json`, and that file is 
 checksum-verified run directories. Nothing is typed by hand.
 
     python webpage/build-data.py
+    python webpage/prerender.py
 
 It calls `ops/panel_coverage.py` for the authoritative counts, so the site's headline number and the
 repository's coverage number cannot drift apart. If a run's checksum fails, the measurement is
@@ -21,7 +24,9 @@ dropped rather than shown.
 
 | File | Purpose |
 |---|---|
-| `index.html` | Structure and JSON-LD (dataset, publisher, FAQ) |
+| `template.html` | Source page with `{{tokens}}`; edit this, not the rendered file |
+| `prerender.py` | Fills headline facts from `data/results.json` into `index.html` |
+| `index.html` | Rendered page with static headline facts and JSON-LD (dataset, publisher, FAQ) |
 | `style.css` | Editorial design system: paper, ink, hairlines. One oxblood accent |
 | `app.js` | Hand-built SVG charts, ranked field list, filters, reveal-on-scroll |
 | `data/results.json` | Generated. Do not edit by hand |
@@ -29,7 +34,10 @@ dropped rather than shown.
 | `llms-full.txt` | Generated. Every result and caveat in one self-contained document |
 | `robots.txt` | Explicitly permits GPTBot, ClaudeBot, PerplexityBot and others |
 | `sitemap.xml` | Single-URL sitemap |
-| `vercel.json` | Security headers, asset caching, CORS on the data file |
+| `CNAME` | Custom domain attachment for GitHub Pages |
+| `visuals/scenes.py` | ManimGX scenes for the animated ledger and manifest diagrams |
+| `assets/` | Rendered MP4 animations and their settled poster frames |
+| `redesign/` | Approved direction, comparison page, screenshots and review evidence |
 | `favicon.svg` | Icon mark: three ranked bars in amber on graphite. Source of truth for the icon |
 | `icon-512.png` | Raster of `favicon.svg` at 512, for manifest and social fallbacks |
 | `apple-touch-icon.png` | Full-bleed 180 square. iOS applies its own mask, so no pre-rounded corners |

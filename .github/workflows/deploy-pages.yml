@@ -23,6 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - name: Prerender headline facts from generated data
+        run: python3 webpage/prerender.py
       - uses: actions/upload-pages-artifact@v3
         with:
           path: webpage

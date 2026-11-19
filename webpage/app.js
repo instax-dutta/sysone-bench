@@ -58,6 +58,7 @@
       if (v != null) node.textContent = v.toLocaleString("en-US");
     });
     $("#edition-version").textContent = d.datasetVersion;
+    $("#as-of").textContent = d.generatedAt || "";
     $("#hash-manifest").textContent = d.manifestSha256;
     $("#hash-logical").textContent = d.logicalDigest;
     $("#hash-eval").textContent = d.evaluationCases.toLocaleString("en-US");

@@ -13,6 +13,7 @@ import json
 import os
 import subprocess
 import sys
+from datetime import date
 from pathlib import Path
 
 # The raw run directories live in results/raw/ inside the repo, gitignored. It is
@@ -35,7 +36,7 @@ READOUT_CAVEAT = {
         "trained to answer with label codes restricted in the next-token distribution, that is a "
         "different function of the same weights rather than a different implementation of the same "
         "one, and it can under-report the model. Confirmed for lev, whose authors measured 0.980 on "
-        "banking77 in-distribution against our 0.7292 out-of-distribution, and who describe selecting "
+        "banking77 in-distribution against our {lev_banking} out-of-distribution, and who describe selecting "
         "by argmax over one-token label codes with two option orders averaged. We have not confirmed "
         "the same expectation for the other rows carrying this flag, so treat them as unqualified "
         "rather than known-low. No number here has been changed and no model has been re-run."
@@ -160,8 +161,14 @@ def main() -> int:
         "decisions": 1240,
         "seed": 42,
         "datasetVersion": "2.1.0",
+        "generatedAt": date.today().isoformat(),
         "suites": SUITES,
-        "readoutCaveat": READOUT_CAVEAT,
+        "readoutCaveat": {
+            **READOUT_CAVEAT,
+            "note": READOUT_CAVEAT["note"].format(
+                lev_banking=f"{by_runner['lev']['suites']['banking77_12']:.4f}"
+            ),
+        },
         "excluded": EXCLUDED_NOTES,
         "scopeTotal": 50,
         "runDirectoriesVerified": coverage["run_directories_verified"],

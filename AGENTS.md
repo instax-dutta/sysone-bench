@@ -97,5 +97,5 @@ Default section order:
 - `ops/` - isolated remote execution, worker safety, and transient secret transport. Owns the remote execution boundary and its configuration contract.
 - `tests/` - deterministic fake-only regression tests and fixtures. Owns test isolation and evidence.
 - `tools/` - clean-environment command-line entry points. Owns external-package import protection.
-- `webpage/` - static public site for `sysone.sdad.pro`. Owns site copy, visual design, generated site data, GEO files, and Vercel deploy config.
+- `webpage/` - static public site for `sysone.sdad.pro`, deployed by `.github/workflows/deploy-pages.yml` to GitHub Pages. Owns site copy, visual design, generated site data, GEO files, ManimGX scene sources and rendered assets.
 - Root owns: `run.py`, `compare.py`, `PLAN.md`, `README.md`, env setup.

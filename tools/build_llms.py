@@ -110,7 +110,7 @@ def build_llms_txt(d: dict) -> str:
     L.append("# sysone-bench")
     L.append("")
     L.append("> An independent head-to-head benchmark of System One decision models. No vendor affiliation,")
-    L.append("> no API access. Every model answers the same sealed "
+    L.append("> no privileged access to model internals. Every locally run model answers the same sealed "
              f"{d['cases']:,} cases and is graded on {d['decisions']:,} scored")
     L.append("> evaluation decisions at seed 42.")
     L.append("")
@@ -118,6 +118,7 @@ def build_llms_txt(d: dict) -> str:
     L.append("Repository: https://github.com/instax-dutta/sysone-bench")
     L.append("Data: https://sysone.sdad.pro/data/results.json")
     L.append("Full results as one document: https://sysone.sdad.pro/llms-full.txt")
+    L.append(f"As of: {d.get('generatedAt', 'unknown')} · dataset version {d['datasetVersion']}")
     L.append("")
     L.append("## What this benchmark measures")
     L.append("")
@@ -169,6 +170,7 @@ def build_llms_txt(d: dict) -> str:
     L.append(f"- Logical digest `{d['logicalDigest']}` (over question bytes, invariant across gold corrections)")
     L.append(f"- Seed {d['seed']}, dataset version {d['datasetVersion']}")
     L.append(f"- {d['evaluationCases']:,} evaluation cases, {d['decisions']:,} scored decisions per model")
+    L.append("- Full 40-character revisions are in `data/results.json`; tables below show 12-character prefixes.")
     L.append("- Every run records a full 40-character model revision, plus base model and base revision for")
     L.append("  adapter and technique entries, plus device, dtype, serving mode, and the scoring readout used")
     L.append("")
@@ -176,11 +178,13 @@ def build_llms_txt(d: dict) -> str:
     L.append("")
     tev = [m for m in ms if m["runner"] == "tev1-08b"]
     if len(tev) == 1:
-        L.append("One model was run on two hosts against identical bytes and one pinned revision. Every GPU row")
-        L.append("is bf16 and every CPU row is fp32, so precision is recorded per row, not treated as constant.")
+        L.append("One model was run on two hosts against identical bytes and one pinned revision. The two")
+        rows = d.get("precision", {}).get("tev1-08b", [])
+        if len(rows) >= 2:
+            L.append("host rows are published in `data/results.json` under `precision`; both are dataset 2.1.0.")
+        L.append("Precision is recorded per row rather than treated as constant across the panel.")
     else:
-        L.append("Every GPU row is bf16 and every CPU row is fp32, so precision is recorded per row rather than")
-        L.append("treated as constant.")
+        L.append("Precision is recorded per row (bf16, fp16, fp32 or vendor-managed) rather than assumed constant.")
     L.append("")
     L.append("## Coverage, and what is missing")
     L.append("")
@@ -212,7 +216,7 @@ def build_llms_txt(d: dict) -> str:
     for m in ms:
         if m["runner"] == "pngwn":
             L.append(f"- **pngwn scored {fmt(m['accuracy'])}** but its vendor never published the prompt format")
-            L.append("  its scorer was trained on. It is recorded as unresolved rather than as a measurement.")
+            L.append("  its scorer was trained on. It stays in the measurement count with an unresolved-readout flag.")
     L.append("- **Latency is not comparable across rows.** CPU rows and container-capped rows were measured")
     L.append("  under different CPU and memory limits, so latency must not be charted across the panel.")
     L.append("")
@@ -282,7 +286,7 @@ def build_llms_full(d: dict) -> str:
     L.append(f"- {d['evaluationCases']:,} of the {d['cases']:,} cases are in the evaluation split; the remainder is")
     L.append("  calibration and is never scored.")
     L.append("- One seed, no per-suite tuning. A suite is scored exactly as the manifest declares it.")
-    L.append("- Every GPU row is bf16 and every CPU row is fp32. Latency is not comparable across rows.")
+    L.append("- Dtype is recorded per row and varies across the panel. Latency is not comparable across rows.")
     L.append("")
     L.append("## Counting rule")
     L.append("")
@@ -314,7 +318,7 @@ def build_llms_full(d: dict) -> str:
     for m in ms:
         if m["runner"] == "pngwn":
             L.append(f"- **pngwn scored {fmt(m['accuracy'])}** but its vendor never published the prompt format")
-            L.append("  its scorer was trained on, so it is recorded as unresolved.")
+            L.append("  its scorer was trained on, so the row is flagged as an unresolved readout.")
     L.append("- **Withdrawn rows are not reported.** An entry whose artifacts cannot be reproduced is removed")
     L.append("  from the ranking and listed above with the reason, rather than published from a superseded run.")
     L.append("")
