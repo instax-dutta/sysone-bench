@@ -283,6 +283,9 @@
       film.addEventListener("timeupdate", revealFilm);
       film.addEventListener("loadeddata", revealFilm);
       film.addEventListener("error", () => film.parentElement.classList.add("no-video"));
+      if (!film.canPlayType("video/webm") && !film.canPlayType("video/mp4")) {
+        film.parentElement.classList.add("no-video");
+      }
       setTimeout(() => {
         if (film.readyState < 2) film.parentElement.classList.add("no-video");
       }, 1800);
