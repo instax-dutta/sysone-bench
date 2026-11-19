@@ -140,7 +140,7 @@ select { font: 12px var(--mono); padding: 7px 10px; background: var(--paper); co
 .answer-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 26px 40px; }
 .answer { border-top: 1px solid var(--rule); padding-top: 12px; }
 .answer h3 { font-size: 18px; margin-bottom: 8px; }
-.answer p { font: 13px/1.7 var(--mono); color: var(--muted); }
+.answer p { font: 13px/1.7 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
 .artifact-panel { margin-top: 18px; }
 .artifact-links { font: 12px/1.9 var(--mono); overflow-wrap: anywhere; }
 .ledger-row .rank { color: var(--oxide); }
@@ -157,7 +157,8 @@ select { font: 12px var(--mono); padding: 7px 10px; background: var(--paper); co
 .heatmap-scroll { overflow-x: auto; }
 svg { display: block; }
 svg text { font-family: var(--mono); }
-.two-col, .three-col, .method-grid, .exclusions { display: grid; gap: 18px; margin-top: 18px; }
+.two-col, .three-col, .method-grid, .exclusions, .task-grid, .answer-grid { display: grid; gap: 18px; margin-top: 18px; }
+.two-col > *, .three-col > *, .method-grid > *, .exclusions > *, .task-grid > *, .answer-grid > * { min-width: 0; }
 .two-col { grid-template-columns: 1.35fr 1fr; align-items: start; }
 .three-col, .method-grid, .exclusions { grid-template-columns: repeat(3, 1fr); }
 .panel { border-top: 2px solid var(--ink); padding-top: 14px; }

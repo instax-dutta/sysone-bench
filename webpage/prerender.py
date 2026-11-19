@@ -116,8 +116,8 @@ def suite_table() -> str:
         cells = "".join(f"<td>{f4(m['suites'].get(s))}</td>" for s in DATA["suites"])
         rows.append(f"<tr><th scope=\"row\">{escape(m['runner'])}</th>{cells}</tr>")
     return (
-        '<table class="sr-only" id="suite-data-table"><caption>Accuracy for every measured model in every suite.</caption>'
-        f"<thead><tr><th scope=\"col\">Model</th>{head}</tr></thead><tbody>{''.join(rows)}</tbody></table>"
+        '<div class="sr-only"><table id="suite-data-table"><caption>Accuracy for every measured model in every suite.</caption>'
+        f"<thead><tr><th scope=\"col\">Model</th>{head}</tr></thead><tbody>{''.join(rows)}</tbody></table></div>"
     )
 
 
@@ -135,7 +135,7 @@ def precision_table() -> str:
         for r in DATA.get("precision", {}).get("tev1-08b", [])
     )
     return (
-        '<table class="sr-only" id="precision-data-table"><caption>tev1-08b measured on two hosts.</caption>'
+        '<div class="sr-only"><table id="precision-data-table"><caption>tev1-08b measured on two hosts.</caption>'
         '<thead><tr><th scope="col">Run</th><th scope="col">Device</th><th scope="col">Dtype</th>'
         f'<th scope="col">Accuracy</th></tr></thead><tbody>{rows}</tbody></table>'
     )
@@ -151,9 +151,9 @@ def coverage_table() -> str:
         )
     )
     return (
-        '<table class="sr-only" id="coverage-data-table"><caption>Coverage counts.</caption>'
+        '<div class="sr-only"><table id="coverage-data-table"><caption>Coverage counts.</caption>'
         '<thead><tr><th scope="col">Measure</th><th scope="col">Count</th></tr></thead>'
-        f"<tbody>{rows}</tbody></table>"
+        f"<tbody>{rows}</tbody></table></div>"
     )
 
 
