@@ -43,11 +43,6 @@
     parent.appendChild(l);
     return l;
   }
-  function grow(node, reducedMotion) {
-    if (reducedMotion) return;
-    node.animate([{ transform: "scaleY(0)", transformOrigin: "bottom" }, { transform: "scaleY(1)", transformOrigin: "bottom" }], { duration: 480, easing: "cubic-bezier(.2,.7,.2,1)" });
-  }
-
   function fillCounts(d) {
     const counts = {
       measurements: d.distinctMeasurements,
@@ -70,14 +65,8 @@
   }
 
   function countUp(node, target) {
-    if (reduced) { node.textContent = target.toFixed(4); return; }
-    const start = performance.now(), duration = 600;
-    const step = (now) => {
-      const t = Math.min(1, (now - start) / duration);
-      node.textContent = (target * (1 - Math.pow(1 - t, 3))).toFixed(4);
-      if (t < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
+    // The number is a measurement: never show an intermediate value that could be read as data.
+    node.textContent = target.toFixed(4);
   }
 
   function fillHero(d) {
@@ -149,7 +138,7 @@
     for (let i = 0; i <= 10; i += 2) {
       const y = top + plotH * (1 - i / 10);
       line(s, left, y, W - 12, y, i === 0 ? "#161412" : "#ded7c8");
-      text(s, left - 8, y + 4, String(i), 10, "end", "#5d574d");
+      text(s, left - 8, y + 4, (i / 10).toFixed(1), 10, "end", "#5d574d");
     }
     const colors = ["#9a3b2c", "#161412", "#b07a55", "#6d6458", "#c9c2b2"];
     const group = (W - left - 20) / data.suites.length;
@@ -161,7 +150,6 @@
         const h = plotH * v;
         const x = left + si * group + 8 + mi * bw;
         const bar = rect(s, x, top + plotH - h, Math.max(2, bw - 2), h, colors[mi], 0.92);
-        grow(bar, reduced);
         bar.appendChild(document.createElementNS(NS, "title")).textContent = `${m.runner} · ${suite}: ${fmt(m.suites[suite])}`;
       });
       const label = text(s, left + si * group + group / 2, H - 30, suite.replace("_", " "), 10, "middle", "#161412");
@@ -196,14 +184,13 @@
     if (rows.length < 2) return;
     const host = $("#precision-chart");
     host.replaceChildren();
-    const W = 420, H = 180, s = svg(W, H);
+    const W = 480, H = 180, s = svg(W, H);
     const max = 1, base = H - 40;
     line(s, 30, base, W - 10, base, "#161412");
     rows.forEach((r, i) => {
       const h = (base - 20) * pct(r.accuracy) / max;
       const x = 70 + i * 170;
       const bar = rect(s, x, base - h, 90, h, "#9a3b2c", 0.9);
-      grow(bar, reduced);
       text(s, x + 45, base - h - 8, fmt(r.accuracy), 16, "middle");
       text(s, x + 45, base + 18, `${r.device} · ${r.dtype || "default"}`, 10, "middle", "#5d574d");
       text(s, x + 45, base + 32, r.runId, 9, "middle", "#5d574d");
@@ -223,7 +210,6 @@
       text(s, 0, y + 14, label, 11, "start");
       const w = (W - 190) * value / Math.max(...pairs.map((p) => p[1]));
       const bar = rect(s, 190, y, w, 18, "#9a3b2c", 0.85);
-      grow(bar, reduced);
       text(s, 196 + w, y + 14, String(value), 13, "start");
     });
     host.appendChild(s);
@@ -278,6 +264,15 @@
     const select = $("#model-select");
     select.innerHTML = data.measurements.map((m) => `<option value="${esc(m.runner)}">${esc(m.runner)} · ${fmt(m.accuracy)}</option>`).join("");
     suiteChart(); heatmap(); precision(); coverage(); notes(); observe();
+    // Keep the settled ledger frame as the first paint; start the loop only after the
+    // reader has had a moment to read it. Reduced-motion users keep the still frame.
+    const film = $("#field-film");
+    if (film && !reduced) {
+      setTimeout(() => {
+        film.parentElement.classList.add("playing");
+        film.play().catch(() => film.parentElement.classList.remove("playing"));
+      }, 1500);
+    }
     $$("[data-filter]").forEach((b) => b.addEventListener("click", () => {
       $$("[data-filter]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); renderLedger();
     }));

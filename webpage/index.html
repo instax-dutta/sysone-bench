@@ -125,7 +125,10 @@
       </div>
     </div>
     <figure class="hero-film">
-      <video id="field-film" src="assets/field-race.mp4" poster="assets/field-race-poster.png" autoplay muted loop playsinline preload="metadata" aria-label="Animated ledger of the ten highest measured accuracies"></video>
+      <div class="film-frame">
+        <img class="film-poster" src="assets/field-race-poster.png" alt="Ledger of the ten highest measured accuracies, from seb-9b at 0.8702 downward">
+        <video id="field-film" src="assets/field-race.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Animated ledger of the ten highest measured accuracies"></video>
+      </div>
       <figcaption>Each row is a run we performed at a pinned revision. The bars are the measured accuracies, not vendor claims.</figcaption>
     </figure>
   </div>
@@ -239,8 +242,8 @@
       <article><h3>Our own model list</h3><p>The panel was assembled from public releases, model cards and published work. No third-party leaderboard was used as input.</p></article>
     </div>
     <figure class="method-film">
-      <video src="assets/same-bytes.mp4" poster="assets/same-bytes-poster.png" autoplay muted loop playsinline preload="metadata" aria-label="One sealed manifest fanning out to independently measured models"></video>
-      <figcaption>The same bytes go to every model. The revision, device and readout are recorded per run.</figcaption>
+      <img src="assets/same-bytes-poster.png" alt="One sealed manifest fanning out to independently measured models">
+      <figcaption>The same bytes go to every model. The revision, device and readout are recorded per run. <a href="assets/same-bytes.mp4">View the ManimGX animation</a>.</figcaption>
     </figure>
     <div class="note" id="gold-note"></div>
   </div>
