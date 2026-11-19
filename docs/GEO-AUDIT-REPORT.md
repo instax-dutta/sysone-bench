@@ -177,6 +177,19 @@ artifact bundle, citable identifier, directory cache refresh) are unchanged.
 
 ---
 
+## Post-audit feature addendum (2026-11-20)
+
+The site now publishes a visible FAQ anchored at `#faq`, a best-by-suite strip, an inspectable row
+detail drawer, a three-model shortlist comparison, sr-only data tables for every SVG chart,
+self-hosted fonts and one complete public run bundle at `/public-artifacts/seb-9b-t4/`. These address
+the audit's citability, authoritativeness and reproducibility gaps without adding a composite score
+or a second ranking. `llms.txt` links the FAQ and the public run bundle.
+
+The benchmark's private mirror remains the storage contract. The public bundle is explicitly a
+verification copy, not a replacement for the append-only record or the mirrored raw roots.
+
+---
+
 ## Appendix: sources analyzed
 
 | Source | Purpose | Issues |

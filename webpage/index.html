@@ -21,9 +21,6 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
 <link rel="stylesheet" href="style.css">
 <script>document.documentElement.classList.add("js");</script>
 <!-- Method-level structured data only. No ranking, score or model count lives here:
@@ -129,6 +126,7 @@
       <a href="#suites">Suites</a>
       <a href="#method">Method</a>
       <a href="#data">Data</a>
+      <a href="#faq">FAQ</a>
     </nav>
     <p class="edition">Dataset <span id="edition-version">2.1.0</span> · as of <span id="as-of">2026-11-19</span> · independent · no affiliation</p>
   </div>
@@ -152,9 +150,9 @@
     <figure class="hero-film">
       <div class="film-frame">
         <img class="film-poster" src="assets/field-race-poster.png" width="1280" height="720" alt="Ledger of the ten highest measured accuracies, from seb-9b at 0.8702 downward">
-        <video id="field-film" autoplay muted loop playsinline preload="auto" aria-label="Animated ledger of the ten highest measured accuracies">
-          <source src="assets/field-race.webm" type="video/webm">
-          <source src="assets/field-race.mp4" type="video/mp4">
+        <video id="field-film" muted loop playsinline preload="none" aria-label="Animated ledger of the ten highest measured accuracies">
+          <source data-src="assets/field-race.webm" type="video/webm">
+          <source data-src="assets/field-race.mp4" type="video/mp4">
         </video>
         <span class="scanline" aria-hidden="true"></span>
       </div>
@@ -188,6 +186,8 @@
     <div class="note" id="readout-note"><p>Each row records the readout used. Rows carrying a readout caveat are explained in <code>llms-full.txt</code>, and no number is changed by the caveat.</p></div>
     <div class="ledger" id="ledger"></div>
     <p class="ledger-count" id="ledger-count"></p>
+    <p class="ledger-status" id="shortlist-status">Select up to three models in the field to compare their suite accuracies.</p>
+    <div class="shortlist" id="shortlist" hidden></div>
   </div>
 </section>
 
@@ -198,6 +198,12 @@
       <h2 id="suite-title">Where each model is strong, and where it fails</h2>
       <p>A single number hides the shape of a model. Pick one to see all nine suites, or compare the top five in each suite before you shortlist.</p>
     </div>
+    <div class="band-head">
+      <p class="eyebrow">Best by task</p>
+      <h3>Leader in each suite</h3>
+      <p>Leaders are derived from the stored accuracies. Models within 0.0050 of the top are listed together: that gap is not a stable lead at this sample size.</p>
+    </div>
+    <div class="task-grid"><div class="task"><p class="task-name">agnews</p><p class="task-lead">lumma-fev-4b, lumma-fev-9b, lumma-fev-06b</p><p class="task-score">0.9563</p></div><div class="task"><p class="task-name">banking77 12</p><p class="task-lead">lumma-fev-9b</p><p class="task-score">0.9896</p></div><div class="task"><p class="task-name">emotion</p><p class="task-lead">seb-9b</p><p class="task-score">0.8281</p></div><div class="task"><p class="task-name">guardrails</p><p class="task-lead">seb-9b</p><p class="task-score">1.0000</p></div><div class="task"><p class="task-name">mnli</p><p class="task-lead">decision-lux-9b</p><p class="task-score">0.9167</p></div><div class="task"><p class="task-name">moderation</p><p class="task-lead">decider-4b, lumma-fev-4b, mini-jev</p><p class="task-score">0.9444</p></div><div class="task"><p class="task-name">multilingual intent</p><p class="task-lead">seb-9b, decider-4b, intern-decision-4b, jevk5, tev1-08b, bosun-06b</p><p class="task-score">1.0000</p></div><div class="task"><p class="task-name">sst5</p><p class="task-lead">seb-9b</p><p class="task-score">0.5583</p></div><div class="task"><p class="task-name">triage</p><p class="task-lead">intern-decision-4b</p><p class="task-score">0.9531</p></div></div>
     <div class="controls">
       <label class="lab" for="model-select">Model</label>
       <select id="model-select"></select>
@@ -208,11 +214,12 @@
     </div>
     <div class="chart">
       <div class="chart-head"><h3>Per-suite accuracy</h3><p>Nine suites · <span data-count="decisions">1,240</span> decisions</p></div>
-      <div class="scroll-x" data-lenis-prevent><svg id="suite-chart" role="img" aria-label="Per-suite accuracy bars"></svg></div>
+      <div class="scroll-x" data-lenis-prevent><svg id="suite-chart" role="img" aria-label="Per-suite accuracy bars" aria-describedby="suite-data-table"></svg></div>
+      <table class="sr-only" id="suite-data-table"><caption>Accuracy for every measured model in every suite.</caption><thead><tr><th scope="col">Model</th><th scope="col">agnews</th><th scope="col">banking77 12</th><th scope="col">emotion</th><th scope="col">guardrails</th><th scope="col">mnli</th><th scope="col">moderation</th><th scope="col">multilingual intent</th><th scope="col">sst5</th><th scope="col">triage</th></tr></thead><tbody><tr><th scope="row">seb-9b</th><td>0.8812</td><td>0.8958</td><td>0.8281</td><td>1.0000</td><td>0.8000</td><td>0.9306</td><td>1.0000</td><td>0.5583</td><td>0.9375</td></tr><tr><th scope="row">decider-4b</th><td>0.9250</td><td>0.9167</td><td>0.7917</td><td>0.8333</td><td>0.8417</td><td>0.9444</td><td>1.0000</td><td>0.4833</td><td>0.9427</td></tr><tr><th scope="row">decision-lux-9b</th><td>0.8438</td><td>0.8854</td><td>0.7344</td><td>0.9792</td><td>0.9167</td><td>0.9306</td><td>0.9750</td><td>0.5250</td><td>0.9010</td></tr><tr><th scope="row">jet</th><td>0.8938</td><td>0.9062</td><td>0.7917</td><td>0.8333</td><td>0.8250</td><td>0.9306</td><td>0.9667</td><td>0.4917</td><td>0.9271</td></tr><tr><th scope="row">kev-4b</th><td>0.8812</td><td>0.9271</td><td>0.8073</td><td>0.9167</td><td>0.8000</td><td>0.9097</td><td>0.9583</td><td>0.4500</td><td>0.9271</td></tr><tr><th scope="row">jpt-9b</th><td>0.8812</td><td>0.8958</td><td>0.7865</td><td>0.9792</td><td>0.7583</td><td>0.9375</td><td>0.8417</td><td>0.5167</td><td>0.9271</td></tr><tr><th scope="row">intern-decision-4b</th><td>0.8750</td><td>0.8958</td><td>0.8073</td><td>0.7917</td><td>0.7333</td><td>0.8889</td><td>1.0000</td><td>0.4583</td><td>0.9531</td></tr><tr><th scope="row">kev-9b</th><td>0.8750</td><td>0.9271</td><td>0.8125</td><td>0.8021</td><td>0.8417</td><td>0.8056</td><td>0.9333</td><td>0.5167</td><td>0.9115</td></tr><tr><th scope="row">jevk5</th><td>0.7812</td><td>0.8750</td><td>0.8125</td><td>0.8333</td><td>0.7667</td><td>0.9375</td><td>1.0000</td><td>0.4750</td><td>0.9271</td></tr><tr><th scope="row">neohorse-4b</th><td>0.8938</td><td>0.9167</td><td>0.7812</td><td>0.9896</td><td>0.8500</td><td>0.9028</td><td>0.7167</td><td>0.4750</td><td>0.9167</td></tr><tr><th scope="row">jpt-4b</th><td>0.8875</td><td>0.8438</td><td>0.7969</td><td>0.9479</td><td>0.7417</td><td>0.9097</td><td>0.8083</td><td>0.5417</td><td>0.9219</td></tr><tr><th scope="row">tev1-4b</th><td>0.8438</td><td>0.8958</td><td>0.7969</td><td>0.9479</td><td>0.8250</td><td>0.9375</td><td>0.8417</td><td>0.4583</td><td>0.8698</td></tr><tr><th scope="row">decision-nox</th><td>0.8438</td><td>0.8750</td><td>0.7344</td><td>0.8438</td><td>0.7833</td><td>0.9028</td><td>0.9333</td><td>0.3750</td><td>0.8854</td></tr><tr><th scope="row">decider-2b</th><td>0.8938</td><td>0.9062</td><td>0.7083</td><td>0.6354</td><td>0.7917</td><td>0.8819</td><td>0.9167</td><td>0.4667</td><td>0.9062</td></tr><tr><th scope="row">this-that-12</th><td>0.8063</td><td>0.8854</td><td>0.7031</td><td>0.5833</td><td>0.7833</td><td>0.9097</td><td>0.9417</td><td>0.5250</td><td>0.8854</td></tr><tr><th scope="row">decision-eos</th><td>0.8625</td><td>0.8229</td><td>0.6562</td><td>0.8646</td><td>0.7500</td><td>0.8611</td><td>0.9083</td><td>0.4083</td><td>0.8906</td></tr><tr><th scope="row">hopper-g</th><td>0.8250</td><td>0.8125</td><td>0.8125</td><td>0.7708</td><td>0.5917</td><td>0.8889</td><td>0.8917</td><td>0.3917</td><td>0.9062</td></tr><tr><th scope="row">lumma-fev-4b</th><td>0.9563</td><td>0.9792</td><td>0.6094</td><td>0.5833</td><td>0.7333</td><td>0.9444</td><td>0.8167</td><td>0.3333</td><td>0.9375</td></tr><tr><th scope="row">lumma-fev-9b</th><td>0.9563</td><td>0.9896</td><td>0.6198</td><td>0.7812</td><td>0.7667</td><td>0.9236</td><td>0.5250</td><td>0.4083</td><td>0.9427</td></tr><tr><th scope="row">kev-08b</th><td>0.8688</td><td>0.9271</td><td>0.6823</td><td>0.9062</td><td>0.5083</td><td>0.8750</td><td>0.9000</td><td>0.4167</td><td>0.8698</td></tr><tr><th scope="row">intern-decision-2b</th><td>0.8688</td><td>0.8021</td><td>0.7656</td><td>0.7708</td><td>0.6667</td><td>0.7986</td><td>0.9750</td><td>0.3333</td><td>0.8750</td></tr><tr><th scope="row">nimble-v2</th><td>0.8063</td><td>0.4479</td><td>0.7604</td><td>0.9792</td><td>0.5500</td><td>0.9306</td><td>0.9250</td><td>0.4417</td><td>0.9323</td></tr><tr><th scope="row">decision-sol</th><td>0.7937</td><td>0.8438</td><td>0.6823</td><td>0.7292</td><td>0.8000</td><td>0.9097</td><td>0.8417</td><td>0.4000</td><td>0.8802</td></tr><tr><th scope="row">jpt-08b</th><td>0.8313</td><td>0.8125</td><td>0.7240</td><td>0.9271</td><td>0.6000</td><td>0.8750</td><td>0.7417</td><td>0.4250</td><td>0.8906</td></tr><tr><th scope="row">tev1-08b</th><td>0.8500</td><td>0.8125</td><td>0.6667</td><td>0.6146</td><td>0.6750</td><td>0.8750</td><td>1.0000</td><td>0.4917</td><td>0.8333</td></tr><tr><th scope="row">mini-jev</th><td>0.8625</td><td>0.7188</td><td>0.7292</td><td>0.8438</td><td>0.5833</td><td>0.9444</td><td>0.8000</td><td>0.4500</td><td>0.8385</td></tr><tr><th scope="row">bosun-17b</th><td>0.8313</td><td>0.9792</td><td>0.5521</td><td>0.6979</td><td>0.6583</td><td>0.8611</td><td>0.9917</td><td>0.2667</td><td>0.8854</td></tr><tr><th scope="row">metask</th><td>0.8812</td><td>0.8021</td><td>0.7812</td><td>0.5104</td><td>0.5333</td><td>0.8889</td><td>0.7917</td><td>0.3917</td><td>0.8646</td></tr><tr><th scope="row">intern-decision-08b</th><td>0.8562</td><td>0.7917</td><td>0.7188</td><td>0.3438</td><td>0.5167</td><td>0.8819</td><td>0.9750</td><td>0.3333</td><td>0.8750</td></tr><tr><th scope="row">lavoir</th><td>0.8812</td><td>0.8229</td><td>0.6979</td><td>0.7292</td><td>0.4333</td><td>0.7917</td><td>0.5667</td><td>0.3833</td><td>0.9219</td></tr><tr><th scope="row">decision-kai</th><td>0.7562</td><td>0.7188</td><td>0.6354</td><td>0.8854</td><td>0.6333</td><td>0.8194</td><td>0.7833</td><td>0.2000</td><td>0.8854</td></tr><tr><th scope="row">bosun-06b</th><td>0.7812</td><td>0.8958</td><td>0.5365</td><td>0.5104</td><td>0.6000</td><td>0.8125</td><td>1.0000</td><td>0.2500</td><td>0.8646</td></tr><tr><th scope="row">laya</th><td>0.9313</td><td>0.7604</td><td>0.6771</td><td>0.7604</td><td>0.6167</td><td>0.7569</td><td>0.4500</td><td>0.2917</td><td>0.8750</td></tr><tr><th scope="row">gliner-decide</th><td>0.7375</td><td>0.8750</td><td>0.6667</td><td>0.7812</td><td>0.3667</td><td>0.7431</td><td>0.6333</td><td>0.4917</td><td>0.8750</td></tr><tr><th scope="row">mimir</th><td>0.9000</td><td>0.8021</td><td>0.6250</td><td>0.8438</td><td>0.7167</td><td>0.7778</td><td>0.1167</td><td>0.4250</td><td>0.7708</td></tr><tr><th scope="row">gliner-base</th><td>0.7375</td><td>0.7812</td><td>0.6979</td><td>0.5938</td><td>0.6000</td><td>0.6181</td><td>0.6167</td><td>0.3833</td><td>0.6406</td></tr><tr><th scope="row">decision-lex</th><td>0.7188</td><td>0.6667</td><td>0.5729</td><td>0.3021</td><td>0.3917</td><td>0.7292</td><td>0.7417</td><td>0.2667</td><td>0.7760</td></tr><tr><th scope="row">gliner-multi</th><td>0.7250</td><td>0.8125</td><td>0.5781</td><td>0.6146</td><td>0.5667</td><td>0.2222</td><td>0.8417</td><td>0.3083</td><td>0.5573</td></tr><tr><th scope="row">lev</th><td>0.5563</td><td>0.7917</td><td>0.2969</td><td>0.9375</td><td>0.3333</td><td>0.8056</td><td>0.2250</td><td>0.5333</td><td>0.7292</td></tr><tr><th scope="row">jobe</th><td>0.8438</td><td>0.3958</td><td>0.7240</td><td>0.9167</td><td>0.3333</td><td>0.4861</td><td>0.3333</td><td>0.3667</td><td>0.4688</td></tr><tr><th scope="row">verdict</th><td>0.6188</td><td>0.7708</td><td>0.5104</td><td>0.4583</td><td>0.4083</td><td>0.6111</td><td>0.5083</td><td>0.3250</td><td>0.6875</td></tr><tr><th scope="row">mojev</th><td>0.6312</td><td>0.7708</td><td>0.3542</td><td>0.2917</td><td>0.4667</td><td>0.7292</td><td>0.4583</td><td>0.3083</td><td>0.7812</td></tr><tr><th scope="row">gliner-small</th><td>0.7688</td><td>0.7500</td><td>0.6094</td><td>0.5625</td><td>0.6333</td><td>0.2847</td><td>0.5333</td><td>0.2917</td><td>0.4323</td></tr><tr><th scope="row">julia-1</th><td>0.5437</td><td>0.8438</td><td>0.6146</td><td>0.3021</td><td>0.3333</td><td>0.3819</td><td>0.7500</td><td>0.3000</td><td>0.6042</td></tr><tr><th scope="row">lumma-fev-06b</th><td>0.9563</td><td>0.9375</td><td>0.6250</td><td>0.6562</td><td>0.3250</td><td>0.2778</td><td>0.0667</td><td>0.2583</td><td>0.4896</td></tr><tr><th scope="row">lumma-fev-01b</th><td>0.9062</td><td>0.6875</td><td>0.5417</td><td>0.2708</td><td>0.3583</td><td>0.2847</td><td>0.0000</td><td>0.2000</td><td>0.4323</td></tr><tr><th scope="row">harsha</th><td>0.5563</td><td>0.2604</td><td>0.6458</td><td>0.7083</td><td>0.3333</td><td>0.2639</td><td>0.2833</td><td>0.3417</td><td>0.3802</td></tr><tr><th scope="row">lfm2600</th><td>0.2500</td><td>0.3021</td><td>0.2188</td><td>0.5417</td><td>0.3417</td><td>0.6875</td><td>0.1667</td><td>0.3667</td><td>0.5156</td></tr><tr><th scope="row">lfm350</th><td>0.4375</td><td>0.1250</td><td>0.5260</td><td>0.7083</td><td>0.4250</td><td>0.2708</td><td>0.1667</td><td>0.2083</td><td>0.2448</td></tr><tr><th scope="row">pngwn</th><td>0.3375</td><td>0.2604</td><td>0.0781</td><td>0.7083</td><td>0.3833</td><td>0.2708</td><td>0.1667</td><td>0.0917</td><td>0.2292</td></tr></tbody></table>
     </div>
     <div class="chart">
       <div class="chart-head"><h3>Suite heatmap</h3><p>Every measured model against every suite, in score order.</p></div>
-      <div class="heatmap-scroll" data-lenis-prevent><svg id="heatmap" role="img" aria-label="Heatmap of model accuracy across nine suites"></svg></div>
+      <div class="heatmap-scroll" data-lenis-prevent><svg id="heatmap" role="img" aria-label="Heatmap of model accuracy across nine suites" aria-describedby="suite-data-table"></svg></div>
     </div>
   </div>
 </section>
@@ -227,7 +234,8 @@
     <div class="two-col">
       <div class="chart">
         <div class="chart-head"><h3>tev1-08b · two hosts</h3><p>Same manifest, same revision.</p></div>
-        <div class="scroll-x" data-lenis-prevent><svg id="precision-chart" role="img" aria-label="Accuracy of tev1-08b on CPU fp32 and T4 fp16"></svg></div>
+        <div class="scroll-x" data-lenis-prevent><svg id="precision-chart" role="img" aria-label="Accuracy of tev1-08b on CPU fp32 and T4 fp16" aria-describedby="precision-data-table"></svg></div>
+        <table class="sr-only" id="precision-data-table"><caption>tev1-08b measured on two hosts.</caption><thead><tr><th scope="col">Run</th><th scope="col">Device</th><th scope="col">Dtype</th><th scope="col">Accuracy</th></tr></thead><tbody><tr><th scope="row">tev1-08b-20261002-v210</th><td>cpu</td><td>default</td><td>0.7532</td></tr><tr><th scope="row">tev1-08b-t4-g1-v210</th><td>cuda</td><td>float16</td><td>0.7637</td></tr></tbody></table>
       </div>
       <div class="note" id="precision-note"><p>The two host runs for this model are published under <code>precision</code> in <code>data/results.json</code>, both against dataset 2.1.0.</p></div>
     </div>
@@ -245,7 +253,8 @@
     <div class="two-col">
       <div class="chart">
         <div class="chart-head"><h3>Directories against measurements</h3><p>Repeated runs are counted once.</p></div>
-        <div class="scroll-x" data-lenis-prevent><svg id="coverage-chart" role="img" aria-label="Run directories versus distinct measurements"></svg></div>
+        <div class="scroll-x" data-lenis-prevent><svg id="coverage-chart" role="img" aria-label="Run directories versus distinct measurements" aria-describedby="coverage-data-table"></svg></div>
+        <table class="sr-only" id="coverage-data-table"><caption>Coverage counts.</caption><thead><tr><th scope="col">Measure</th><th scope="col">Count</th></tr></thead><tbody><tr><th scope="row">Verified run directories</th><td>53</td></tr><tr><th scope="row">Distinct measurements</th><td>50</td></tr><tr><th scope="row">Scope entries</th><td>50</td></tr></tbody></table>
       </div>
       <div class="panel">
         <h3>Why <span data-count="dirs">53</span> directories are <span data-count="measurements">50</span> measurements</h3>
@@ -306,7 +315,23 @@ python ops/panel_coverage.py --results-root results/raw</code></pre>
       <div class="panel"><h3>Structured data</h3><p>This page ships JSON-LD for the dataset, publisher and FAQ, with method facts only so it does not go stale when a model is added.</p></div>
       <div class="panel"><h3>Contribute</h3><p>The acceptance checklist and per-model VRAM estimates live in <code>docs/panel-hardware-requirements.md</code> in the repository.</p></div>
     </div>
+    <div class="panel artifact-panel">
+      <h3>Inspect one complete run</h3>
+      <p>The public copy of the <code>seb-9b-t4</code> directory is byte-for-byte identical to the measured run. Verify it locally with <code>sha256sum -c checksums.sha256</code>.</p>
+      <p class="artifact-links"><a href="public-artifacts/seb-9b-t4/checksums.sha256">checksums.sha256</a> · <a href="public-artifacts/seb-9b-t4/metadata.json">metadata.json</a> · <a href="public-artifacts/seb-9b-t4/predictions.jsonl">predictions.jsonl</a> · <a href="public-artifacts/seb-9b-t4/summary.json">summary.json</a> · <a href="public-artifacts/seb-9b-t4/usage.json">usage.json</a> · <a href="public-artifacts/seb-9b-t4/gpu_provenance.json">gpu_provenance.json</a></p>
+    </div>
     <div class="note" id="sources-note"><p><strong>Sources and reuse.</strong> The public-label suites (agnews, banking77_12, mnli and sst5) keep their upstream versions, licences and citations in <code>datasets/v2/sources.lock.json</code>. Site and benchmark code are MIT; cite this dataset by its version and <code>data/results.json</code>. sysone-bench is independent of the unrelated System One Bench at systemonebench.dev.</p></div>
+  </div>
+</section>
+
+<section id="faq" aria-labelledby="faq-title">
+  <div class="wrap">
+    <div class="band-head">
+      <p class="eyebrow">07 / Direct answers</p>
+      <h2 id="faq-title">Questions this benchmark answers</h2>
+      <p>Each answer is generated from the same data as the charts. It is written out here so a reader, a crawler or an answer engine gets the figure and its context together.</p>
+    </div>
+    <div class="answer-grid"><div class="answer"><h3>What does sysone-bench measure?</h3><p>Typed decisions: multiple choice, ordinal scores and binary judgements. Every model answers the same sealed cases from one manifest at seed 42.</p></div><div class="answer"><h3>Which open model scores highest?</h3><p>seb-9b at 0.8702. It trails the closed-API reference Jev 1.13.0 at 0.9065 by 0.0363.</p></div><div class="answer"><h3>How many models and decisions?</h3><p>50 measurements, each on 1240 evaluation decisions across 9 suites, from a 50-entry scope.</p></div><div class="answer"><h3>Which manifest were they scored against?</h3><p>Dataset 2.1.0, raw SHA-256 0d21a64c6b61b6be7b49050dbd89f89f934912a7b586734e475308e9c9422ea2.</p></div><div class="answer"><h3>Why not use vendor-published scores?</h3><p>They come from different prompts and different harnesses. Two numbers from different prompts are not a comparison, so no vendor-published figure is reused here.</p></div><div class="answer"><h3>Can I inspect a complete run?</h3><p>Yes. One full run directory with its checksum manifest is published at <a href="public-artifacts/seb-9b-t4/">public-artifacts/seb-9b-t4/</a>.</p></div></div>
   </div>
 </section>
 </main>

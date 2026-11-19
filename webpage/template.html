@@ -21,9 +21,6 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
 <link rel="stylesheet" href="style.css">
 <script>document.documentElement.classList.add("js");</script>
 <!-- Method-level structured data only. No ranking, score or model count lives here:
@@ -129,6 +126,7 @@
       <a href="#suites">Suites</a>
       <a href="#method">Method</a>
       <a href="#data">Data</a>
+      <a href="#faq">FAQ</a>
     </nav>
     <p class="edition">Dataset <span id="edition-version">{{version}}</span> · as of <span id="as-of">{{generated_at}}</span> · independent · no affiliation</p>
   </div>
@@ -152,9 +150,9 @@
     <figure class="hero-film">
       <div class="film-frame">
         <img class="film-poster" src="assets/field-race-poster.png" width="1280" height="720" alt="Ledger of the ten highest measured accuracies, from seb-9b at 0.8702 downward">
-        <video id="field-film" autoplay muted loop playsinline preload="auto" aria-label="Animated ledger of the ten highest measured accuracies">
-          <source src="assets/field-race.webm" type="video/webm">
-          <source src="assets/field-race.mp4" type="video/mp4">
+        <video id="field-film" muted loop playsinline preload="none" aria-label="Animated ledger of the ten highest measured accuracies">
+          <source data-src="assets/field-race.webm" type="video/webm">
+          <source data-src="assets/field-race.mp4" type="video/mp4">
         </video>
         <span class="scanline" aria-hidden="true"></span>
       </div>
@@ -188,6 +186,8 @@
     <div class="note" id="readout-note"><p>Each row records the readout used. Rows carrying a readout caveat are explained in <code>llms-full.txt</code>, and no number is changed by the caveat.</p></div>
     <div class="ledger" id="ledger"></div>
     <p class="ledger-count" id="ledger-count"></p>
+    <p class="ledger-status" id="shortlist-status">Select up to three models in the field to compare their suite accuracies.</p>
+    <div class="shortlist" id="shortlist" hidden></div>
   </div>
 </section>
 
@@ -198,6 +198,12 @@
       <h2 id="suite-title">Where each model is strong, and where it fails</h2>
       <p>A single number hides the shape of a model. Pick one to see all nine suites, or compare the top five in each suite before you shortlist.</p>
     </div>
+    <div class="band-head">
+      <p class="eyebrow">Best by task</p>
+      <h3>Leader in each suite</h3>
+      <p>Leaders are derived from the stored accuracies. Models within 0.0050 of the top are listed together: that gap is not a stable lead at this sample size.</p>
+    </div>
+    {{best_by_task}}
     <div class="controls">
       <label class="lab" for="model-select">Model</label>
       <select id="model-select"></select>
@@ -208,11 +214,12 @@
     </div>
     <div class="chart">
       <div class="chart-head"><h3>Per-suite accuracy</h3><p>Nine suites · <span data-count="decisions">{{counts.decisions}}</span> decisions</p></div>
-      <div class="scroll-x" data-lenis-prevent><svg id="suite-chart" role="img" aria-label="Per-suite accuracy bars"></svg></div>
+      <div class="scroll-x" data-lenis-prevent><svg id="suite-chart" role="img" aria-label="Per-suite accuracy bars" aria-describedby="suite-data-table"></svg></div>
+      {{suite_table}}
     </div>
     <div class="chart">
       <div class="chart-head"><h3>Suite heatmap</h3><p>Every measured model against every suite, in score order.</p></div>
-      <div class="heatmap-scroll" data-lenis-prevent><svg id="heatmap" role="img" aria-label="Heatmap of model accuracy across nine suites"></svg></div>
+      <div class="heatmap-scroll" data-lenis-prevent><svg id="heatmap" role="img" aria-label="Heatmap of model accuracy across nine suites" aria-describedby="suite-data-table"></svg></div>
     </div>
   </div>
 </section>
@@ -227,7 +234,8 @@
     <div class="two-col">
       <div class="chart">
         <div class="chart-head"><h3>tev1-08b · two hosts</h3><p>Same manifest, same revision.</p></div>
-        <div class="scroll-x" data-lenis-prevent><svg id="precision-chart" role="img" aria-label="Accuracy of tev1-08b on CPU fp32 and T4 fp16"></svg></div>
+        <div class="scroll-x" data-lenis-prevent><svg id="precision-chart" role="img" aria-label="Accuracy of tev1-08b on CPU fp32 and T4 fp16" aria-describedby="precision-data-table"></svg></div>
+        {{precision_table}}
       </div>
       <div class="note" id="precision-note"><p>The two host runs for this model are published under <code>precision</code> in <code>data/results.json</code>, both against dataset 2.1.0.</p></div>
     </div>
@@ -245,7 +253,8 @@
     <div class="two-col">
       <div class="chart">
         <div class="chart-head"><h3>Directories against measurements</h3><p>Repeated runs are counted once.</p></div>
-        <div class="scroll-x" data-lenis-prevent><svg id="coverage-chart" role="img" aria-label="Run directories versus distinct measurements"></svg></div>
+        <div class="scroll-x" data-lenis-prevent><svg id="coverage-chart" role="img" aria-label="Run directories versus distinct measurements" aria-describedby="coverage-data-table"></svg></div>
+        {{coverage_table}}
       </div>
       <div class="panel">
         <h3>Why <span data-count="dirs">{{counts.dirs}}</span> directories are <span data-count="measurements">{{counts.measurements}}</span> measurements</h3>
@@ -306,7 +315,23 @@ python ops/panel_coverage.py --results-root results/raw</code></pre>
       <div class="panel"><h3>Structured data</h3><p>This page ships JSON-LD for the dataset, publisher and FAQ, with method facts only so it does not go stale when a model is added.</p></div>
       <div class="panel"><h3>Contribute</h3><p>The acceptance checklist and per-model VRAM estimates live in <code>docs/panel-hardware-requirements.md</code> in the repository.</p></div>
     </div>
+    <div class="panel artifact-panel">
+      <h3>Inspect one complete run</h3>
+      <p>The public copy of the <code>seb-9b-t4</code> directory is byte-for-byte identical to the measured run. Verify it locally with <code>sha256sum -c checksums.sha256</code>.</p>
+      <p class="artifact-links"><a href="public-artifacts/seb-9b-t4/checksums.sha256">checksums.sha256</a> · <a href="public-artifacts/seb-9b-t4/metadata.json">metadata.json</a> · <a href="public-artifacts/seb-9b-t4/predictions.jsonl">predictions.jsonl</a> · <a href="public-artifacts/seb-9b-t4/summary.json">summary.json</a> · <a href="public-artifacts/seb-9b-t4/usage.json">usage.json</a> · <a href="public-artifacts/seb-9b-t4/gpu_provenance.json">gpu_provenance.json</a></p>
+    </div>
     <div class="note" id="sources-note"><p><strong>Sources and reuse.</strong> The public-label suites (agnews, banking77_12, mnli and sst5) keep their upstream versions, licences and citations in <code>datasets/v2/sources.lock.json</code>. Site and benchmark code are MIT; cite this dataset by its version and <code>data/results.json</code>. sysone-bench is independent of the unrelated System One Bench at systemonebench.dev.</p></div>
+  </div>
+</section>
+
+<section id="faq" aria-labelledby="faq-title">
+  <div class="wrap">
+    <div class="band-head">
+      <p class="eyebrow">07 / Direct answers</p>
+      <h2 id="faq-title">Questions this benchmark answers</h2>
+      <p>Each answer is generated from the same data as the charts. It is written out here so a reader, a crawler or an answer engine gets the figure and its context together.</p>
+    </div>
+    <div class="answer-grid">{{faq}}</div>
   </div>
 </section>
 </main>

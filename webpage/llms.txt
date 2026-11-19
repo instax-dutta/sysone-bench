@@ -8,6 +8,8 @@ Site: https://sysone.sdad.pro/
 Repository: https://github.com/instax-dutta/sysone-bench
 Data: https://sysone.sdad.pro/data/results.json
 Full results as one document: https://sysone.sdad.pro/llms-full.txt
+Direct answers: https://sysone.sdad.pro/#faq
+One complete public run: https://sysone.sdad.pro/public-artifacts/seb-9b-t4/
 As of: 2026-11-19 · dataset version 2.1.0
 
 ## What this benchmark measures

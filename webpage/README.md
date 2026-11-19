@@ -28,8 +28,10 @@ dropped rather than shown.
 | `prerender.py` | Fills headline facts from `data/results.json` into `index.html` |
 | `index.html` | Rendered page with static headline facts and JSON-LD (dataset, publisher, FAQ) |
 | `style.css` | Editorial design system: paper, ink, hairlines. One oxblood accent |
+| `fonts/` | Self-hosted Newsreader and IBM Plex Mono WOFF2 files plus OFL licences |
 | `vendor/lenis.min.js` | Vendored Lenis 1.3.27 (MIT); local smooth scroll, no CDN runtime |
-| `app.js` | Hand-built SVG charts, ranked field list, filters, Lenis smooth scroll; no scroll-triggered reveals |
+| `public-artifacts/seb-9b-t4/` | One complete run directory with its checksum manifest, published for verification |
+| `app.js` | Hand-built SVG charts, ranked field, filters, run drawers, three-model compare, Lenis scroll; no scroll-triggered reveals |
 | `data/results.json` | Generated. Do not edit by hand |
 | `llms.txt` | Plain-language summary for AI answer engines |
 | `llms-full.txt` | Generated. Every result and caveat in one self-contained document |

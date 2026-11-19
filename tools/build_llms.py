@@ -118,6 +118,8 @@ def build_llms_txt(d: dict) -> str:
     L.append("Repository: https://github.com/instax-dutta/sysone-bench")
     L.append("Data: https://sysone.sdad.pro/data/results.json")
     L.append("Full results as one document: https://sysone.sdad.pro/llms-full.txt")
+    L.append("Direct answers: https://sysone.sdad.pro/#faq")
+    L.append("One complete public run: https://sysone.sdad.pro/public-artifacts/seb-9b-t4/")
     L.append(f"As of: {d.get('generatedAt', 'unknown')} · dataset version {d['datasetVersion']}")
     L.append("")
     L.append("## What this benchmark measures")

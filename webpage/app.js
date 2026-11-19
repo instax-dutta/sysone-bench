@@ -108,6 +108,50 @@
   }
 
   let data;
+  const picked = [];
+
+  function detailFor(m) {
+    const caveat = m.readoutCaveat
+      ? `<p><strong>Readout caveat.</strong> ${esc(data.readoutCaveat?.note || "This readout needs separate interpretation.")}</p>`
+      : "";
+    const deferred = m.deferrals
+      ? `<p><strong>Deferrals.</strong> ${m.deferrals.deferred} of ${m.deferrals.evaluation_decisions} evaluation decisions were declined by the runner and projected to argmax by the adapter.</p>`
+      : "";
+    return `<div class="row-detail" hidden><dl>
+      <div><dt>Run</dt><dd>${esc(m.runId)}</dd></div>
+      <div><dt>Revision</dt><dd>${esc(m.revision || "not recorded")}</dd></div>
+      <div><dt>Base weights</dt><dd>${esc(m.baseModel || "single checkpoint")}</dd></div>
+      <div><dt>Device</dt><dd>${esc(m.device || "not recorded")}</dd></div>
+      <div><dt>Dtype</dt><dd>${esc(m.dtype || "not recorded")}</dd></div>
+      <div><dt>Serving</dt><dd>${esc(m.serving || "not recorded")}</dd></div>
+      <div><dt>Readout</dt><dd>${esc(m.scoring || "vendor path")}</dd></div>
+      <div><dt>Sharding</dt><dd>${esc(m.sharding || "single device")}</dd></div>
+    </dl>${deferred}${caveat}</div>`;
+  }
+
+  function renderShortlist() {
+    const host = $("#shortlist");
+    const status = $("#shortlist-status");
+    if (!picked.length) {
+      host.hidden = true;
+      status.textContent = "Select up to three models in the field to compare their suite accuracies.";
+      return;
+    }
+    host.hidden = false;
+    status.textContent = `${picked.length} of 3 selected. Deltas are percentage points against ${picked[0]}; positive means higher accuracy. No overall score is calculated.`;
+    const head = `<tr><th scope="col">Suite</th>${picked.map((r) => `<th scope="col">${esc(r)}</th>`).join("")}</tr>`;
+    const rows = data.suites.map((suite) => {
+      const baseline = data.measurements.find((m) => m.runner === picked[0])?.suites[suite] ?? 0;
+      return `<tr><th scope="row">${esc(suite.replace("_", " "))}</th>${picked.map((r) => {
+        const m = data.measurements.find((x) => x.runner === r);
+        const v = m?.suites[suite];
+        const delta = v == null ? null : v - baseline;
+        return `<td>${fmt(v)}${r === picked[0] || delta == null ? "" : ` <span class="delta">${delta >= 0 ? "+" : ""}${(delta * 100).toFixed(2)}</span>`}</td>`;
+      }).join("")}</tr>`;
+    }).join("");
+    host.innerHTML = `<table><caption>Per-suite comparison of selected models</caption><thead>${head}</thead><tbody>${rows}</tbody></table>`;
+  }
+
   function renderLedger() {
     const filter = $(".chip[data-filter][aria-pressed='true']")?.dataset.filter || "all";
     const sort = $("#sort-by").value;
@@ -122,18 +166,26 @@
     host.replaceChildren();
     const head = document.createElement("div");
     head.className = "ledger-row head";
-    head.innerHTML = "<span>#</span><span>Model</span><span class='score'>Accuracy</span><span>Nine suites</span><span class='flags'>Provenance</span>";
+    head.innerHTML = "<span></span><span>#</span><span>Model</span><span class='score'>Accuracy</span><span>Nine suites</span><span class='flags'>Provenance</span>";
     host.appendChild(head);
     rows.forEach((m, i) => {
+      const wrap = document.createElement("div");
+      wrap.className = "ledger-item";
       const row = document.createElement("div");
       row.className = "ledger-row";
+      row.tabIndex = 0;
+      row.setAttribute("role", "button");
+      row.setAttribute("aria-expanded", "false");
       const flags = [m.techniqueReimplementation ? "technique" : null, m.readoutCaveat ? "readout caveat" : null, m.deferrals ? "deferred" : null, m.sharding ? "2-GPU shard" : null].filter(Boolean);
-      row.innerHTML = `<span class="rank">${String(i + 1).padStart(2, "0")}</span><span class="who">${esc(m.runner)}</span><span class="score">${fmt(m.accuracy)}</span><span></span><span class="flags">${esc(flags.join(" · "))}</span>`;
-      row.children[3].appendChild(sparkline(m));
+      row.innerHTML = `<span class="pick"><input type="checkbox" aria-label="Compare ${esc(m.runner)}" data-runner="${esc(m.runner)}" ${picked.includes(m.runner) ? "checked" : ""}></span><span class="rank">${String(i + 1).padStart(2, "0")}</span><span class="who">${esc(m.runner)}</span><span class="score">${fmt(m.accuracy)}</span><span></span><span class="flags">${esc(flags.join(" · "))}</span>`;
+      row.children[4].appendChild(sparkline(m));
       row.title = `${m.runner} · ${m.runId} · ${m.device || "?"} / ${m.dtype || "?"} · ${m.scoring || "vendor readout"}`;
-      host.appendChild(row);
+      wrap.appendChild(row);
+      wrap.insertAdjacentHTML("beforeend", detailFor(m));
+      host.appendChild(wrap);
     });
-    $("#ledger-count").textContent = `${rows.length} of ${data.measurements.length} measurements shown`;
+    $("#ledger-count").textContent = `${rows.length} of ${data.measurements.length} measurements shown. Select a row for its run record; tick up to three models to compare suites.`;
+    renderShortlist();
   }
 
   function suiteChart() {
@@ -290,18 +342,35 @@
     suiteChart(); heatmap(); precision(); coverage(); notes();
     const film = $("#field-film");
     if (film) {
+      const frame = film.parentElement;
       const revealFilm = () => {
-        if (film.currentTime > 1) film.parentElement.classList.add("ready");
+        if (film.currentTime > 1) frame.classList.add("ready");
       };
       film.addEventListener("timeupdate", revealFilm);
       film.addEventListener("loadeddata", revealFilm);
-      film.addEventListener("error", () => film.parentElement.classList.add("no-video"));
-      if (!film.canPlayType("video/webm") && !film.canPlayType("video/mp4")) {
-        film.parentElement.classList.add("no-video");
+      film.addEventListener("error", () => frame.classList.add("no-video"));
+      if (reduced || (!film.canPlayType("video/webm") && !film.canPlayType("video/mp4"))) {
+        frame.classList.add("no-video");
+      } else {
+        const loadFilm = () => {
+          film.querySelectorAll("source").forEach((source) => {
+            source.src = source.dataset.src;
+          });
+          film.load();
+          film.play().catch(() => frame.classList.add("no-video"));
+        };
+        if ("IntersectionObserver" in window) {
+          const mediaObserver = new IntersectionObserver((entries) => {
+            if (entries.some((entry) => entry.isIntersecting)) {
+              mediaObserver.disconnect();
+              loadFilm();
+            }
+          }, { rootMargin: "200px" });
+          mediaObserver.observe(film);
+        } else {
+          loadFilm();
+        }
       }
-      setTimeout(() => {
-        if (film.readyState < 2) film.parentElement.classList.add("no-video");
-      }, 1800);
     }
     if (data.scopeTotal - data.distinctMeasurements === 0) {
       $("#coverage-title").textContent = "Every entry in scope has a recorded measurement";
@@ -315,6 +384,38 @@
     }));
     $("#sort-by").addEventListener("change", renderLedger);
     select.addEventListener("change", suiteChart);
+    $("#ledger").addEventListener("click", (event) => {
+      const box = event.target.closest(".pick input");
+      if (box) {
+        const runner = box.dataset.runner;
+        if (box.checked) {
+          if (picked.length >= 3) {
+            box.checked = false;
+            $("#shortlist-status").textContent = "Three models are already selected. Uncheck one before adding another.";
+            return;
+          }
+          picked.push(runner);
+        } else {
+          const at = picked.indexOf(runner);
+          if (at >= 0) picked.splice(at, 1);
+        }
+        renderShortlist();
+        return;
+      }
+      const row = event.target.closest(".ledger-row");
+      if (!row) return;
+      const detail = row.nextElementSibling;
+      if (!detail || !detail.classList.contains("row-detail")) return;
+      detail.hidden = !detail.hidden;
+      row.setAttribute("aria-expanded", String(!detail.hidden));
+    });
+    $("#ledger").addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const row = event.target.closest(".ledger-row");
+      if (!row || event.target.matches("input")) return;
+      event.preventDefault();
+      row.click();
+    });
   }
   document.addEventListener("DOMContentLoaded", init);
 })();

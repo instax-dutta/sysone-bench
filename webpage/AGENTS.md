@@ -12,6 +12,13 @@
 - `visuals/scenes.py` owns the ManimGX scenes. `assets/*.mp4` and `assets/*-poster.png` are rendered
   from `data/results.json`; regenerate them after a data change with `manimgx render`, then
   `manimgx inspect` first. The scene sources and evidence live in `redesign/`, not in Skill dirs.
+- `fonts/` owns the self-hosted IBM Plex Mono and Newsreader WOFF2 files and their OFL licences.
+  `index.html` must not request fonts from a CDN.
+- `public-artifacts/seb-9b-t4/` is the public, byte-for-byte copy of one complete run directory.
+  Its `checksums.sha256` and run files are the record; `index.html` is site navigation and is not
+  listed in the checksum manifest. Never type a score into that index.
+- `prerender.py` also generates the best-by-task strip, visible FAQ answers and sr-only data tables
+  from `data/results.json`. Those fragments carry current figures and must never be hand-edited.
 - Does not own result artifacts, ground truth, coverage rules, or model adapters. Those belong to
   `results/`, `datasets/`, `ops/`, and `runners/`.
 
@@ -77,6 +84,13 @@
   legible instead of scaling to a few pixels. Page-level horizontal overflow must stay false.
 - Content stays fully opaque while scrolling in both normal and `prefers-reduced-motion` modes.
   No content may be left stranded invisible, and no animation may run on ledger rows or their bars.
+- The hero video is lazy: `source` elements carry `data-src` until `app.js` observes the film in
+  view. Reduced motion or missing codecs keep the settled poster and add `no-video` for the scan
+  fallback. The video must not block first paint.
+- Ledger rows are clickable run-record drawers with full revision, run ID, device, dtype, serving,
+  readout and caveats. Checkboxes shortlist up to three models; the comparison is per-suite deltas
+  against the first selection. No overall or averaged score may be introduced.
+- Every SVG chart has a generated `table.sr-only` equivalent referenced by `aria-describedby`.
 - No secrets, tokens, or keys in this directory. `CNAME` carries the custom domain only; the
   deploy workflow is owned by `.github/workflows/deploy-pages.yml`.
 - `favicon.svg` is the icon source of truth. `icon-512.png` and `apple-touch-icon.png` are rasters of

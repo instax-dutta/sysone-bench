@@ -1,0 +1,16 @@
+{
+ "cuda_available": true,
+ "device_count": 2,
+ "dtype": "bfloat16",
+ "gpus": [
+  "Tesla T4, 15360 MiB, 580.178.04",
+  "Tesla T4, 15360 MiB, 580.178.04"
+ ],
+ "host_os": "Linux-6.18.55+-x86_64-with-glibc2.39",
+ "note": "causal_conv1d was compiling during this run, so transformers used its reference PyTorch implementation; causal_conv1d 1.7.0 finished installing after the run completed.",
+ "python": "3.12.3",
+ "sharding": "device_map=auto across both visible GPUs (12 layers on cuda:0, 20 layers plus lm_head on cuda:1)",
+ "torch": "2.14.0+cu130",
+ "torch_cuda": "13.0",
+ "transformers": "5.17.0"
+}
