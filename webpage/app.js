@@ -282,6 +282,10 @@
       };
       film.addEventListener("timeupdate", revealFilm);
       film.addEventListener("loadeddata", revealFilm);
+      film.addEventListener("error", () => film.parentElement.classList.add("no-video"));
+      setTimeout(() => {
+        if (film.readyState < 2) film.parentElement.classList.add("no-video");
+      }, 1800);
     }
     if (data.scopeTotal - data.distinctMeasurements === 0) {
       $("#coverage-title").textContent = "Every entry in scope has a recorded measurement";
