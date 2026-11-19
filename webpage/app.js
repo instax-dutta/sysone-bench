@@ -174,9 +174,10 @@
     const H = headH + data.measurements.length * rowH + 8;
     const s = mount(host, W, H);
     data.suites.forEach((suite, i) => {
-      const x = labelW + i * cellW + cellW / 2;
-      const t = text(s, x, headH - 22, suite.replace("_", " "), 9, "end", "#5d574d");
-      t.setAttribute("transform", `rotate(-55 ${x} ${headH - 22})`);
+      const ax = labelW + i * cellW + 4;
+      const ay = headH - 8;
+      const t = text(s, ax, ay, suite.replace("_", " "), 9, "start", "#5d574d");
+      t.setAttribute("transform", `rotate(-55 ${ax} ${ay})`);
     });
     data.measurements.forEach((m, r) => {
       const y = headH + r * rowH;
