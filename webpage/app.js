@@ -98,6 +98,7 @@
 
   function sparkline(row) {
     const s = svg(116, 22);
+    s.classList.add("spark");
     data.suites.forEach((suite, i) => {
       const v = pct(row.suites[suite]);
       const bar = rect(s, i * 13, 22 - v * 22, 9, v * 22, "#9a3b2c", v ? 0.8 : 0.12);
