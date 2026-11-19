@@ -160,6 +160,23 @@ paper, press or active social channel. Private HF dataset contributes no crawlab
 
 ---
 
+## Post-cutover verification (2026-11-19)
+
+After DNS was moved off Vercel, `sysone.sdad.pro` was configured as the GitHub Pages custom domain
+and HTTPS enforcement was enabled. Verified against the live custom domain:
+
+- `https://sysone.sdad.pro/` returns HTTP/2 200 with a matching certificate.
+- Raw HTML contains `0.8702`, `as of 2026-11-19`, and 50 measurements without JavaScript.
+- Canonical, `og:url`, sitemap `<loc>` and all JSON-LD `@id`s resolve to `https://sysone.sdad.pro/`.
+- `data/results.json`, `llms.txt`, `llms-full.txt`, `robots.txt`, `sitemap.xml`, both icon assets,
+  `og.png` and the ManimGX animation all return 200.
+- The as-of line in `llms.txt` matches `generatedAt` in the published data.
+
+The canonical-domain mismatch finding is therefore closed. The remaining 30-day items (public
+artifact bundle, citable identifier, directory cache refresh) are unchanged.
+
+---
+
 ## Appendix: sources analyzed
 
 | Source | Purpose | Issues |
