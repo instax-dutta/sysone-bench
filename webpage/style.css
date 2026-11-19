@@ -47,15 +47,12 @@ p { margin: 0 0 1em; }
 .film-frame img, .film-frame video { display: block; width: 100%; height: auto; }
 .film-frame video { display: block; position: absolute; inset: 0; width: 100%; height: auto; opacity: 0; transition: opacity .35s ease; }
 .film-frame.ready video { opacity: 1; }
-.film-frame.no-video::after {
-  content: ""; position: absolute; left: 0; right: 0; height: 2px;
-  background: var(--oxide); opacity: .45; pointer-events: none;
-  animation: scan 2.6s linear infinite;
-}
+.scanline { display: none; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: var(--oxide); opacity: .45; pointer-events: none; }
+.film-frame.no-video .scanline { display: block; animation: scan 2.6s linear infinite; }
 @keyframes scan { from { top: 0; } to { top: 100%; } }
 @media (prefers-reduced-motion: reduce) {
-  .film-frame video, .film-frame.no-video::after { display: none; }
-  .film-frame.no-video::after { animation: none; }
+  .film-frame video, .scanline { display: none !important; animation: none !important; }
 }
 .hero-film figcaption { font: 11px/1.5 var(--mono); color: var(--muted); padding: 12px 14px; border-top: 1px solid var(--rule); }
 .proof { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--rule); margin-top: 18px; }
@@ -82,10 +79,10 @@ select { font: 12px var(--mono); padding: 7px 10px; background: var(--paper); co
 .ledger-row .who { font-weight: 600; overflow-wrap: anywhere; }
 .ledger-row .score { text-align: right; font-variant-numeric: tabular-nums; }
 .spark { display: flex; align-items: end; gap: 2px; height: 22px; }
-.spark i { display: block; width: 9px; background: var(--oxide); opacity: .78; transform-origin: bottom; }
-.js .ledger-row.in .spark i { animation: growBar .32s cubic-bezier(.2,.7,.2,1) both; }
-.js .ledger-row.in .spark i:nth-child(2n) { animation-delay: .03s; }
-.js .ledger-row.in .spark i:nth-child(3n) { animation-delay: .06s; }
+.spark .bar { transform-box: fill-box; transform-origin: bottom; }
+.js .ledger-row.in .spark .bar { animation: growBar .32s cubic-bezier(.2,.7,.2,1) both; }
+.js .ledger-row.in .spark .bar:nth-child(2n) { animation-delay: .03s; }
+.js .ledger-row.in .spark .bar:nth-child(3n) { animation-delay: .06s; }
 @keyframes growBar { from { transform: scaleY(.05); } to { transform: scaleY(1); } }
 .flags { font-size: 10px; color: var(--muted); text-align: right; }
 .ledger-count { font: 11px var(--mono); color: var(--muted); margin-top: 16px; }
@@ -138,6 +135,6 @@ footer p { font: 12px/1.7 var(--mono); color: var(--muted); }
   .chart-head { flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .js .reveal, .js .ledger-row, .js .ledger-row .spark i { opacity: 1; transform: none; transition: none; animation: none !important; }
+  .js .reveal, .js .ledger-row, .js .ledger-row .spark .bar { opacity: 1; transform: none; transition: none; animation: none !important; }
   video { display: none; }
 }

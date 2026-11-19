@@ -100,7 +100,8 @@
     const s = svg(116, 22);
     data.suites.forEach((suite, i) => {
       const v = pct(row.suites[suite]);
-      rect(s, i * 13, 22 - v * 22, 9, v * 22, "#9a3b2c", v ? 0.8 : 0.12);
+      const bar = rect(s, i * 13, 22 - v * 22, 9, v * 22, "#9a3b2c", v ? 0.8 : 0.12);
+      bar.classList.add("bar");
     });
     return s;
   }
