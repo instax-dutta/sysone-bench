@@ -50,7 +50,7 @@ a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; 
 a:hover { color: var(--oxide); }
 a:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid var(--oxide); outline-offset: 3px; }
 code, pre { font-family: var(--mono); font-size: .88em; }
-pre { background: var(--paper-2); padding: 14px; overflow-x: auto; border-left: 2px solid var(--oxide); }
+pre { background: var(--paper-2); padding: 14px; overflow-x: auto; border-left: 2px solid var(--oxide); white-space: pre-wrap; overflow-wrap: anywhere; }
 .wrap { width: min(var(--max), calc(100% - 48px)); margin-inline: auto; }
 .skip { position: absolute; left: -9999px; }
 .skip:focus { left: 12px; top: 12px; background: var(--ink); color: var(--paper); padding: 8px; z-index: 20; }

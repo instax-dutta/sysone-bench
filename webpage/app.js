@@ -245,16 +245,19 @@
     const rows = data.precision?.["tev1-08b"] || [];
     if (rows.length < 2) return;
     const host = $("#precision-chart");
-    const W = 480, H = 180, s = mount(host, W, H);
+    const narrow = innerWidth < 560;
+    const W = narrow ? 360 : 480, H = 180, s = mount(host, W, H);
     const max = 1, base = H - 40;
-    line(s, 30, base, W - 10, base, "#161412");
+    line(s, 20, base, W - 10, base, "#161412");
     rows.forEach((r, i) => {
       const h = (base - 20) * pct(r.accuracy) / max;
-      const x = 70 + i * 170;
-      const bar = rect(s, x, base - h, 90, h, "#9a3b2c", 0.9);
-      text(s, x + 45, base - h - 8, fmt(r.accuracy), 16, "middle");
-      text(s, x + 45, base + 18, `${r.device} · ${r.dtype || "default"}`, 10, "middle", "#5d574d");
-      text(s, x + 45, base + 32, r.runId, 9, "middle", "#5d574d");
+      const slot = (W - 30) / rows.length;
+      const x = 20 + i * slot + slot * 0.18;
+      const bw = slot * 0.64;
+      const bar = rect(s, x, base - h, bw, h, "#9a3b2c", 0.9);
+      text(s, x + bw / 2, base - h - 8, fmt(r.accuracy), narrow ? 13 : 16, "middle");
+      text(s, x + bw / 2, base + 18, `${r.device} · ${r.dtype || "default"}`, narrow ? 8 : 10, "middle", "#5d574d");
+      text(s, x + bw / 2, base + 32, narrow ? r.runId.replace("tev1-08b-", "") : r.runId, narrow ? 8 : 9, "middle", "#5d574d");
     });
     const gap = Math.abs(rows[0].accuracy - rows[1].accuracy);
     $("#precision-note").innerHTML = `<p><strong>${gap.toFixed(4)} apart.</strong> Precision at this scale is small but not zero, so it is recorded per row rather than assumed constant. The two runs use one pinned revision and identical bytes.</p>`;
@@ -263,13 +266,15 @@
   function coverage() {
     const host = $("#coverage-chart");
     const pairs = [["Verified run directories", data.runDirectoriesVerified], ["Distinct measurements", data.distinctMeasurements]];
-    const W = 560, H = 140, barX = 250, barMax = 250, s = mount(host, W, H);
+    const narrow = innerWidth < 560;
+    const W = narrow ? 330 : 560, H = 140, barX = narrow ? 170 : 250;
+    const barMax = W - barX - 36, s = mount(host, W, H);
     pairs.forEach(([label, value], i) => {
       const y = 16 + i * 56;
-      text(s, 0, y + 14, label, 11, "start");
+      text(s, 0, y + 14, label, narrow ? 9 : 11, "start");
       const w = barMax * value / Math.max(...pairs.map((p) => p[1]));
       rect(s, barX, y, w, 18, "#9a3b2c", 0.85);
-      text(s, barX + w + 10, y + 14, String(value), 13, "start");
+      text(s, barX + w + 8, y + 14, String(value), 13, "start");
     });
     const list = $("#collapse-list");
     const rep = data.duplicates.repeatedRuns || {}, ids = data.duplicates.identicalPredictions || {};

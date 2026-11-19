@@ -90,7 +90,12 @@
 - Ledger rows are clickable run-record drawers with full revision, run ID, device, dtype, serving,
   readout and caveats. Checkboxes shortlist up to three models; the comparison is per-suite deltas
   against the first selection. No overall or averaged score may be introduced.
-- Every SVG chart has a generated `table.sr-only` equivalent referenced by `aria-describedby`.
+- Every SVG chart has a generated data table wrapped in a clipped `sr-only` div and referenced by
+  `aria-describedby`. Never put `sr-only` directly on a table: its intrinsic width causes mobile
+  overflow.
+- Long commands in `<pre>` must wrap with `overflow-wrap:anywhere` so the reproduction command can
+  be read end to end at 390px. Fixed-width charts must shrink on narrow viewports so their value
+  labels stay inside the page width.
 - No secrets, tokens, or keys in this directory. `CNAME` carries the custom domain only; the
   deploy workflow is owned by `.github/workflows/deploy-pages.yml`.
 - `favicon.svg` is the icon source of truth. `icon-512.png` and `apple-touch-icon.png` are rasters of
