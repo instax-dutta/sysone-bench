@@ -208,11 +208,11 @@
     </div>
     <div class="chart">
       <div class="chart-head"><h3>Per-suite accuracy</h3><p>Nine suites · <span data-count="decisions">1,240</span> decisions</p></div>
-      <div class="scroll-x"><svg id="suite-chart" role="img" aria-label="Per-suite accuracy bars"></svg></div>
+      <div class="scroll-x" data-lenis-prevent><svg id="suite-chart" role="img" aria-label="Per-suite accuracy bars"></svg></div>
     </div>
     <div class="chart">
       <div class="chart-head"><h3>Suite heatmap</h3><p>Every measured model against every suite, in score order.</p></div>
-      <div class="heatmap-scroll"><svg id="heatmap" role="img" aria-label="Heatmap of model accuracy across nine suites"></svg></div>
+      <div class="heatmap-scroll" data-lenis-prevent><svg id="heatmap" role="img" aria-label="Heatmap of model accuracy across nine suites"></svg></div>
     </div>
   </div>
 </section>
@@ -227,7 +227,7 @@
     <div class="two-col">
       <div class="chart">
         <div class="chart-head"><h3>tev1-08b · two hosts</h3><p>Same manifest, same revision.</p></div>
-        <div class="scroll-x"><svg id="precision-chart" role="img" aria-label="Accuracy of tev1-08b on CPU fp32 and T4 fp16"></svg></div>
+        <div class="scroll-x" data-lenis-prevent><svg id="precision-chart" role="img" aria-label="Accuracy of tev1-08b on CPU fp32 and T4 fp16"></svg></div>
       </div>
       <div class="note" id="precision-note"><p>The two host runs for this model are published under <code>precision</code> in <code>data/results.json</code>, both against dataset 2.1.0.</p></div>
     </div>
@@ -245,7 +245,7 @@
     <div class="two-col">
       <div class="chart">
         <div class="chart-head"><h3>Directories against measurements</h3><p>Repeated runs are counted once.</p></div>
-        <div class="scroll-x"><svg id="coverage-chart" role="img" aria-label="Run directories versus distinct measurements"></svg></div>
+        <div class="scroll-x" data-lenis-prevent><svg id="coverage-chart" role="img" aria-label="Run directories versus distinct measurements"></svg></div>
       </div>
       <div class="panel">
         <h3>Why <span data-count="dirs">53</span> directories are <span data-count="measurements">50</span> measurements</h3>
@@ -332,6 +332,7 @@ python ops/panel_coverage.py --results-root results/raw</code></pre>
   </div>
 </footer>
 
+<script src="vendor/lenis.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

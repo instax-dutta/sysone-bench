@@ -28,7 +28,8 @@ dropped rather than shown.
 | `prerender.py` | Fills headline facts from `data/results.json` into `index.html` |
 | `index.html` | Rendered page with static headline facts and JSON-LD (dataset, publisher, FAQ) |
 | `style.css` | Editorial design system: paper, ink, hairlines. One oxblood accent |
-| `app.js` | Hand-built SVG charts, ranked field list, filters, reveal-on-scroll |
+| `vendor/lenis.min.js` | Vendored Lenis 1.3.27 (MIT); local smooth scroll, no CDN runtime |
+| `app.js` | Hand-built SVG charts, ranked field list, filters, Lenis smooth scroll, reveal-on-scroll |
 | `data/results.json` | Generated. Do not edit by hand |
 | `llms.txt` | Plain-language summary for AI answer engines |
 | `llms-full.txt` | Generated. Every result and caveat in one self-contained document |

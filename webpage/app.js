@@ -263,7 +263,34 @@
     targets.forEach((n) => { n.classList.add("reveal"); io.observe(n); });
   }
 
+  function initSmoothScroll() {
+    let lenis = null;
+    if (!reduced && typeof Lenis !== "undefined") {
+      lenis = new Lenis({
+        autoRaf: true,
+        duration: 1.05,
+        smoothWheel: true,
+        syncTouch: false,
+        wheelMultiplier: 0.9,
+        gestureOrientation: "vertical",
+      });
+      window.lenis = lenis;
+    }
+    $$('a[href^="#"]').forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const id = link.getAttribute("href").slice(1);
+        const target = id ? document.getElementById(id) : null;
+        if (!target) return;
+        event.preventDefault();
+        if (lenis) lenis.scrollTo(target);
+        else target.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+        history.replaceState(null, "", `#${id}`);
+      });
+    });
+  }
+
   async function init() {
+    initSmoothScroll();
     try {
       const response = await fetch("data/results.json");
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
