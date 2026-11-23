@@ -2,3 +2,4 @@ laya
 requests
 python-dotenv
 mimir-decisions[local]==1.2.0
+phocinae-server==0.1.6
